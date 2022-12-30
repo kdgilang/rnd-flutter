@@ -16,8 +16,11 @@ class TitleSubtitle extends StatelessWidget {
             child: Text(title,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold, fontSize: 22))),
-        Text(subtitle, style: const TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 8))),
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+          child: Text(subtitle, style: const TextStyle(
+                    fontWeight: FontWeight.normal, fontSize: 11))
+        )
       ]),
     );
   }

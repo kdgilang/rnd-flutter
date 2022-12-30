@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hostplus/src/constants/Color.dart';
-import 'package:hostplus/src/shared/screens/layout.dart';
+import 'package:hostplus/src/shared/screens/starter.dart';
+import 'package:hostplus/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,10 +42,12 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: primaryColor,
+        fontFamily: 'Effra'
       ),
       darkTheme: ThemeData.dark(), // standard dark theme
       themeMode: ThemeMode.system,
-      home: const Layout(),
+      home: const StarterScreen(),
+      routes: routes,
     );
   }
 }
