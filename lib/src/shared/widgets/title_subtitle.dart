@@ -16,7 +16,8 @@ class TitleSubtitle extends StatelessWidget {
             child: Text(title,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold, fontSize: 22))),
-        Text(subtitle),
+        Text(subtitle, style: const TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 8))),
       ]),
     );
   }
