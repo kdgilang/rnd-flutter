@@ -32,7 +32,10 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 400),
     vsync: this,
-  )..forward().whenComplete(() => Navigator.pushReplacementNamed(context, HomeScreen.id));
+  )..forward().whenComplete(() async  {
+      await Future.delayed(const Duration(milliseconds: 1500));
+      Navigator.pushReplacementNamed(context, HomeScreen.id);
+  });
 
   late final Animation<double> _opacityAnimation = CurvedAnimation(
     parent: _controller,

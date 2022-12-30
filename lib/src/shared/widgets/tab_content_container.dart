@@ -6,12 +6,12 @@ class TabContentContainer extends StatelessWidget {
   const TabContentContainer({
     super.key,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     required this.child
   });
 
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final Widget child;
 
   @override

@@ -26,11 +26,14 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          leading: IconButton(
-            iconSize: 30.0,
-            color: ColorConstants.primary,
-            onPressed: () {},
-            icon: const Icon(Icons.menu),
+          leading: Builder(builder: (context) => IconButton(
+              iconSize: 30.0,
+              color: ColorConstants.primary,
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            )
           ),
           actions: [
             IconButton(
@@ -40,6 +43,23 @@ class HomeScreen extends StatelessWidget {
               icon: const Icon(Icons.person),
             ),
           ],
+        ),
+        drawerEnableOpenDragGesture: true,
+        drawer: Drawer(
+          backgroundColor: ColorConstants.primary,
+          child: ListView(
+            children: [
+              ListTile(
+                title: const Text('Item 1'),
+                onTap: () {
+                  // Update the state of the app
+                  // ...
+                  // Then close the drawer
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         ),
         bottomNavigationBar: const TabItems(),
         body: const TabBarView(

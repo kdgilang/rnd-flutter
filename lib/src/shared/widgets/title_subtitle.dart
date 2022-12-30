@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class TitleSubtitle extends StatelessWidget {
-  const TitleSubtitle({super.key, required this.title, required this.subtitle});
+  const TitleSubtitle({super.key, required this.title, this.subtitle});
 
   final String title;
-  final String subtitle;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +16,11 @@ class TitleSubtitle extends StatelessWidget {
             child: Text(title,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold, fontSize: 22))),
-        Padding(
+        if (subtitle!.isNotEmpty) Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-          child: Text(subtitle, style: const TextStyle(
-                    fontWeight: FontWeight.normal, fontSize: 11))
-        )
+          child: Text(subtitle!, style: const TextStyle(
+                    fontWeight: FontWeight.normal, fontSize: 12))
+        ),
       ]),
     );
   }
