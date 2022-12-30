@@ -22,21 +22,15 @@ class TabContentContainer extends StatelessWidget {
         color: ColorConstants.grey,
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
-        Container(
-          height: 70,
-          decoration: const BoxDecoration(
-            color: ColorConstants.grey,
-          ),
-        ),
         Expanded(
           child: Container(
-          padding: const EdgeInsets.all(15.0),
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
-            color: Colors.white,
-          ),
+            width: double.infinity,
+            padding: const EdgeInsets.all(15.0),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+              color: Colors.white,
+            ),
           child: Container(
 
             child: Column(children: [

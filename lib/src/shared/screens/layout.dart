@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hostplus/src/constants/Color.dart';
 import 'package:hostplus/src/shared/widgets/tab_content_container.dart';
 import 'package:hostplus/src/shared/widgets/tab_items.dart';
 import 'package:hostplus/src/shared/widgets/title_subtitle.dart';
@@ -12,56 +13,57 @@ class Layout extends StatelessWidget {
       length: 5,
       child: Scaffold(
         appBar: AppBar(
+          shadowColor: Colors.transparent,
+          backgroundColor: ColorConstants.grey,
           title: Container(
             height: 30.0,
             width: 30.0,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/icons/hp_logo.png"),
+                image: AssetImage("assets/icons/hp_logo_blue.png"),
                 fit: BoxFit.fitWidth,
               ),
             ),
           ),
           leading: IconButton(
+            iconSize: 30.0,
+            color: ColorConstants.primary,
             onPressed: () {},
             icon: const Icon(Icons.menu),
           ),
           actions: [
             IconButton(
+              iconSize: 28.0,
+              color: ColorConstants.primary,
               onPressed: () {},
               icon: const Icon(Icons.person),
             ),
           ],
         ),
         bottomNavigationBar: const TabItems(),
-        body: TabBarView(
-          children: [
-            Container(
-                child: const TabContentContainer(
-                  title: "",
-                  subtitle: "",
-                  child: Text('data'))
+        body: const TabBarView(
+          children: [ 
+            TabContentContainer(
+                title: "Dashboard",
+                subtitle: "Angus, your super has changed since you joined",
+                child: Text('data')
               ),
-            Container(
-                child: const TitleSubtitle(
+            TabContentContainer(
                     title: "Contributions",
-                    subtitle:
-                        "Angus, your super has changed since you joined")),
-            Container(
-                child: const TitleSubtitle(
+                    subtitle: "Angus, your super has changed since you joined",
+                    child: Text("")),
+            TabContentContainer(
                     title: "Investments",
-                    subtitle:
-                        "Angus, your super has changed since you joined")),
-            Container(
-                child: const TitleSubtitle(
+                    subtitle: "Angus, your super has changed since you joined",
+                    child: Text("")),
+            TabContentContainer(
                     title: "Insurance",
-                    subtitle:
-                        "Angus, your super has changed since you joined")),
-            Container(
-                child: const TitleSubtitle(
+                    subtitle: "Angus, your super has changed since you joined",
+                    child: Text("")),
+            TabContentContainer(
                     title: "None",
-                    subtitle:
-                        "Angus, your super has changed since you joined")),
+                    subtitle: "Angus, your super has changed since you joined",
+                    child: Text("")),
           ],
         ),
       ),

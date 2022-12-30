@@ -9,7 +9,7 @@ class TabItems extends StatelessWidget {
     return Container(
       color: ColorConstants.primary,
       child: const TabBar(
-        labelStyle: TextStyle(fontSize: 10),
+        labelStyle: TextStyle(fontSize: 7),
         labelColor: ColorConstants.secondary,
         unselectedLabelColor: Colors.white70,
         // indicatorSize: TabBarIndicatorSize.tab,

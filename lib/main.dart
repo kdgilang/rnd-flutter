@@ -42,6 +42,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: primaryColor,
       ),
+      darkTheme: ThemeData.dark(), // standard dark theme
+      themeMode: ThemeMode.system,
       home: const Layout(),
     );
   }
