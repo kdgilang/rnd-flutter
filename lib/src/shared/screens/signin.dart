@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hostplus/src/constants/Color.dart';
 import 'package:hostplus/src/constants/path.dart';
-import 'package:hostplus/src/shared/screens/signin.dart';
 
-class StarterScreen extends StatelessWidget {
-  const StarterScreen({super.key});
+class SigninScreen extends StatelessWidget {
+  const SigninScreen({super.key});
+
+  static const String id = "/signin";
   
   final bool isButtonsVisible = false;
 
@@ -16,20 +17,20 @@ class StarterScreen extends StatelessWidget {
         height: double.infinity,
         width: double.infinity,
         alignment: Alignment.center,
-        child: const StarterWidget()
+        child: const Signin()
       ),
     );
   }
 }
 
-class StarterWidget extends StatefulWidget {
-  const StarterWidget({super.key});
+class Signin extends StatefulWidget {
+  const Signin({super.key});
 
   @override
-  State<StarterWidget> createState() => _StarterWidgetState();
+  State<Signin> createState() => _SigninState();
 }
 
-class _StarterWidgetState extends State<StarterWidget> with SingleTickerProviderStateMixin {
+class _SigninState extends State<Signin> with SingleTickerProviderStateMixin {
 
   bool isButtonsVisible = false;
 
@@ -41,6 +42,7 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
       setState(() {
         isButtonsVisible = true;
       });
+      // Navigator.pushReplacementNamed(context, HomeScreen.id);
     });
 
   late final Animation<Offset> _offsetAnimation = Tween<Offset>(
@@ -101,9 +103,7 @@ class ButtonsWidget extends StatelessWidget {
                 fontSize: 22.0,
               )
             ),
-            onPressed: () {
-              Navigator.pushNamed(context, SigninScreen.id);
-            },
+            onPressed: () {},
             child: const Text('Sign in'),
           ),
           const SizedBox(height: 20,),
