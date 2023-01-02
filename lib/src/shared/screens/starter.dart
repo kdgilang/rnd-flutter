@@ -98,7 +98,7 @@ class ButtonsWidget extends StatelessWidget {
               minimumSize: const Size(280, 0),
               textStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 22.0,
+                fontSize: 18.0,
               )
             ),
             onPressed: () {
@@ -115,7 +115,7 @@ class ButtonsWidget extends StatelessWidget {
               minimumSize: const Size(280, 0),
               textStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 22.0,
+                fontSize: 18.0,
               )
             ),
             onPressed: () {},

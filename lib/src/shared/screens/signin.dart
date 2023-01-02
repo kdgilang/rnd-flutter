@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hostplus/src/constants/Color.dart';
 import 'package:hostplus/src/constants/path.dart';
+import 'package:hostplus/src/shared/screens/home.dart';
 
 class SigninScreen extends StatelessWidget {
   const SigninScreen({super.key});
@@ -28,21 +29,22 @@ class SigninScreen extends StatelessWidget {
         height: double.infinity,
         width: double.infinity,
         alignment: Alignment.center,
-        child: const Signin()
+        child: const SigninWidget()
       ),
     );
   }
 }
 
-class Signin extends StatefulWidget {
-  const Signin({super.key});
+class SigninWidget extends StatefulWidget {
+  const SigninWidget({super.key});
 
   @override
-  State<Signin> createState() => _SigninState();
+  State<SigninWidget> createState() => _SigninWidgetState();
 }
 
-class _SigninState extends State<Signin> with SingleTickerProviderStateMixin {
-
+class _SigninWidgetState extends State<SigninWidget> {
+  final memberControl = TextEditingController();
+  final passwordControl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +60,17 @@ class _SigninState extends State<Signin> with SingleTickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               TextFormField(
+                controller: memberControl,
                 decoration: const InputDecoration(
                   border: UnderlineInputBorder(),
                   labelText: 'Member number',
                 ),
+                validator: (String? value) {
+                  if (value!.trim().isEmpty) {
+                    return 'Password is required';
+                  }
+                  return null;
+                },
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -88,6 +97,7 @@ class _SigninState extends State<Signin> with SingleTickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               TextFormField(
+                controller: passwordControl,
                 obscureText: true,
                 enableSuggestions: false,
                 autocorrect: false,
@@ -95,6 +105,12 @@ class _SigninState extends State<Signin> with SingleTickerProviderStateMixin {
                   border: UnderlineInputBorder(),
                   labelText: 'Password',
                 ),
+                validator: (String? value) {
+                  if (value!.trim().isEmpty) {
+                    return 'Password is required';
+                  }
+                  return null;
+                },
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -125,10 +141,24 @@ class _SigninState extends State<Signin> with SingleTickerProviderStateMixin {
               minimumSize: const Size(280, 0),
               textStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 22.0,
+                fontSize: 18.0,
               )
             ),
-            onPressed: () {},
+            onPressed: () {
+              // showDialog(
+              //   context: context,
+              //   builder: (context) {
+              //     return AlertDialog(
+              //       // Retrieve the text that the user has entered by using the
+              //       // TextEditingController.
+              //       content: Text(memberControl.text),
+              //     );
+              //   },
+              // );
+              if (passwordControl.text == memberControl.text) {
+                Navigator.pushNamedAndRemoveUntil(context, HomeScreen.id, (_) => false);
+              }
+            },
             child: const Text('Continue'),
           ),
           const SizedBox(height: 10,),
