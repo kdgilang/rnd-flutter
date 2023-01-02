@@ -95,7 +95,7 @@ class ButtonsWidget extends StatelessWidget {
               backgroundColor: ColorConstants.secondary,
               foregroundColor: ColorConstants.primary,
               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
-              minimumSize: const Size(250, 0),
+              minimumSize: const Size(280, 0),
               textStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 22.0,
@@ -112,7 +112,7 @@ class ButtonsWidget extends StatelessWidget {
               foregroundColor: Colors.white,
               side: const BorderSide(color: Colors.white, width: 1),
               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
-              minimumSize: const Size(250, 0),
+              minimumSize: const Size(280, 0),
               textStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 22.0,
