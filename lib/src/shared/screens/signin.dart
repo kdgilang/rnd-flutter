@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hostplus/src/constants/Color.dart';
-import 'package:hostplus/src/constants/path.dart';
 import 'package:hostplus/src/shared/screens/home.dart';
 
 class SigninScreen extends StatelessWidget {
   const SigninScreen({super.key});
 
-  static const String id = "/signin";
+  static const String routeName = "/signin";
   
   final bool isButtonsVisible = false;
 
@@ -156,7 +155,7 @@ class _SigninWidgetState extends State<SigninWidget> {
               //   },
               // );
               if (passwordControl.text == memberControl.text) {
-                Navigator.pushNamedAndRemoveUntil(context, HomeScreen.id, (_) => false);
+                Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (_) => false);
               }
             },
             child: const Text('Continue'),

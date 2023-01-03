@@ -6,7 +6,7 @@ import 'package:hostplus/src/shared/widgets/tab_items.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  static const String id = "/main";
+  static const String routeName = "/home";
 
   @override
   Widget build(BuildContext context) {
@@ -16,15 +16,12 @@ class HomeScreen extends StatelessWidget {
         appBar: AppBar(
           shadowColor: Colors.transparent,
           backgroundColor: ColorConstants.grey,
-          title: Container(
-            height: 30.0,
-            width: 30.0,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/icons/hp_logo_blue.png"),
-                fit: BoxFit.fitWidth,
-              ),
-            ),
+          title: Center(
+            child: Image.asset(
+              "assets/icons/hp_logo_blue.png",
+              width: 30,
+              height: 30,
+            )
           ),
           leading: Builder(builder: (context) => IconButton(
               iconSize: 30.0,

@@ -5,6 +5,8 @@ import 'package:hostplus/src/shared/screens/signin.dart';
 
 class StarterScreen extends StatelessWidget {
   const StarterScreen({super.key});
+
+  static const String routeName = "/starter";
   
   final bool isButtonsVisible = false;
 
@@ -45,7 +47,7 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
 
   late final Animation<Offset> _offsetAnimation = Tween<Offset>(
     begin: Offset.zero,
-    end: const Offset(0.0, -3.0),
+    end: const Offset(0.0, -2.5),
   ).animate(CurvedAnimation(
     parent: _controller,
     curve: Curves.linearToEaseOut,
@@ -102,7 +104,7 @@ class ButtonsWidget extends StatelessWidget {
               )
             ),
             onPressed: () {
-              Navigator.pushNamed(context, SigninScreen.id);
+              Navigator.pushNamed(context, SigninScreen.routeName);
             },
             child: const Text('Sign in'),
           ),
