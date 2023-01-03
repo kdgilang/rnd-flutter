@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hostplus/src/constants/Color.dart';
+import 'package:hostplus/src/shared/widgets/chart_stack.dart';
 import 'package:hostplus/src/shared/widgets/tab_content_container.dart';
 import 'package:hostplus/src/shared/widgets/tab_items.dart';
 
@@ -59,26 +60,26 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: const TabItems(),
-        body: const TabBarView(
+        body:  TabBarView(
           children: [ 
             TabContentContainer(
                 title: "Dashboard",
                 subtitle: "Angus, your super has changed since you joined",
-                child: Text('data')
+                child: StackedAreaLineChart.withSampleData()
               ),
-            TabContentContainer(
+            const TabContentContainer(
                     title: "Contributions",
                     subtitle: "Angus, your super has changed since you joined",
                     child: Text("")),
-            TabContentContainer(
+            const TabContentContainer(
                     title: "Investments",
                     subtitle: "Angus, your super has changed since you joined",
                     child: Text("")),
-            TabContentContainer(
+            const TabContentContainer(
                     title: "Insurance",
                     subtitle: "Angus, your super has changed since you joined",
                     child: Text("")),
-            TabContentContainer(
+            const TabContentContainer(
                     title: "None",
                     subtitle: "Angus, your super has changed since you joined",
                     child: Text("")),
