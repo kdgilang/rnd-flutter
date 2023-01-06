@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:charts_common/common.dart' as common;
 
 class ChartStackedLineWidget extends StatelessWidget {
+  const ChartStackedLineWidget({
+    super.key,
+    required this.seriesList,
+    required this.animate
+  });
+
   final List<common.Series<dynamic, num>> seriesList;
   final bool animate;
-
-  const ChartStackedLineWidget({super.key, required this.seriesList, required this.animate});
 
   /// Creates a [LineChart] with sample data and transition.
   factory ChartStackedLineWidget.withSampleData() {
@@ -29,21 +33,21 @@ class ChartStackedLineWidget extends StatelessWidget {
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<LinearSales, int>> _createSampleData() {
-    final myFakeDesktopData = [
+    const myFakeDesktopData = [
       LinearSales(0, 5),
       LinearSales(1, 25),
       LinearSales(2, 100),
       LinearSales(3, 75),
     ];
 
-    var myFakeTabletData = [
+    const myFakeTabletData = [
       LinearSales(0, 10),
       LinearSales(1, 50),
       LinearSales(2, 200),
       LinearSales(3, 150),
     ];
 
-    var myFakeMobileData = [
+    const myFakeMobileData = [
       LinearSales(0, 15),
       LinearSales(1, 75),
       LinearSales(2, 300),
@@ -81,5 +85,5 @@ class LinearSales {
   final int year;
   final int sales;
 
-  LinearSales(this.year, this.sales);
+  const LinearSales(this.year, this.sales);
 }
