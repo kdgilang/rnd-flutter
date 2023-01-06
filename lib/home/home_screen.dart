@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hostplus/src/constants/Color.dart';
-import 'package:hostplus/src/shared/widgets/chart_stack.dart';
-import 'package:hostplus/src/shared/widgets/tab_content_container.dart';
-import 'package:hostplus/src/shared/widgets/tab_items.dart';
+import 'package:hostplus/constants/color_constants.dart';
+import 'package:hostplus/shared/widgets/chart_stacked_line_widget.dart';
+import 'package:hostplus/home/widgets/tab_container_widget.dart';
+import 'package:hostplus/home/widgets/tab_items_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -59,27 +59,27 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: const TabItems(),
+        bottomNavigationBar: const TabItemsWidget(),
         body:  TabBarView(
           children: [ 
-            TabContentContainer(
+            TabContainerWidget(
                 title: "Dashboard",
                 subtitle: "Angus, your super has changed since you joined",
-                child: StackedAreaLineChart.withSampleData()
+                child: ChartStackedLineWidget.withSampleData()
               ),
-            const TabContentContainer(
+            const TabContainerWidget(
                     title: "Contributions",
                     subtitle: "Angus, your super has changed since you joined",
                     child: Text("")),
-            const TabContentContainer(
+            const TabContainerWidget(
                     title: "Investments",
                     subtitle: "Angus, your super has changed since you joined",
                     child: Text("")),
-            const TabContentContainer(
+            const TabContainerWidget(
                     title: "Insurance",
                     subtitle: "Angus, your super has changed since you joined",
                     child: Text("")),
-            const TabContentContainer(
+            const TabContainerWidget(
                     title: "None",
                     subtitle: "Angus, your super has changed since you joined",
                     child: Text("")),

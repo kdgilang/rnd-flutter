@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hostplus/src/constants/Color.dart';
-import 'package:hostplus/src/shared/widgets/title_subtitle.dart';
+import 'package:hostplus/constants/color_constants.dart';
+import 'package:hostplus/shared/widgets/title_widget.dart';
 
-class TabContentContainer extends StatelessWidget {
-  const TabContentContainer({
+class TabContainerWidget extends StatelessWidget {
+  const TabContainerWidget({
     super.key,
     required this.title,
     this.subtitle,
@@ -31,7 +31,7 @@ class TabContentContainer extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            TitleSubtitle(title: title, subtitle: subtitle),
+            TitleWidget(title: title, subtitle: subtitle),
             const SizedBox(height: 20,),
             Expanded(
               child: child,

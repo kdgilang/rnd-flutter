@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hostplus/src/constants/Color.dart';
+import 'package:hostplus/constants/color_constants.dart';
 
-class TabItems extends StatelessWidget {
-  const TabItems({ super.key });
+class TabItemsWidget extends StatelessWidget {
+  const TabItemsWidget({ super.key });
   
   @override
   Widget build(BuildContext context) {

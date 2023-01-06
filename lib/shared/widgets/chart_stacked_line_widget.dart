@@ -3,15 +3,15 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:charts_common/common.dart' as common;
 
-class StackedAreaLineChart extends StatelessWidget {
+class ChartStackedLineWidget extends StatelessWidget {
   final List<common.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  const StackedAreaLineChart({super.key, required this.seriesList, required this.animate});
+  const ChartStackedLineWidget({super.key, required this.seriesList, required this.animate});
 
-  /// Creates a [LineChart] with sample data and no transition.
-  factory StackedAreaLineChart.withSampleData() {
-    return StackedAreaLineChart(
+  /// Creates a [LineChart] with sample data and transition.
+  factory ChartStackedLineWidget.withSampleData() {
+    return ChartStackedLineWidget(
       seriesList: _createSampleData(),
       // Disable animations for image tests.
       animate: true,

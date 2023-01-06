@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hostplus/src/constants/Color.dart';
-import 'package:hostplus/src/shared/screens/starter.dart';
+import 'package:hostplus/constants/color_constants.dart';
+import 'package:hostplus/starter/starter_screen.dart';
 import 'package:hostplus/routes.dart';
 
 void main() {

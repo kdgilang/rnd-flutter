@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hostplus/src/constants/Color.dart';
-import 'package:hostplus/src/constants/path.dart';
-import 'package:hostplus/src/shared/screens/signin.dart';
+import 'package:hostplus/constants/color_constants.dart';
+import 'package:hostplus/constants/path_constants.dart';
+import 'package:hostplus/signin/signin_screen.dart';
 
 class StarterScreen extends StatelessWidget {
   const StarterScreen({super.key});
