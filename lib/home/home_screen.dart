@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hostplus/constants/color_constants.dart';
-import 'package:hostplus/shared/widgets/chart_stacked_line_widget.dart';
+import 'package:hostplus/shared/widgets/charts/line_chart_widget.dart';
+import 'package:hostplus/shared/widgets/charts/pie_chart_widget.dart';
 import 'package:hostplus/home/widgets/tab_container_widget.dart';
 import 'package:hostplus/home/widgets/tab_items_widget.dart';
 
@@ -65,16 +66,18 @@ class HomeScreen extends StatelessWidget {
             TabContainerWidget(
                 title: "Dashboard",
                 subtitle: "Angus, your super has changed since you joined",
-                child: ChartStackedLineWidget.withSampleData()
+                child: LineChartWidget.withSampleData()
               ),
             const TabContainerWidget(
                     title: "Contributions",
                     subtitle: "Angus, your super has changed since you joined",
-                    child: Text("")),
-            const TabContainerWidget(
+                    child: Text("data")
+              ),
+            TabContainerWidget(
                     title: "Investments",
                     subtitle: "Angus, your super has changed since you joined",
-                    child: Text("")),
+                    child: PieChartWidget.withSampleData()
+              ),
             const TabContainerWidget(
                     title: "Insurance",
                     subtitle: "Angus, your super has changed since you joined",

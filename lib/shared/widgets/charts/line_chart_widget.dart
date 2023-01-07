@@ -3,8 +3,8 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:charts_common/common.dart' as common;
 
-class ChartStackedLineWidget extends StatelessWidget {
-  const ChartStackedLineWidget({
+class LineChartWidget extends StatelessWidget {
+  const LineChartWidget({
     super.key,
     required this.seriesList,
     required this.animate
@@ -14,8 +14,8 @@ class ChartStackedLineWidget extends StatelessWidget {
   final bool animate;
 
   /// Creates a [LineChart] with sample data and transition.
-  factory ChartStackedLineWidget.withSampleData() {
-    return ChartStackedLineWidget(
+  factory LineChartWidget.withSampleData() {
+    return LineChartWidget(
       seriesList: _createSampleData(),
       // Disable animations for image tests.
       animate: true,

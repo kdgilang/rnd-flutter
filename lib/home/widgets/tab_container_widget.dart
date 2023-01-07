@@ -35,7 +35,7 @@ class TabContainerWidget extends StatelessWidget {
             const SizedBox(height: 20,),
             Expanded(
               child: child,
-            )
+            ),
           ]
         ),
       ),
