@@ -1,6 +1,6 @@
 # R&D flutter
 
-Sample templates flutter mobile app with charts.
+Simple charts mobile app using Flutter.
 
 - Login Screen
 - Register Screen
