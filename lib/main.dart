@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hostplus/constants/color_constants.dart';
-import 'package:hostplus/starter/starter_screen.dart';
-import 'package:hostplus/routes.dart';
+import 'package:purala/constants/color_constants.dart';
+import 'package:purala/starter/starter_screen.dart';
+import 'package:purala/routes.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,6 +1,6 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:hostplus/constants/color_constants.dart';
+import 'package:purala/constants/color_constants.dart';
 
 class PieChartWidget extends StatelessWidget {
   const PieChartWidget({

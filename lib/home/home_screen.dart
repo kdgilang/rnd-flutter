@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hostplus/constants/color_constants.dart';
-import 'package:hostplus/shared/widgets/charts/line_chart_widget.dart';
-import 'package:hostplus/shared/widgets/charts/pie_chart_widget.dart';
-import 'package:hostplus/home/widgets/tab_container_widget.dart';
-import 'package:hostplus/home/widgets/tab_items_widget.dart';
+import 'package:purala/constants/color_constants.dart';
+import 'package:purala/shared/widgets/charts/line_chart_widget.dart';
+import 'package:purala/shared/widgets/charts/pie_chart_widget.dart';
+import 'package:purala/home/widgets/tab_container_widget.dart';
+import 'package:purala/home/widgets/tab_items_widget.dart';
+import 'package:purala/signin/signin_screen.dart';
+import 'package:purala/pos/pos_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -17,7 +19,7 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           shadowColor: Colors.transparent,
-          backgroundColor: ColorConstants.grey,
+          backgroundColor: Colors.white,
           title: Center(
             child: Image.asset(
               "assets/icons/hp_logo_blue.png",
@@ -57,35 +59,42 @@ class HomeScreen extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
+              ListTile(
+                title: const Text('Sign out'),
+                onTap: () {
+                  Navigator.pushNamed(context, SigninScreen.routeName);
+                },
+              )
             ],
           ),
         ),
         bottomNavigationBar: const TabItemsWidget(),
-        body:  TabBarView(
+        body: TabBarView(
           children: [ 
+            const TabContainerWidget(
+              title: "Point of sale",
+              child: Text("data")
+            ),
             TabContainerWidget(
-                title: "Dashboard",
-                subtitle: "Angus, your super has changed since you joined",
-                child: LineChartWidget.withSampleData()
-              ),
-            const TabContainerWidget(
-                    title: "Contributions",
-                    subtitle: "Angus, your super has changed since you joined",
-                    child: Text("data")
-              ),
+              title: "Statistic",
+              subtitle: "Angus, your super has changed since you joined",
+              child: LineChartWidget.withSampleData()
+            ),
             TabContainerWidget(
-                    title: "Investments",
-                    subtitle: "Angus, your super has changed since you joined",
-                    child: PieChartWidget.withSampleData()
-              ),
+              title: "History",
+              subtitle: "find your transaction history",
+              child: PieChartWidget.withSampleData()
+            ),
             const TabContainerWidget(
-                    title: "Insurance",
-                    subtitle: "Angus, your super has changed since you joined",
-                    child: Text("")),
+              title: "Insurance",
+              subtitle: "Angus, your super has changed since you joined",
+              child: Text("")
+            ),
             const TabContainerWidget(
-                    title: "None",
-                    subtitle: "Angus, your super has changed since you joined",
-                    child: Text("")),
+              title: "None",
+              subtitle: "Angus, your super has changed since you joined",
+              child: Text("")
+            ),
           ],
         ),
       ),

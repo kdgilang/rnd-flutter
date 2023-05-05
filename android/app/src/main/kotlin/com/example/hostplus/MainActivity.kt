@@ -1,4 +1,4 @@
-package com.example.hostplus
+package com.example.puralaflutter
 
 import io.flutter.embedding.android.FlutterActivity
 

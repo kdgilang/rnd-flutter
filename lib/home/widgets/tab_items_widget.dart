@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hostplus/constants/color_constants.dart';
+import 'package:purala/constants/color_constants.dart';
 
 class TabItemsWidget extends StatelessWidget {
   const TabItemsWidget({ super.key });
@@ -17,24 +17,24 @@ class TabItemsWidget extends StatelessWidget {
         indicatorColor: Colors.transparent,
         tabs: [
           Tab(
-            text: "Dashboard",
-            icon: Icon(Icons.dashboard),
+            text: "Pos",
+            icon: Icon(Icons.computer),
           ),
           Tab(
-            text: "Contributions",
+            text: "Statistic",
             icon: Icon(Icons.show_chart),
           ),
           Tab(
-            text: "Investments",
+            text: "History",
+            icon: Icon(Icons.history),
+          ),
+          Tab(
+            text: "Investment",
             icon: Icon(Icons.money_off),
           ),
           Tab(
             text: "Insurance",
             icon: Icon(Icons.shield),
-          ),
-          Tab(
-            text: "More",
-            icon: Icon(Icons.more_horiz),
           ),
         ],
       ),

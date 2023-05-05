@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hostplus/constants/color_constants.dart';
-import 'package:hostplus/home/home_screen.dart';
+import 'package:purala/constants/color_constants.dart';
+import 'package:purala/home/home_screen.dart';
 
 class SigninScreen extends StatelessWidget {
   const SigninScreen({super.key});
@@ -47,13 +47,25 @@ class _SigninWidgetState extends State<SigninWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+    return Container(
+      // color: ColorConstants.grey,
+      constraints: const BoxConstraints(maxWidth: 400),
+      decoration: const BoxDecoration(
+        color: ColorConstants.primary,
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text("You can find your member number on your statement or member card. By proceeding you agree to the Terms and Conditions, and Privacy Policy."),
+          Center(
+            child: Image.asset(
+              "assets/icons/launch_icon.png",
+              width: 30,
+              height: 30,
+            ),
+          ),
           const SizedBox(height: 20,),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -62,33 +74,19 @@ class _SigninWidgetState extends State<SigninWidget> {
                 controller: memberControl,
                 decoration: const InputDecoration(
                   border: UnderlineInputBorder(),
-                  labelText: 'Member number',
+                  labelText: 'Email address',
+                  floatingLabelStyle: TextStyle(color: Colors.white),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white, width: 1.0)
+                  )
                 ),
                 validator: (String? value) {
                   if (value!.trim().isEmpty) {
-                    return 'Password is required';
+                    return 'Email address is required.';
                   }
                   return null;
                 },
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    foregroundColor: ColorConstants.tertiary,
-                    padding: EdgeInsets.zero,
-                    textStyle: const TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    )
-                  ),
-                  child: const Text(
-                    "Forgot your member number?"
-                  ),
-                ),
-              ),
+              )
             ],
           ),
           const SizedBox(height: 10,),
@@ -103,6 +101,10 @@ class _SigninWidgetState extends State<SigninWidget> {
                 decoration: const InputDecoration(
                   border: UnderlineInputBorder(),
                   labelText: 'Password',
+                  floatingLabelStyle: TextStyle(color: Colors.white),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white, width: 1.0)
+                  )
                 ),
                 validator: (String? value) {
                   if (value!.trim().isEmpty) {
@@ -125,19 +127,19 @@ class _SigninWidgetState extends State<SigninWidget> {
                     )
                   ),
                   child: const Text(
-                    "Forgot your member number?"
+                    "Forgot your password?"
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20,),
+          const SizedBox(height: 30,),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: ColorConstants.secondary,
               foregroundColor: ColorConstants.primary,
-              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
-              minimumSize: const Size(280, 0),
+              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 18),
+              minimumSize: const Size(250, 0),
               textStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18.0,
@@ -158,21 +160,21 @@ class _SigninWidgetState extends State<SigninWidget> {
                 Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (_) => false);
               }
             },
-            child: const Text('Continue'),
+            child: const Text('Sign in'),
           ),
-          const SizedBox(height: 10,),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              "Can't find your member number?",
-              style: TextStyle(
-                color: ColorConstants.tertiary,
-                decoration: TextDecoration.underline,
-                fontWeight: FontWeight.bold,
-                fontSize: 12.0,
-              ),
-            ),
-          ),
+          // const SizedBox(height: 10,),
+          // TextButton(
+          //   onPressed: () {},
+          //   child: const Text(
+          //     "Can't find your member number?",
+          //     style: TextStyle(
+          //       color: ColorConstants.tertiary,
+          //       decoration: TextDecoration.underline,
+          //       fontWeight: FontWeight.bold,
+          //       fontSize: 12.0,
+          //     ),
+          //   ),
+          // ),
         ],
       )
     );

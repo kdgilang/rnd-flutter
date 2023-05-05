@@ -1,6 +1,7 @@
 /// Example of a stacked area chart.
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:charts_common/common.dart' as common;
 
 class LineChartWidget extends StatelessWidget {

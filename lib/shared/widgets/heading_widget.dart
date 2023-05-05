@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:purala/constants/color_constants.dart';
 
-class TitleWidget extends StatelessWidget {
-  const TitleWidget({super.key, required this.title, this.subtitle});
+class HeadingWidget extends StatelessWidget {
+  const HeadingWidget({super.key, required this.title, this.subtitle});
 
   final String title;
   final String? subtitle;
@@ -15,10 +16,12 @@ class TitleWidget extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10.0),
             child: Text(title,
                 style: const TextStyle(
+                  color: ColorConstants.primary,
                     fontWeight: FontWeight.bold, fontSize: 22))),
-        if (subtitle!.isNotEmpty) Padding(
+        if (subtitle != null) Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
           child: Text(subtitle!, style: const TextStyle(
+                    color: ColorConstants.primary,
                     fontWeight: FontWeight.normal, fontSize: 12))
         ),
       ]),

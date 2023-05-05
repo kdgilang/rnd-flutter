@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hostplus/constants/color_constants.dart';
-import 'package:hostplus/constants/path_constants.dart';
-import 'package:hostplus/signin/signin_screen.dart';
+import 'package:purala/constants/color_constants.dart';
+import 'package:purala/constants/path_constants.dart';
+import 'package:purala/signin/signin_screen.dart';
 
 class StarterScreen extends StatelessWidget {
   const StarterScreen({super.key});
@@ -108,21 +108,21 @@ class ButtonsWidget extends StatelessWidget {
             },
             child: const Text('Sign in'),
           ),
-          const SizedBox(height: 20,),
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              foregroundColor: Colors.white,
-              side: const BorderSide(color: Colors.white, width: 1),
-              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
-              minimumSize: const Size(280, 0),
-              textStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              )
-            ),
-            onPressed: () {},
-            child: const Text('Register'),
-          ),
+          // const SizedBox(height: 20,),
+          // OutlinedButton(
+          //   style: OutlinedButton.styleFrom(
+          //     foregroundColor: Colors.white,
+          //     side: const BorderSide(color: Colors.white, width: 1),
+          //     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
+          //     minimumSize: const Size(280, 0),
+          //     textStyle: const TextStyle(
+          //       fontWeight: FontWeight.bold,
+          //       fontSize: 18.0,
+          //     )
+          //   ),
+          //   onPressed: () {},
+          //   child: const Text('Register'),
+          // ),
         ],
       ),
     );
