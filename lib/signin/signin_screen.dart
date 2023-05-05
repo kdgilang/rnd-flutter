@@ -24,7 +24,7 @@ class SigninScreen extends StatelessWidget {
         ),
       ),
       body: Container(
-        color: Colors.white,
+        color: ColorConstants.grey,
         height: double.infinity,
         width: double.infinity,
         alignment: Alignment.center,

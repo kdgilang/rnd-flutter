@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:purala/constants/color_constants.dart';
 
-class ResultWidget extends StatelessWidget {
-  const ResultWidget({super.key});
+class TotalWidget extends StatelessWidget {
+  const TotalWidget({super.key});
   
   final bool isButtonsVisible = false;
 
@@ -15,11 +15,6 @@ class ResultWidget extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(5))
       ),
-      child: Column(
-        children: const [
-          Text("Test")
-        ],
-      )
     );
   }
 }
