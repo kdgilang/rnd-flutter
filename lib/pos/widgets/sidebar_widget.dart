@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:purala/constants/color_constants.dart';
 
-class ResultWidget extends StatelessWidget {
-  const ResultWidget({super.key});
+class SidebarWidget extends StatelessWidget {
+  const SidebarWidget({super.key});
   
   final bool isButtonsVisible = false;
 

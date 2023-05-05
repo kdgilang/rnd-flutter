@@ -73,7 +73,7 @@ class HomeScreen extends StatelessWidget {
           children: [ 
             const TabContainerWidget(
               title: "Point of sale",
-              child: Text("data")
+              child: PosWidget()
             ),
             TabContainerWidget(
               title: "Statistic",

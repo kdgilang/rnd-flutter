@@ -28,7 +28,7 @@ class TabContainerWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           HeadingWidget(title: title, subtitle: subtitle),
-
+          
           Expanded(
             child: child,
           ),

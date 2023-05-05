@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# R&D flutter
-=======
 # Purala
->>>>>>> af5ac7d (major update project)
 
 Simple charts mobile app using Flutter.
 
