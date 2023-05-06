@@ -13,18 +13,15 @@ class SigninScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: ColorConstants.primary,
-        shadowColor: Colors.transparent,
-        backgroundColor: ColorConstants.grey,
+        foregroundColor: Theme.of(context).textTheme.bodyText1!.color,
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text("Sign in"),
         titleTextStyle: const TextStyle(
-          color: ColorConstants.primary,
           fontWeight: FontWeight.bold,
           fontSize: 18
         ),
       ),
       body: Container(
-        color: ColorConstants.grey,
         height: double.infinity,
         width: double.infinity,
         alignment: Alignment.center,
@@ -48,11 +45,10 @@ class _SigninWidgetState extends State<SigninWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: ColorConstants.grey,
       constraints: const BoxConstraints(maxWidth: 400),
-      decoration: const BoxDecoration(
-        color: ColorConstants.primary,
-        borderRadius: BorderRadius.all(Radius.circular(5)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
       child: Column(

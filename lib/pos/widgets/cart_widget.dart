@@ -10,8 +10,8 @@ class CartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
-      shadowColor: Colors.grey,
-      color: Colors.white,
+      shadowColor: Colors.black12,
+      color: Theme.of(context).primaryColor,
       child: Container(
         padding: const EdgeInsets.all(20),
         width: double.infinity,

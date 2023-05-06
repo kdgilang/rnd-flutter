@@ -7,15 +7,15 @@ class TabItemsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: ColorConstants.primary,
-      child: const TabBar(
-        labelStyle: TextStyle(fontSize: 7),
+      color: Theme.of(context).primaryColor,
+      child: TabBar(
+        labelStyle: const TextStyle(fontSize: 7),
         labelColor: ColorConstants.secondary,
-        unselectedLabelColor: Colors.white70,
+        unselectedLabelColor: Theme.of(context).textTheme.bodyText1!.color,
         // indicatorSize: TabBarIndicatorSize.tab,
         // indicatorPadding: EdgeInsets.all(5.0),
         indicatorColor: Colors.transparent,
-        tabs: [
+        tabs: const [
           Tab(
             text: "Pos",
             icon: Icon(Icons.computer),

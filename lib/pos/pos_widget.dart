@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:purala/constants/color_constants.dart';
-import 'package:purala/pos/widgets/result_widget.dart';
+import 'package:purala/pos/widgets/search_widget.dart';
 import 'package:purala/pos/widgets/sidebar_widget.dart';
 
 class PosWidget extends StatelessWidget {
@@ -13,10 +13,12 @@ class PosWidget extends StatelessWidget {
       // mainAxisSize: MainAxisSize.max,
       children: const [
         Expanded(
-          child: ResultWidget(),
+          flex: 7,
+          child: SearchWidget(),
         ),
         SizedBox(width: 20,),
         Expanded(
+          flex: 3,
           child: SidebarWidget(),
         )
       ],

@@ -16,12 +16,10 @@ class HeadingWidget extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10.0),
             child: Text(title,
                 style: const TextStyle(
-                  color: ColorConstants.primary,
                     fontWeight: FontWeight.bold, fontSize: 22))),
         if (subtitle != null) Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
           child: Text(subtitle!, style: const TextStyle(
-                    color: ColorConstants.primary,
                     fontWeight: FontWeight.normal, fontSize: 12))
         ),
       ]),

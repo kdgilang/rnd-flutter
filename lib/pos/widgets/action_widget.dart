@@ -8,13 +8,17 @@ class ActionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(5))
-      ),
+    return Card(
+      elevation: 4,
+      shadowColor: Colors.black12,
+      color: Theme.of(context).primaryColor,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(5))
+        ),
+      )
     );
   }
 }

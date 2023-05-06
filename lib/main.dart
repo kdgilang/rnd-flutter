@@ -30,24 +30,34 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Purala POS',
       restorationScopeId: "root",
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: primaryColor,
-        fontFamily: 'Effra'
-      ),
-      darkTheme: ThemeData.dark(), // standard dark theme
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColorLight: Colors.black12,
+        textTheme: const TextTheme(
+          bodyText1: TextStyle(),
+          bodyText2: TextStyle(),
+        ).apply(
+          bodyColor: Colors.grey, 
+          displayColor: Colors.grey,
+        ),
+      ), // standard dark theme
       themeMode: ThemeMode.system,
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: Colors.white,
+        primaryColorLight: ColorConstants.grey,
+        fontFamily: 'Effra',
+        textTheme: const TextTheme(
+          bodyText1: TextStyle(),
+          bodyText2: TextStyle(),
+        ).apply(
+          bodyColor: ColorConstants.primary, 
+          displayColor: ColorConstants.primary, 
+        ),
+      ),
       home: const StarterScreen(),
       routes: routes,
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:purala/constants/color_constants.dart';
 import 'package:purala/shared/widgets/charts/line_chart_widget.dart';
 import 'package:purala/shared/widgets/charts/pie_chart_widget.dart';
 import 'package:purala/home/widgets/tab_container_widget.dart';
@@ -19,7 +18,7 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           shadowColor: Colors.transparent,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).primaryColor,
           title: Center(
             child: Image.asset(
               "assets/icons/hp_logo_blue.png",
@@ -28,8 +27,8 @@ class HomeScreen extends StatelessWidget {
             )
           ),
           leading: Builder(builder: (context) => IconButton(
+              color: Theme.of(context).textTheme.bodyText1!.color,
               iconSize: 30.0,
-              color: ColorConstants.primary,
               icon: const Icon(Icons.menu),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
@@ -38,8 +37,8 @@ class HomeScreen extends StatelessWidget {
           ),
           actions: [
             IconButton(
+              color: Theme.of(context).textTheme.bodyText1!.color,
               iconSize: 28.0,
-              color: ColorConstants.primary,
               onPressed: () {},
               icon: const Icon(Icons.person),
             ),
@@ -47,7 +46,7 @@ class HomeScreen extends StatelessWidget {
         ),
         drawerEnableOpenDragGesture: true,
         drawer: Drawer(
-          backgroundColor: ColorConstants.primary,
+          backgroundColor: Theme.of(context).primaryColor,
           child: ListView(
             children: [
               ListTile(

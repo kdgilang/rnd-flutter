@@ -18,8 +18,8 @@ class TabContainerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        color: ColorConstants.grey,
+      decoration: BoxDecoration(
+        // color: Theme.of(context).primaryColorLight,
       ),
       constraints: const BoxConstraints(
         minHeight: double.infinity,
