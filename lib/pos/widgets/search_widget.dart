@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:purala/constants/color_constants.dart';
+import 'package:purala/shared/widgets/tile_widget.dart';
 
 class SearchWidget extends StatelessWidget {
   const SearchWidget({super.key});
@@ -8,7 +9,8 @@ class SearchWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return Column(
+      children: [
           Expanded(
             flex: 1,
             child: Card(
@@ -33,19 +35,79 @@ class SearchWidget extends StatelessWidget {
           const SizedBox(height: 10,),
           Expanded(
             flex: 8,
-            child: Card(
-              elevation: 4,
-              shadowColor: Colors.black12,
-              color: Theme.of(context).primaryColor,
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                child: Column(children: const [
-                  Text("tets")
-                ]),
-              )
-            )
+            child: GridView.count(
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 3,
+              children: const [
+                TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+                TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+                TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+                TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+                TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+                TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+                TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+                TileWidget(title: "coffee vanila latte", price: "Rp.20000")
+              ]
+            ),
           )
       ]);
   }
 }
+
+
+            //     CustomScrollView(
+                  
+            //   primary: true,
+            //   slivers: <Widget>[
+            //     SliverPadding(
+            //       padding: const EdgeInsets.all(20),
+            //       sliver: SliverGrid.count(
+            //         crossAxisSpacing: 10,
+            //         mainAxisSpacing: 10,
+            //         crossAxisCount: 4,
+            //         children: [
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+            //         ]
+            //       )
+            //     )
+            //   ]
+            // )
