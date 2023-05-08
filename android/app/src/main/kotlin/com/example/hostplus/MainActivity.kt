@@ -1,4 +1,4 @@
-package com.example.puralaflutter
+package com.example.purala
 
 import io.flutter.embedding.android.FlutterActivity
 

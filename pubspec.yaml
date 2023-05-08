@@ -41,6 +41,7 @@ dependencies:
       url: git@github.com:darkstarx/charts.git
       path: charts_flutter
       ref: master
+  qr_code_scanner: ^1.0.1
 
 dev_dependencies:
   flutter_test:

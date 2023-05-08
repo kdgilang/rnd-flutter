@@ -9,19 +9,21 @@ class TileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: Theme.of(context).primaryColor,
+    return Card(
+      color: Theme.of(context).primaryColor,
       shape:  RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
-          //set border radius more than 50% of height and width to make circle
       ),
-      leading: const FlutterLogo(size: 30.0),
-      title: Text(
-        title, 
-        style: const TextStyle(fontWeight: FontWeight.bold),
+      child: ListTile(
+        contentPadding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+        leading: const FlutterLogo(size: 30.0),
+        title: Text(
+          title, 
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(price),
+        onTap: () {},
       ),
-      subtitle: Text(price),
-      onTap: () {}
     );
   }
 }

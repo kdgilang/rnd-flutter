@@ -16,12 +16,14 @@ class SigninScreen extends StatelessWidget {
         foregroundColor: Theme.of(context).textTheme.bodyText1!.color,
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text("Sign in"),
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
+          color: Theme.of(context).textTheme.bodyText1!.color,
           fontWeight: FontWeight.bold,
           fontSize: 18
         ),
       ),
       body: Container(
+        padding: const EdgeInsets.all(20),
         height: double.infinity,
         width: double.infinity,
         alignment: Alignment.center,
@@ -68,12 +70,12 @@ class _SigninWidgetState extends State<SigninWidget> {
             children: [
               TextFormField(
                 controller: memberControl,
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
+                decoration: InputDecoration(
+                  border: const UnderlineInputBorder(),
                   labelText: 'Email address',
-                  floatingLabelStyle: TextStyle(color: Colors.white),
+                  // floatingLabelStyle: TextStyle(color: Colors.white),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 1.0)
+                    borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
                   )
                 ),
                 validator: (String? value) {
@@ -94,12 +96,12 @@ class _SigninWidgetState extends State<SigninWidget> {
                 obscureText: true,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
+                decoration: InputDecoration(
+                  border: const UnderlineInputBorder(),
                   labelText: 'Password',
-                  floatingLabelStyle: TextStyle(color: Colors.white),
+                  // floatingLabelStyle: TextStyle(color: Colors.white),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 1.0)
+                    borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
                   )
                 ),
                 validator: (String? value) {
