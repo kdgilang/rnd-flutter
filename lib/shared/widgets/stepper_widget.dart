@@ -85,7 +85,7 @@ class Stepper2State extends State<StepperWidget> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return FittedBox(
-      child: Container(
+      child: SizedBox(
         width: widget.direction == Axis.horizontal ? 350.0 : 130.0,
         height: widget.direction == Axis.horizontal ? 130.0 : 350.0,
         child: Material(
@@ -131,10 +131,11 @@ class Stepper2State extends State<StepperWidget> with SingleTickerProviderStateM
                     child: Center(
                       child: AnimatedSwitcher(
                         duration: const Duration(milliseconds: 200),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
+                        transitionBuilder: (Widget child, Animation<double> animation) {
                           return ScaleTransition(
-                              child: child, scale: animation);
+                            scale: animation,
+                            child: child
+                          );
                         },
                         child: Text(
                           '$_value',

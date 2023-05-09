@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:purala/constants/color_constants.dart';
 
 class TileWidget extends StatelessWidget {
   const TileWidget({super.key, required this.title, required this.price, this.isDisabled = false, this.hasPadding = true });

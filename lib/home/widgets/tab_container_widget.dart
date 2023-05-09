@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:purala/constants/color_constants.dart';
 import 'package:purala/shared/widgets/heading_widget.dart';
 
 class TabContainerWidget extends StatelessWidget {

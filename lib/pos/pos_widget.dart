@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:purala/constants/color_constants.dart';
 import 'package:purala/pos/widgets/search_widget.dart';
 import 'package:purala/pos/widgets/sidebar_widget.dart';
 

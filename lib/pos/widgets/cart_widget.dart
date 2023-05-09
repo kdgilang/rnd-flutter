@@ -13,12 +13,11 @@ class CartWidget extends StatelessWidget {
       elevation: 4,
       shadowColor: Colors.black12,
       color: Theme.of(context).primaryColor,
-      child: Container(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Padding(
         padding: const EdgeInsets.all(20),
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-        ),
         child: Column(
           children: [
             Expanded(

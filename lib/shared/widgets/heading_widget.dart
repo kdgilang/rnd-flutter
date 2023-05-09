@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:purala/constants/color_constants.dart';
 
 class HeadingWidget extends StatelessWidget {
   const HeadingWidget({super.key, required this.title, this.subtitle});

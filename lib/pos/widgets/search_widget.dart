@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:purala/constants/color_constants.dart';
-import 'package:purala/pos/widgets/scanner_widget.dart';
 import 'package:purala/shared/widgets/stepper_widget.dart';
 import 'package:purala/shared/widgets/tile_widget.dart';
 
@@ -23,19 +21,22 @@ class SearchWidget extends StatelessWidget {
         child: Column(
         children: [
             Expanded(
-              flex: 1,
-              child: Card(
+              flex: 2,
+              child: Material(
                 elevation: 4,
                 shadowColor: Colors.black12,
                 color: Theme.of(context).primaryColor,
+                shape:  RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
                 child:  Padding(
                   padding: const EdgeInsets.all(20),
                   child: TextFormField(
                     decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
+                      border: OutlineInputBorder(),
                       hintText: 'Search products by name or code.',
                       floatingLabelStyle: TextStyle(color: Colors.white),
-                      focusedBorder: UnderlineInputBorder(
+                      focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white, width: 1.0)
                       )
                     ),

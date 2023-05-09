@@ -12,12 +12,11 @@ class ActionWidget extends StatelessWidget {
       elevation: 4,
       shadowColor: Colors.black12,
       color: Theme.of(context).primaryColor,
-      child: Container(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Padding(
         padding: const EdgeInsets.all(20),
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5))
-        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -25,10 +24,10 @@ class ActionWidget extends StatelessWidget {
               child: TextFormField(
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                border: UnderlineInputBorder(),
+                border: OutlineInputBorder(),
                 hintText: 'Cash...',
                 floatingLabelStyle: TextStyle(color: Colors.white),
-                focusedBorder: UnderlineInputBorder(
+                focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.white, width: 1.0)
                 )
               ),
@@ -69,7 +68,7 @@ class ActionWidget extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            return AlertDialog(
+                            return const AlertDialog(
                               // Retrieve the text that the user has entered by using the
                               // TextEditingController.
                               content: Text("Test"),
