@@ -14,7 +14,7 @@ class SearchWidget extends StatelessWidget {
     return Row(children: [
       Expanded(
         flex: 3,
-        child: StepperTouch(initialValue: 0, onChanged: (val) {},),
+        child: StepperWidget(initialValue: 0, onChanged: (val) {},),
         // child: QRViewExample(),
       ),
       const SizedBox(width: 20,),

@@ -5,13 +5,13 @@ import 'package:purala/shared/widgets/heading_widget.dart';
 class TabContainerWidget extends StatelessWidget {
   const TabContainerWidget({
     super.key,
-    required this.title,
-    this.subtitle,
+    this.title = "",
+    this.subtitle = "",
     required this.child
   });
 
   final String title;
-  final String? subtitle;
+  final String subtitle;
   final Widget child;
 
   @override
@@ -24,7 +24,8 @@ class TabContainerWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          HeadingWidget(title: title, subtitle: subtitle),
+          if (title.isNotEmpty && subtitle.isNotEmpty)
+            HeadingWidget(title: title, subtitle: subtitle),
           
           Expanded(
             child: child,

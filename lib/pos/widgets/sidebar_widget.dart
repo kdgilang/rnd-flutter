@@ -14,12 +14,19 @@ class SidebarWidget extends StatelessWidget {
     return  Column(
         children: const [
           Expanded(
+            flex: 6,
             child: CartWidget()
           ),
           SizedBox(height: 10,),
-          TotalWidget(),
+          Expanded(
+            flex: 2,
+            child: TotalWidget(),
+          ),
           SizedBox(height: 10,),
-          ActionWidget()
+          Expanded(
+            flex: 2,
+            child: ActionWidget(),
+          ),
         ],
       );
   }

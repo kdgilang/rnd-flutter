@@ -19,7 +19,8 @@ class TotalWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
              Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -27,20 +28,18 @@ class TotalWidget extends StatelessWidget {
               Text("Subtotal:"),
               Text("Rp.20000000")
             ]),
-            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
               Text("Tax:"),
               Text("Rp.20000")
             ]),
-            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
               Text("Discount:"),
               Text("Rp.200000000")
-            ])
+            ]),
           ],
         ),
       )

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 
-class StepperTouch extends StatefulWidget {
-  const StepperTouch({
+class StepperWidget extends StatefulWidget {
+  const StepperWidget({
     super.key,
-    required this.initialValue,
+    this.initialValue,
+    this.maxValue,
     required this.onChanged,
     this.direction = Axis.horizontal,
     this.withSpring = true,
@@ -15,7 +16,9 @@ class StepperTouch extends StatefulWidget {
   final Axis direction;
 
   /// the initial value of the stepper
-  final int initialValue;
+  final int? initialValue;
+
+  final int? maxValue;
 
   /// called whenever the value of the stepper changed
   final ValueChanged<int> onChanged;
@@ -31,7 +34,7 @@ class StepperTouch extends StatefulWidget {
 }
 
 
-class Stepper2State extends State<StepperTouch> with SingleTickerProviderStateMixin {
+class Stepper2State extends State<StepperWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;
   late int _value;
@@ -60,7 +63,7 @@ class Stepper2State extends State<StepperTouch> with SingleTickerProviderStateMi
   
   @override
   void dispose() {
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -83,8 +86,8 @@ class Stepper2State extends State<StepperTouch> with SingleTickerProviderStateMi
   Widget build(BuildContext context) {
     return FittedBox(
       child: Container(
-        width: widget.direction == Axis.horizontal ? 280.0 : 120.0,
-        height: widget.direction == Axis.horizontal ? 120.0 : 280.0,
+        width: widget.direction == Axis.horizontal ? 350.0 : 130.0,
+        height: widget.direction == Axis.horizontal ? 130.0 : 350.0,
         child: Material(
           type: MaterialType.canvas,
           clipBehavior: Clip.antiAlias,
@@ -96,14 +99,22 @@ class Stepper2State extends State<StepperTouch> with SingleTickerProviderStateMi
               Positioned(
                 left: widget.direction == Axis.horizontal ? 10.0 : null,
                 bottom: widget.direction == Axis.horizontal ? null : 10.0,
-                child: const Icon(Icons.remove, size: 40.0, color: Colors.white),
+                child: IconButton(
+                  iconSize: 50,
+                  onPressed: () {
+                    _onCalculate('min');
+                  },
+                  icon: const Icon(Icons.remove)
+                ),
               ),
               Positioned(
                 right: widget.direction == Axis.horizontal ? 10.0 : null,
                 top: widget.direction == Axis.horizontal ? null : 10.0,
                 child: IconButton(
-                  // alignment: Alignment.center,
-                  onPressed: () {  },
+                  iconSize: 50,
+                  onPressed: () {
+                    _onCalculate('plus');
+                  },
                   icon: const Icon(Icons.add)
                 ),
               ),
@@ -119,7 +130,7 @@ class Stepper2State extends State<StepperTouch> with SingleTickerProviderStateMi
                     elevation: 5.0,
                     child: Center(
                       child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 200),
                         transitionBuilder:
                             (Widget child, Animation<double> animation) {
                           return ScaleTransition(
@@ -166,18 +177,36 @@ class Stepper2State extends State<StepperTouch> with SingleTickerProviderStateMi
     _controller.value = offsetFromGlobalPos(details.globalPosition);
   }
 
+  void _onCalculate(String type) {
+
+    if (type == 'plus') {
+      int maxValue = widget.maxValue ?? 500;
+
+      if (_value >= maxValue) return;
+
+      setState(() => _value++);
+    } else {
+
+      if (_value < 1) return;
+
+      setState(() => _value--);
+    }
+    
+    widget.onChanged(_value);
+  }
   
   void _onPanEnd(DragEndDetails details) {
     _controller.stop();
     bool isHor = widget.direction == Axis.horizontal;
-    bool changed = false;
-    if (_controller.value <= -0.20) {
-      setState(() => isHor ? _value-- : _value++);
-      changed = true;
-    } else if (_controller.value >= 0.20) {
-      setState(() => isHor ? _value++ : _value--);
-      changed = true;
+
+    if (isHor) {
+      if (_controller.value <= -0.20) {
+        _onCalculate('min');
+      } else if (_controller.value >= 0.20) {
+        _onCalculate('plus');
+      } 
     }
+
     if (widget.withSpring) {
       final SpringDescription kDefaultSpring = SpringDescription.withDampingRatio(
         mass: 0.9,
@@ -194,10 +223,6 @@ class Stepper2State extends State<StepperTouch> with SingleTickerProviderStateMi
     } else {
       _controller.animateTo(0.0,
           curve: Curves.bounceOut, duration: const Duration(milliseconds: 500));
-    }
-
-    if (changed) {
-      widget.onChanged(_value);
     }
   }
 }
