@@ -10,23 +10,23 @@ class SidebarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
-        children: const [
-          Expanded(
-            flex: 6,
-            child: CartWidget()
-          ),
-          SizedBox(height: 10,),
-          Expanded(
-            flex: 2,
-            child: TotalWidget(),
-          ),
-          SizedBox(height: 10,),
-          Expanded(
-            flex: 2,
-            child: ActionWidget(),
-          ),
-        ],
-      );
+    return Column(
+      children: const [
+        Expanded(
+          flex: 6,
+          child: CartWidget()
+        ),
+        SizedBox(height: 10,),
+        Expanded(
+          flex: 2,
+          child: TotalWidget(),
+        ),
+        SizedBox(height: 10,),
+        Expanded(
+          flex: 2,
+          child: ActionWidget(),
+        ),
+      ],
+    );
   }
 }

@@ -97,8 +97,8 @@ class Stepper2State extends State<StepperWidget> with SingleTickerProviderStateM
             alignment: Alignment.center,
             children: <Widget>[
               Positioned(
-                left: widget.direction == Axis.horizontal ? 10.0 : null,
-                bottom: widget.direction == Axis.horizontal ? null : 10.0,
+                left: widget.direction == Axis.horizontal ? 20.0 : null,
+                bottom: widget.direction == Axis.horizontal ? null : 20.0,
                 child: IconButton(
                   iconSize: 50,
                   onPressed: () {
@@ -108,8 +108,8 @@ class Stepper2State extends State<StepperWidget> with SingleTickerProviderStateM
                 ),
               ),
               Positioned(
-                right: widget.direction == Axis.horizontal ? 10.0 : null,
-                top: widget.direction == Axis.horizontal ? null : 10.0,
+                right: widget.direction == Axis.horizontal ? 20.0 : null,
+                top: widget.direction == Axis.horizontal ? null : 20.0,
                 child: IconButton(
                   iconSize: 50,
                   onPressed: () {
