@@ -71,7 +71,6 @@ class HomeScreen extends StatelessWidget {
         body: TabBarView(
           children: [ 
             const TabContainerWidget(
-              title: "",
               child: PosWidget()
             ),
             TabContainerWidget(

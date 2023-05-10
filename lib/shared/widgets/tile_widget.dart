@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class TileWidget extends StatelessWidget {
-  const TileWidget({super.key, required this.title, required this.price, this.isDisabled = false, this.hasPadding = true });
+  const TileWidget({super.key, required this.title, required this.subtitle, this.isDisabled = false, this.hasPadding = true });
 
   final String title;
-  final String price;
+  final String subtitle;
   final bool isDisabled;
   final bool hasPadding;
 
@@ -22,7 +22,7 @@ class TileWidget extends StatelessWidget {
           title, 
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(price),
+        subtitle: Text(subtitle),
         onTap: isDisabled ? null : () {},
       ),
     );

@@ -46,7 +46,7 @@ class SearchWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: 10,
                       itemBuilder: (context, index) {
-                        return TextButton(
+                        return Center(child: TextButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             foregroundColor: Theme.of(context).textTheme.bodyText1!.color,
@@ -56,7 +56,7 @@ class SearchWidget extends StatelessWidget {
                           onPressed: () {
                           },
                           child: const Text('pay'),
-                        );
+                        ));
                       },
                       separatorBuilder: (context, index) {
                         return const VerticalDivider();
@@ -78,31 +78,31 @@ class SearchWidget extends StatelessWidget {
             mainAxisSpacing: 10,
             crossAxisCount: 3,
             children: const [
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
 
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
 
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
 
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
 
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
 
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
 
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
 
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
 
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
 
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
 
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000"),
 
-              TileWidget(title: "coffee vanila latte", price: "Rp.20000")
+              TileWidget(title: "coffee vanila latte", subtitle: "Rp.20000")
             ]
           ),
         )
@@ -110,53 +110,3 @@ class SearchWidget extends StatelessWidget {
     );
   }
 }
-
-
-            //     CustomScrollView(
-                  
-            //   primary: true,
-            //   slivers: <Widget>[
-            //     SliverPadding(
-            //       padding: const EdgeInsets.all(20),
-            //       sliver: SliverGrid.count(
-            //         crossAxisSpacing: 10,
-            //         mainAxisSpacing: 10,
-            //         crossAxisCount: 4,
-            //         children: [
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-            //           TileWidget(title: "coffee vanila latte", price: "Rp.20000"),
-            //         ]
-            //       )
-            //     )
-            //   ]
-            // )
