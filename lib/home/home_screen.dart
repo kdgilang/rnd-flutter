@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
           backgroundColor: Theme.of(context).primaryColor,
           title: Center(
             child: Image.asset(
-              "assets/icons/hp_logo_blue.png",
+              "assets/icons/purala-logo.png",
               width: 30,
               height: 30,
             )

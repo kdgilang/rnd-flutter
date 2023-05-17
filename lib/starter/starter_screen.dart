@@ -14,7 +14,6 @@ class StarterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: ColorConstants.primary,
         height: double.infinity,
         width: double.infinity,
         alignment: Alignment.center,
@@ -47,7 +46,7 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
 
   late final Animation<Offset> _offsetAnimation = Tween<Offset>(
     begin: Offset.zero,
-    end: const Offset(0.0, -2.5),
+    end: const Offset(0.0, -1.5),
   ).animate(CurvedAnimation(
     parent: _controller,
     curve: Curves.linearToEaseOut,
@@ -67,9 +66,10 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
         SlideTransition(
           position: _offsetAnimation,
           child: Image.asset(
-            "${PathConstants.iconsPath}/launch_icon.png",
+            "${PathConstants.iconsPath}/purala-square-logo.png",
             fit: BoxFit.contain,
-            height: 80,
+            height: 120,
+            width: 120,
           ),
         ),
         ButtonsWidget(isVisible: isButtonsVisible)
@@ -85,7 +85,7 @@ class ButtonsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        return  AnimatedOpacity(
+    return AnimatedOpacity(
       opacity: isVisible ? 1.0 : 0.0,
       duration: const Duration(milliseconds: 500),
       child: Column(

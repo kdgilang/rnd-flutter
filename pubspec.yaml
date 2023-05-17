@@ -76,6 +76,8 @@ flutter:
     - .env
     - assets/icons/hp_logo_blue.png
     - assets/icons/launch_icon.png
+    - assets/icons/purala-square-logo.png
+    - assets/icons/purala-logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

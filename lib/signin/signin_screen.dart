@@ -67,12 +67,12 @@ class _SigninWidgetState extends State<SigninWidget> {
         children: [
           Center(
             child: Image.asset(
-              "assets/icons/launch_icon.png",
-              width: 30,
-              height: 30,
+              "assets/icons/purala-square-logo.png",
+              width: 100,
+              height: 100,
             ),
           ),
-          const SizedBox(height: 20,),
+          const SizedBox(height: 10,),
           Visibility(
             visible: isBusy,
             maintainSize: true, 
