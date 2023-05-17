@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/starter/starter_screen.dart';
 import 'package:purala/routes.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+Future<void> main() async {
+  await Supabase.initialize(
+    url: 'https://mavedekqbwcpovnyaxpq.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1hdmVkZWtxYndjcG92bnlheHBxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODQzMzAzMjAsImV4cCI6MTk5OTkwNjMyMH0.RXOXRCrgbfIx1LfLlskqDvDJw6CVg-UqNYiQRMeu5ww',
+  );
+
   runApp(const MyApp());
 }
 

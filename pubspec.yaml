@@ -43,6 +43,7 @@ dependencies:
       ref: master
   qr_code_scanner: ^1.0.1
   supabase_flutter: ^1.9.2
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
