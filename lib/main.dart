@@ -3,11 +3,14 @@ import 'package:purala/constants/color_constants.dart';
 import 'package:purala/starter/starter_screen.dart';
 import 'package:purala/routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
+  await dotenv.load(fileName: ".env");
+
   await Supabase.initialize(
-    url: 'https://mavedekqbwcpovnyaxpq.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1hdmVkZWtxYndjcG92bnlheHBxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODQzMzAzMjAsImV4cCI6MTk5OTkwNjMyMH0.RXOXRCrgbfIx1LfLlskqDvDJw6CVg-UqNYiQRMeu5ww',
+    url: dotenv.env['SUPABASE_API_HOST'] ?? "",
+    anonKey: dotenv.env['SUPABASE_API_KEY'] ?? "",
   );
 
   runApp(const MyApp());
