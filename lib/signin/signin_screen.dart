@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/home/home_screen.dart';
+import 'package:purala/providers/user_provider.dart';
 import 'package:purala/validations/email_validation.dart';
 import 'package:purala/validations/password_validation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -160,8 +161,7 @@ class _SigninWidgetState extends State<SigninWidget> {
                         password: passwordControl.text,
                       );
 
-                      final Session? session = res.session;
-                      final User? user = res.user;
+                      UserProvider.setAuth(res.user, res.session);
 
                       if (context.mounted) {
                         Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (_) => false);

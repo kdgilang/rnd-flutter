@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:purala/providers/user_provider.dart';
 import 'package:purala/shared/widgets/charts/line_chart_widget.dart';
 import 'package:purala/shared/widgets/charts/pie_chart_widget.dart';
 import 'package:purala/home/widgets/tab_container_widget.dart';
@@ -27,7 +28,7 @@ class HomeScreen extends StatelessWidget {
             )
           ),
           leading: Builder(builder: (context) => IconButton(
-              color: Theme.of(context).textTheme.bodyText1!.color,
+              color: Theme.of(context).textTheme.bodyLarge!.color,
               iconSize: 30.0,
               icon: const Icon(Icons.menu),
               onPressed: () {
@@ -74,7 +75,7 @@ class HomeScreen extends StatelessWidget {
               child: PosWidget()
             ),
             TabContainerWidget(
-              title: "Statistic",
+              title: UserProvider.getUser()?.email ?? "",
               subtitle: "Angus, your super has changed since you joined",
               child: LineChartWidget.withSampleData()
             ),
