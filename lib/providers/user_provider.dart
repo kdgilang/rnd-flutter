@@ -16,4 +16,18 @@ class UserProvider {
   static Session? getSession() {
     return _session;
   }
+
+  static bool isValidUser() {
+    final expToken = _session!.expiresAt ?? 0;
+    
+    if (expToken == 0) {
+      return false;
+    }
+
+    final dateNow = DateTime.now();
+    var tokenExp = DateTime.fromMillisecondsSinceEpoch(expToken * 1000);
+    var diffDate = tokenExp.difference(dateNow);
+    
+    return !diffDate.isNegative;
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:purala/shared/widgets/stepper_widget.dart';
-import 'package:purala/shared/widgets/tile_widget.dart';
+import 'package:purala/widgets/stepper_widget.dart';
+import 'package:purala/widgets/tile_widget.dart';
 
 class CartItemWidget extends StatelessWidget {
   const CartItemWidget({super.key});

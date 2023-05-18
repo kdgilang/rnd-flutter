@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:purala/shared/widgets/heading_widget.dart';
+import 'package:purala/widgets/heading_widget.dart';
 
 class TabContainerWidget extends StatelessWidget {
   const TabContainerWidget({

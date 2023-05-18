@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:purala/constants/color_constants.dart';
-import 'package:purala/pos/widgets/cart_item_widget.dart';
+import 'package:purala/widgets/tile_widget.dart';
 
-class CartWidget extends StatelessWidget {
-  const CartWidget({super.key});
+class StockWidget extends StatelessWidget {
+  const StockWidget({super.key});
   
   final bool isButtonsVisible = false;
 
@@ -27,21 +26,7 @@ class CartWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Order summary", style: Theme.of(context).textTheme.headlineSmall,),
-                  TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      foregroundColor: ColorConstants.tertiary,
-                      padding: EdgeInsets.zero,
-                      textStyle: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      )
-                    ),
-                    child: const Text(
-                      "Clear all"
-                    ),
-                  ),
+                  Text("Stock reminder", style: Theme.of(context).textTheme.titleMedium,),
                 ],
               )
             ),
@@ -51,7 +36,7 @@ class CartWidget extends StatelessWidget {
                 shrinkWrap: true,
                 itemCount: 10,
                 itemBuilder: (context, index) {
-                  return const CartItemWidget();
+                  return const TileWidget(title: "test", subtitle: "price",);
                 },
                 separatorBuilder: (context, index) {
                   return const Divider();
