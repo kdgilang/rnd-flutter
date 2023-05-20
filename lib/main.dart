@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:purala/constants/color_constants.dart';
+import 'package:purala/models/files_related.morphs.dart';
 import 'package:purala/starter/starter_screen.dart';
 import 'package:purala/routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,6 +15,27 @@ Future<void> main() async {
     url: dotenv.env['SUPABASE_API_URL'] ?? "",
     anonKey: dotenv.env['SUPABASE_API_KEY'] ?? "",
   );
+
+
+  final supabase = Supabase.instance.client;
+
+  var data = await supabase
+  .from('merchants')
+  .select("*")
+  .eq('id', dotenv.env['MERCHANT_ID']);
+
+  final morphRes = await supabase
+  .from('files_related_morphs')
+  .select('*')
+  .eq('related_id', dotenv.env['MERCHANT_ID'])
+  .eq('related_type', 'api::merchant.merchant').maybeSingle();
+
+  final morphs = FilesRelatedMorphs.fromJson(morphRes);
+
+  final file = await supabase
+  .from('files')
+  .select('id, name, caption, url')
+  .eq('id', morphs.fileId).maybeSingle();
 
   runApp(const MyApp());
 }
