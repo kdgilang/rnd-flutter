@@ -1,4 +1,4 @@
-class FilesRelatedMorphs {
+class FilesRelatedMorphsModel {
   final int id;
   final int fileId;
   final int relatedId;
@@ -6,7 +6,7 @@ class FilesRelatedMorphs {
   final String field;
   final int order;
 
-  const FilesRelatedMorphs({
+  const FilesRelatedMorphsModel({
     required this.id,
     required this.fileId,
     required this.relatedId,
@@ -15,8 +15,8 @@ class FilesRelatedMorphs {
     required this.order
   });
 
-  factory FilesRelatedMorphs.fromJson(Map<String, dynamic> json) {
-    return FilesRelatedMorphs(
+  factory FilesRelatedMorphsModel.fromJson(Map<String, dynamic> json) {
+    return FilesRelatedMorphsModel(
       id: json['id'],
       fileId: json['file_id'],
       relatedId: json['related_id'],
