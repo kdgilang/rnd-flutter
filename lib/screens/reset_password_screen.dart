@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/constants/path_constants.dart';
-import 'package:purala/home/home_screen.dart';
 import 'package:purala/providers/merchant_provider.dart';
-import 'package:purala/providers/user_provider.dart';
-import 'package:purala/screens/reset_password_screen.dart';
+import 'package:purala/signin/signin_screen.dart';
 import 'package:purala/validations/email_validation.dart';
-import 'package:purala/validations/password_validation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class SigninScreen extends StatelessWidget {
-  const SigninScreen({super.key});
+class ResetPasswordScreen extends StatelessWidget {
+  const ResetPasswordScreen({super.key});
 
-  static const String routeName = "/signin";
-  
-  final bool isButtonsVisible = false;
+  static const String routeName = "/reset-password";
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +18,7 @@ class SigninScreen extends StatelessWidget {
       appBar: AppBar(
         foregroundColor: Theme.of(context).textTheme.bodyLarge!.color,
         backgroundColor: Theme.of(context).primaryColor,
-        title: const Text("Sign in"),
+        title: const Text("Reset password"),
         titleTextStyle: TextStyle(
           color: Theme.of(context).textTheme.bodyLarge!.color,
           fontWeight: FontWeight.bold,
@@ -35,23 +30,22 @@ class SigninScreen extends StatelessWidget {
         height: double.infinity,
         width: double.infinity,
         alignment: Alignment.center,
-        child: const SigninWidget()
+        child: const ResetPasswordWidget()
       ),
     );
   }
 }
 
-class SigninWidget extends StatefulWidget {
-  const SigninWidget({super.key});
+class ResetPasswordWidget extends StatefulWidget {
+  const ResetPasswordWidget({super.key});
 
   @override
-  State<SigninWidget> createState() => _SigninWidgetState();
+  State<ResetPasswordWidget> createState() => _ResetPasswordWidgetState();
 }
 
-class _SigninWidgetState extends State<SigninWidget> {
+class _ResetPasswordWidgetState extends State<ResetPasswordWidget> {
   bool isBusy = false;
   final emailControl = TextEditingController();
-  final passwordControl = TextEditingController();
   final supabase = Supabase.instance.client;
   final _formKey = GlobalKey<FormState>();
   final merchant = MerchantProvider.get();
@@ -102,50 +96,13 @@ class _SigninWidgetState extends State<SigninWidget> {
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     labelText: 'Email address',
-                    // floatingLabelStyle: TextStyle(color: Colors.white),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
                     )
                   ),
                   validator: EmailValidation.validateEmail,
                 ),
-                const SizedBox(height: 10,),
-                TextFormField(
-                  controller: passwordControl,
-                  obscureText: true,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: InputDecoration(
-                    border: const UnderlineInputBorder(),
-                    labelText: 'Password',
-                    // floatingLabelStyle: TextStyle(color: Colors.white),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
-                    )
-                  ),
-                  validator: PasswordValidation.validateRegisterPassword,
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, ResetPasswordScreen.routeName);
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: ColorConstants.tertiary,
-                      padding: EdgeInsets.zero,
-                      textStyle: const TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      )
-                    ),
-                    child: const Text(
-                      "Forgot your password?"
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20,),
+                const SizedBox(height: 40,),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: ColorConstants.secondary,
@@ -157,8 +114,8 @@ class _SigninWidgetState extends State<SigninWidget> {
                       fontSize: 18.0,
                     )
                   ),
-                  onPressed: _onSingin,
-                  child: const Text('Sign in'),
+                  onPressed: _onSendEmail,
+                  child: const Text('Send email'),
                 ),
               ],
             )
@@ -168,7 +125,7 @@ class _SigninWidgetState extends State<SigninWidget> {
     );
   }
 
-  Future<void> _onSingin () async {
+  Future<void> _onSendEmail() async {
     if (!_formKey.currentState!.validate() || isBusy) {
       return;
     }
@@ -178,15 +135,27 @@ class _SigninWidgetState extends State<SigninWidget> {
     });
 
     try {
-      final AuthResponse res = await supabase.auth.signInWithPassword(
-        email: emailControl.text,
-        password: passwordControl.text,
-      );
+     final test = await supabase.auth.resetPasswordForEmail(emailControl.text);
 
-      UserProvider.setAuth(res.user, res.session);
-
-      if (context.mounted) {
-        Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (_) => false);
+      if(context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  const Text("Reset link sent, please check your email."),
+                  const SizedBox(height: 20,),
+                  TextButton(onPressed: () { 
+                    Navigator.pop(context, SigninScreen.routeName);
+                  }, child: const Text("ok"))
+                ],
+              ),
+            );
+          },
+        );
       }
     } on Exception catch (e) {
       showDialog(

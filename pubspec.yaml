@@ -45,6 +45,7 @@ dependencies:
   supabase_flutter: ^1.9.2
   flutter_dotenv: ^5.0.2
   loading_animation_widget:
+  url_launcher: ^6.1.11
 
 dev_dependencies:
   flutter_test:

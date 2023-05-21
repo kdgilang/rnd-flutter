@@ -6,6 +6,7 @@ import 'package:purala/home/widgets/tab_container_widget.dart';
 import 'package:purala/home/widgets/tab_items_widget.dart';
 import 'package:purala/pos/pos_widget.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -63,6 +64,7 @@ class HomeScreen extends StatelessWidget {
                 ListTile(
                   title: const Text('Sign out'),
                   onTap: () {
+                    Supabase.instance.client.auth.signOut();
                     Navigator.pushNamedAndRemoveUntil(context, StarterScreen.routeName, (_) => false);
                   },
                 )

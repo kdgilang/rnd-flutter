@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/files_related_morphs_model.dart';
 import 'package:purala/models/media_model.dart';
+import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/merchant_repository.dart';
 import 'package:purala/starter/starter_screen.dart';
 import 'package:purala/routes.dart';
@@ -19,8 +20,9 @@ Future<void> main() async {
   );
 
   final merchantRepository = MerchantRepository();
-
   var merchant = await merchantRepository.getOne(int.parse(dotenv.env['MERCHANT_ID'] ?? ""));
+  MerchantProvider.set(merchant);
+  
   runApp(const MyApp());
 }
 

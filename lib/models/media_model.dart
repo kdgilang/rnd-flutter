@@ -2,14 +2,14 @@ class MediaModel {
   final int id;
   final String name;
   final String? caption;
-  final Uri imageUrl;
-  final Uri thumbnailUrl;
+  final String url;
+  final String thumbnailUrl;
 
   const MediaModel({
     required this.id,
     required this.name,
     this.caption,
-    required this.imageUrl,
+    required this.url,
     required this.thumbnailUrl
   });
 
@@ -18,8 +18,8 @@ class MediaModel {
       id: json['id'],
       name: json['name'],
       caption: json['caption'],
-      imageUrl: Uri.parse(json['url']),
-      thumbnailUrl: Uri.parse(json['formats']['thumbnail']['url'])
+      url: json['url'],
+      thumbnailUrl: json['formats']['thumbnail']['url']
     );
   }
 }

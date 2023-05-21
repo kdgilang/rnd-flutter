@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/constants/path_constants.dart';
+import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/signin/signin_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StarterScreen extends StatelessWidget {
   const StarterScreen({super.key});
@@ -17,9 +19,43 @@ class StarterScreen extends StatelessWidget {
         height: double.infinity,
         width: double.infinity,
         alignment: Alignment.center,
-        child: const StarterWidget()
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Expanded(
+              flex: 9,
+              child: StarterWidget()
+            ),
+            Expanded(
+              flex: 1,
+              child: Flex(
+                mainAxisAlignment: MainAxisAlignment.center,
+                direction: Axis.horizontal,
+                children: [
+                  const Text("powered by"),
+                  TextButton(
+                    onPressed: _launchUrl,
+                    child: const Text(
+                      "Purala",
+                      style: TextStyle(color: ColorConstants.secondary),
+                    )
+                  )
+                ]
+              ),
+            )
+          ],
+        )
       ),
     );
+  }
+
+  Future<void> _launchUrl() async {
+    final Uri uri = Uri.parse('https://github.com/kdgilang');
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
+    }
   }
 }
 
@@ -33,6 +69,7 @@ class StarterWidget extends StatefulWidget {
 class _StarterWidgetState extends State<StarterWidget> with SingleTickerProviderStateMixin {
 
   bool isButtonsVisible = false;
+  final merchant = MerchantProvider.get();
 
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 400),
@@ -65,7 +102,12 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
       children: [
         SlideTransition(
           position: _offsetAnimation,
-          child: Image.asset(
+          child: merchant?.media?.url != null ? Image.network(
+             merchant?.media?.url ?? "",
+            fit: BoxFit.contain,
+            height: 120,
+            width: 120,
+          ) : Image.asset(
             "${PathConstants.iconsPath}/purala-square-logo.png",
             fit: BoxFit.contain,
             height: 120,
@@ -108,21 +150,21 @@ class ButtonsWidget extends StatelessWidget {
             },
             child: const Text('Sign in'),
           ),
-          // const SizedBox(height: 20,),
-          // OutlinedButton(
-          //   style: OutlinedButton.styleFrom(
-          //     foregroundColor: Colors.white,
-          //     side: const BorderSide(color: Colors.white, width: 1),
-          //     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
-          //     minimumSize: const Size(280, 0),
-          //     textStyle: const TextStyle(
-          //       fontWeight: FontWeight.bold,
-          //       fontSize: 18.0,
-          //     )
-          //   ),
-          //   onPressed: () {},
-          //   child: const Text('Register'),
-          // ),
+          const SizedBox(height: 20,),
+          OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.white,
+              side: const BorderSide(color: Colors.white, width: 1),
+              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
+              minimumSize: const Size(280, 0),
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18.0,
+              )
+            ),
+            onPressed: () {},
+            child: const Text('Add User'),
+          ),
         ],
       ),
     );

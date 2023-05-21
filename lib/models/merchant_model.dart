@@ -4,21 +4,20 @@ import 'package:purala/models/media_model.dart';
 class MerchantModel extends BaseModel {
   final String name;
   final String? description;
-  final MediaModel? media;
+  MediaModel? media;
 
-  const MerchantModel({
+  MerchantModel({
     required super.id,
     required this.name,
     this.description,
     this.media
   });
 
-  factory MerchantModel.fromJson(Map<String, dynamic> merchant, Map<String, dynamic> media) {
+  factory MerchantModel.fromJson(Map<String, dynamic> merchant) {
     return MerchantModel(
       id: merchant['id'],
       name: merchant['name'],
       description: merchant['description'],
-      media: MediaModel.fromJson(media)
     );
   }
 }
