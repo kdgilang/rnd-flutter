@@ -135,7 +135,7 @@ class _ResetPasswordWidgetState extends State<ResetPasswordWidget> {
     });
 
     try {
-     final test = await supabase.auth.resetPasswordForEmail(emailControl.text);
+     await supabase.auth.resetPasswordForEmail(emailControl.text);
 
       if(context.mounted) {
         showDialog(
