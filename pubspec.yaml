@@ -46,6 +46,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   loading_animation_widget:
   url_launcher: ^6.1.11
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:
