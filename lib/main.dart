@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/providers/merchant_provider.dart';
+import 'package:purala/providers/session_provider.dart';
+import 'package:purala/providers/user_provider.dart';
 import 'package:purala/repositories/merchant_repository.dart';
 import 'package:purala/starter/starter_screen.dart';
 import 'package:purala/routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
@@ -14,12 +17,17 @@ Future<void> main() async {
     url: dotenv.env['SUPABASE_API_URL'] ?? "",
     anonKey: dotenv.env['SUPABASE_API_KEY'] ?? "",
   );
-
-  final merchantRepository = MerchantRepository();
-  var merchant = await merchantRepository.getOne(int.parse(dotenv.env['MERCHANT_ID'] ?? ""));
-  MerchantProvider.set(merchant);
   
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => SessionProvider()),
+        ChangeNotifierProvider(create: (_) => MerchantProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -74,7 +82,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const StarterScreen(),
-      routes: routes,
+      routes: routes
     );
   }
 }

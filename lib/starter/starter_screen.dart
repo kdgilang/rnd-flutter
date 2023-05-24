@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/constants/path_constants.dart';
+import 'package:purala/models/merchant_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
+import 'package:purala/repositories/merchant_repository.dart';
 import 'package:purala/signin/signin_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -9,8 +13,6 @@ class StarterScreen extends StatelessWidget {
   const StarterScreen({super.key});
 
   static const String routeName = "/starter";
-  
-  final bool isButtonsVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +71,9 @@ class StarterWidget extends StatefulWidget {
 class _StarterWidgetState extends State<StarterWidget> with SingleTickerProviderStateMixin {
 
   bool isButtonsVisible = false;
-  final merchant = MerchantProvider.get();
+
+  final merchantRepository = MerchantRepository();
+  late Future<MerchantModel?> futureMerchant;
 
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 400),
@@ -90,6 +94,12 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
   ));
 
   @override
+  void initState() {
+    super.initState();
+    futureMerchant = merchantRepository.getOne(int.parse(dotenv.env['MERCHANT_ID'] ?? ""));
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -97,25 +107,43 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SlideTransition(
-          position: _offsetAnimation,
-          child: merchant?.media?.url != null ? Image.network(
-             merchant?.media?.url ?? "",
-            fit: BoxFit.contain,
-            height: 120,
-            width: 120,
-          ) : Image.asset(
-            "${PathConstants.iconsPath}/purala-square-logo.png",
-            fit: BoxFit.contain,
-            height: 120,
-            width: 120,
-          ),
-        ),
-        ButtonsWidget(isVisible: isButtonsVisible)
-      ],
+
+    return FutureBuilder<MerchantModel?>(
+      future: futureMerchant,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          // context.read<MerchantProvider>().set(snapshot.data);
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SlideTransition(
+                position: _offsetAnimation,
+                child: snapshot.data?.media?.url != null ? Image.network(
+                  snapshot.data?.media?.url ?? "",
+                  fit: BoxFit.contain,
+                  height: 120,
+                  width: 120,
+                ) : Image.asset(
+                  "${PathConstants.iconsPath}/purala-square-logo.png",
+                  fit: BoxFit.contain,
+                  height: 120,
+                  width: 120,
+                ),
+              ),
+              ButtonsWidget(isVisible: isButtonsVisible)
+            ],
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+
+        // By default, show a loading spinner.
+        return const SizedBox(
+          height: 50,
+          width: 50,
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/constants/path_constants.dart';
 import 'package:purala/providers/merchant_provider.dart';
@@ -48,10 +49,10 @@ class _ResetPasswordWidgetState extends State<ResetPasswordWidget> {
   final emailControl = TextEditingController();
   final supabase = Supabase.instance.client;
   final _formKey = GlobalKey<FormState>();
-  final merchant = MerchantProvider.get();
 
   @override
   Widget build(BuildContext context) {
+    final merchant = context.read<MerchantProvider>().merchant;
     
     return Container(
       constraints: const BoxConstraints(maxWidth: 400),

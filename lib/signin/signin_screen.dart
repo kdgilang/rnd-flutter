@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/constants/path_constants.dart';
 import 'package:purala/home/home_screen.dart';
 import 'package:purala/providers/merchant_provider.dart';
+import 'package:purala/providers/session_provider.dart';
 import 'package:purala/providers/user_provider.dart';
 import 'package:purala/screens/reset_password_screen.dart';
 import 'package:purala/validations/email_validation.dart';
@@ -54,10 +56,11 @@ class _SigninWidgetState extends State<SigninWidget> {
   final passwordControl = TextEditingController();
   final supabase = Supabase.instance.client;
   final _formKey = GlobalKey<FormState>();
-  final merchant = MerchantProvider.get();
 
   @override
   Widget build(BuildContext context) {
+    
+    final merchant = context.read<MerchantProvider>().merchant;
     
     return Container(
       constraints: const BoxConstraints(maxWidth: 400),
@@ -183,9 +186,9 @@ class _SigninWidgetState extends State<SigninWidget> {
         password: passwordControl.text,
       );
 
-      UserProvider.setAuth(res.user, res.session);
-
       if (context.mounted) {
+        context.read<UserProvider>().set(res.user);
+        context.read<SessionProvider>().set(res.session);
         Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (_) => false);
       }
     } on Exception catch (e) {

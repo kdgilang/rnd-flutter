@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
+import 'package:purala/providers/session_provider.dart';
 import 'package:purala/providers/user_provider.dart';
 import 'package:purala/starter/starter_screen.dart';
 
@@ -10,7 +12,7 @@ class AuthenticatedLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (UserProvider.isValidUser()) {
+    if (context.read<SessionProvider>().isValidToken()) {
       return child;
     } else {
       return AlertDialog(

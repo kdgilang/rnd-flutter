@@ -1,33 +1,19 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter/foundation.dart';
 
-class UserProvider {
-  static User? _user;
-  static Session? _session;
+class UserProvider with ChangeNotifier, DiagnosticableTreeMixin {
+  User? _user;
 
-  static void setAuth(User? user, Session? session) {
+  User? get user => _user;
+
+  void set(User? user) {
     _user = user;
-    _session = session;
+    notifyListeners();
   }
-
-  static User? getUser() {
-    return _user;
-  }
-
-  static Session? getSession() {
-    return _session;
-  }
-
-  static bool isValidUser() {
-    final expToken = _session!.expiresAt ?? 0;
-    
-    if (expToken == 0) {
-      return false;
-    }
-
-    final dateNow = DateTime.now();
-    var tokenExp = DateTime.fromMillisecondsSinceEpoch(expToken * 1000);
-    var diffDate = tokenExp.difference(dateNow);
-    
-    return !diffDate.isNegative;
+  
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty('merchant', user));
   }
 }
