@@ -9,6 +9,7 @@ import 'package:purala/providers/user_provider.dart';
 import 'package:purala/screens/reset_password_screen.dart';
 import 'package:purala/validations/email_validation.dart';
 import 'package:purala/validations/password_validation.dart';
+import 'package:purala/widgets/image_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -74,17 +75,7 @@ class _SigninWidgetState extends State<SigninWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: merchant?.media?.url != null ? Image.network(
-              merchant?.media?.url ?? "",
-              fit: BoxFit.contain,
-              height: 120,
-              width: 120,
-            ) : Image.asset(
-              "${PathConstants.iconsPath}/purala-square-logo.png",
-              fit: BoxFit.contain,
-              height: 120,
-              width: 120,
-            )
+            child: ImageWidget(url:  merchant?.media?.url ?? "")
           ),
           const SizedBox(height: 10,),
           Visibility(
