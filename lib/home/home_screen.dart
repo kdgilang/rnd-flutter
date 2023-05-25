@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:purala/starter/starter_screen.dart';
+import 'package:purala/user/user_screen.dart';
 import 'package:purala/widgets/charts/line_chart_widget.dart';
 import 'package:purala/widgets/charts/pie_chart_widget.dart';
 import 'package:purala/home/widgets/tab_container_widget.dart';
@@ -53,12 +54,9 @@ class HomeScreen extends StatelessWidget {
             child: ListView(
               children: [
                 ListTile(
-                  title: const Text('Item 1'),
+                  title: const Text('Users'),
                   onTap: () {
-                    // Update the state of the app
-                    // ...
-                    // Then close the drawer
-                    Navigator.pop(context);
+                    Navigator.pushNamed(context, UserScreen.routeName);
                   },
                 ),
                 ListTile(

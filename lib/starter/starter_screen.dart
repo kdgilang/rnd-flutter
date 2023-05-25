@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/merchant_model.dart';
 import 'package:purala/repositories/merchant_repository.dart';
-import 'package:purala/signin/signin_screen.dart';
+import 'package:purala/auth/signin_screen.dart';
 import 'package:purala/widgets/image_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:purala/constants/path_constants.dart';
 
 class StarterScreen extends StatelessWidget {
   const StarterScreen({super.key});
@@ -116,7 +118,7 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
             children: [
               SlideTransition(
                 position: _offsetAnimation,
-                child: ImageWidget(url: snapshot.data?.media?.url ?? ""),
+                child: ImageWidget(url: snapshot.data?.media?.url ?? "${PathConstants.iconsPath}/purala-square-logo.png"),
               ),
               ButtonsWidget(isVisible: isButtonsVisible)
             ],
@@ -126,11 +128,15 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
         }
 
         // By default, show a loading spinner.
-        return const SizedBox(
-          height: 50,
-          width: 50,
-          child: CircularProgressIndicator(),
-        );
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+          SizedBox(
+            height: 50,
+            width: 50,
+            child: LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50)
+          )
+        ]);
       },
     );
   }
