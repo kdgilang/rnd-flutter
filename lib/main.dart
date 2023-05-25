@@ -3,7 +3,6 @@ import 'package:purala/constants/color_constants.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/providers/session_provider.dart';
 import 'package:purala/providers/user_provider.dart';
-import 'package:purala/repositories/merchant_repository.dart';
 import 'package:purala/starter/starter_screen.dart';
 import 'package:purala/routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

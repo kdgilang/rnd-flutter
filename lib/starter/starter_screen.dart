@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
-import 'package:purala/constants/path_constants.dart';
 import 'package:purala/models/merchant_model.dart';
-import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/merchant_repository.dart';
 import 'package:purala/signin/signin_screen.dart';
+import 'package:purala/widgets/image_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StarterScreen extends StatelessWidget {
@@ -118,17 +116,7 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
             children: [
               SlideTransition(
                 position: _offsetAnimation,
-                child: snapshot.data?.media?.url != null ? Image.network(
-                  snapshot.data?.media?.url ?? "",
-                  fit: BoxFit.contain,
-                  height: 120,
-                  width: 120,
-                ) : Image.asset(
-                  "${PathConstants.iconsPath}/purala-square-logo.png",
-                  fit: BoxFit.contain,
-                  height: 120,
-                  width: 120,
-                ),
+                child: ImageWidget(url: snapshot.data?.media?.url ?? ""),
               ),
               ButtonsWidget(isVisible: isButtonsVisible)
             ],

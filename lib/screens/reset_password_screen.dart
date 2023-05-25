@@ -5,6 +5,7 @@ import 'package:purala/constants/path_constants.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/signin/signin_screen.dart';
 import 'package:purala/validations/email_validation.dart';
+import 'package:purala/widgets/image_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -66,17 +67,7 @@ class _ResetPasswordWidgetState extends State<ResetPasswordWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: merchant?.media?.url != null ? Image.network(
-              merchant?.media?.url ?? "",
-              fit: BoxFit.contain,
-              height: 120,
-              width: 120,
-            ) : Image.asset(
-              "${PathConstants.iconsPath}/purala-square-logo.png",
-              fit: BoxFit.contain,
-              height: 120,
-              width: 120,
-            )
+            child: ImageWidget(url: merchant?.media?.url ?? "")
           ),
           const SizedBox(height: 10,),
           Visibility(

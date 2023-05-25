@@ -1,6 +1,5 @@
 import 'package:purala/models/files_related_morphs_model.dart';
 import 'package:purala/models/media_model.dart';
-import 'package:purala/models/merchant_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MediaRepository {
