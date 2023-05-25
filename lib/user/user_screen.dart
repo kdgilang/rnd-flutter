@@ -1,9 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:purala/constants/color_constants.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
-
-import 'dart:async';
-
 import 'package:searchable_listview/searchable_listview.dart';
 
 class User {
@@ -28,9 +27,6 @@ class UserScreen extends StatelessWidget {
     );
   }
 }
-
-
-
 
 class UserWidget extends StatefulWidget {
   const UserWidget({Key? key}) : super(key: key);
@@ -68,7 +64,6 @@ class _UserWidgetState extends State<UserWidget> {
       width: double.infinity,
       child: Column(
         children: [
-          const Text('Searchable list with divider'),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
@@ -85,27 +80,26 @@ class _UserWidgetState extends State<UserWidget> {
                   });
                 },
                 builder: (Actor actor) => ActorItem(actor: actor),
-                loadingWidget: Column(
+                loadingWidget: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     CircularProgressIndicator(),
                     SizedBox(
                       height: 20,
                     ),
-                    Text('Loading actors...')
+                    Text('Loading data...')
                   ],
                 ),
-                errorWidget: Column(
+                errorWidget: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Icon(
                       Icons.error,
-                      color: Colors.red,
                     ),
                     SizedBox(
                       height: 20,
                     ),
-                    Text('Error while fetching actors')
+                    Text('Error while fetching data.')
                   ],
                 ),
                 asyncListCallback: () async {
@@ -124,28 +118,25 @@ class _UserWidgetState extends State<UserWidget> {
                 emptyWidget: const EmptyView(),
                 onRefresh: () async {},
                 onItemSelected: (Actor item) {},
-                inputDecoration: InputDecoration(
-                  labelText: "Search Actor",
-                  fillColor: Colors.white,
+                inputDecoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Search Product',
+                  floatingLabelStyle: TextStyle(color: Colors.white),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Colors.blue,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
+                    borderSide: BorderSide(color: Colors.white, width: 1.0)
+                  )
                 ),
-                secondaryWidget: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Container(
-                    color: Colors.grey[400],
-                    child: const Padding(
+                secondaryWidget: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Card(
+                    color: ColorConstants.secondary,
+                    child: Padding(
                       padding: EdgeInsets.symmetric(
                         vertical: 20,
-                        horizontal: 10,
+                        horizontal: 20,
                       ),
                       child: Center(
-                        child: Icon(Icons.sort),
+                        child: Icon(Icons.add, color: ColorConstants.primary,),
                       ),
                     ),
                   ),
@@ -172,45 +163,6 @@ class _UserWidgetState extends State<UserWidget> {
       name: 'ALi',
     ));
     setState(() {});
-  }
-
-  Widget expansionSearchableList() {
-    return SearchableList<Actor>.expansion(
-      expansionListData: mapOfActors,
-      expansionTitleBuilder: (p0) {
-        return Container(
-          color: Colors.grey[300],
-          width: MediaQuery.of(context).size.width * 0.8,
-          height: 30,
-          child: Center(
-            child: Text(p0.toString()),
-          ),
-        );
-      },
-      filterExpansionData: (p0) {
-        final filteredMap = {
-          for (final entry in mapOfActors.entries)
-            entry.key: (mapOfActors[entry.key] ?? [])
-                .where((element) => element.name.contains(p0))
-                .toList()
-        };
-        return filteredMap;
-      },
-      style: const TextStyle(fontSize: 25),
-      builder: (Actor actor) => ActorItem(actor: actor),
-      emptyWidget: const EmptyView(),
-      inputDecoration: InputDecoration(
-        labelText: "Search Actor",
-        fillColor: Colors.white,
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.blue,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-    );
   }
 }
 
@@ -282,14 +234,13 @@ class EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
+      children: [
         Icon(
           Icons.error,
-          color: Colors.red,
         ),
-        Text('no actor is found with this name'),
+        Text('No Items Found.'),
       ],
     );
   }
