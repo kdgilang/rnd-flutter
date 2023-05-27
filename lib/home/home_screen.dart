@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:purala/constants/color_constants.dart';
+import 'package:purala/providers/user_provider.dart';
 import 'package:purala/starter/starter_screen.dart';
 import 'package:purala/user/user_screen.dart';
 import 'package:purala/widgets/charts/line_chart_widget.dart';
@@ -6,6 +9,7 @@ import 'package:purala/widgets/charts/pie_chart_widget.dart';
 import 'package:purala/home/widgets/tab_container_widget.dart';
 import 'package:purala/home/widgets/tab_items_widget.dart';
 import 'package:purala/pos/pos_widget.dart';
+import 'package:purala/widgets/image_widget.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -44,7 +48,17 @@ class HomeScreen extends StatelessWidget {
                 color: Theme.of(context).textTheme.bodyLarge!.color,
                 iconSize: 28.0,
                 onPressed: () {},
-                icon: const Icon(Icons.person),
+                icon: context.read<UserProvider>().user!.image != null ?
+                    CircleAvatar(
+                      radius: 15,
+                      backgroundColor: ColorConstants.secondary,
+                      child: CircleAvatar(
+                        radius: 13,
+                        backgroundImage: NetworkImage(context.read<UserProvider>().user!.image!.thumbnailUrl)
+                      ) ,
+                    ) : 
+                    const Icon(Icons.person)
+                  ,
               ),
             ],
           ),
