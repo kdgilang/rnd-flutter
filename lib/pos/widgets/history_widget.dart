@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:purala/constants/color_constants.dart';
 import 'package:purala/widgets/tile_widget.dart';
 
 class HistoryWidget extends StatelessWidget {

@@ -36,7 +36,7 @@ class StockWidget extends StatelessWidget {
                 shrinkWrap: true,
                 itemCount: 10,
                 itemBuilder: (context, index) {
-                  return const TileWidget(title: "test", subtitle: "price",);
+                  return const TileWidget(title: "test", subtitle: "price");
                 },
                 separatorBuilder: (context, index) {
                   return const Divider();

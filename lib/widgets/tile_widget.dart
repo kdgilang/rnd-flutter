@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:purala/widgets/image_widget.dart';
 
 class TileWidget extends StatelessWidget {
-  const TileWidget({super.key, required this.title, required this.subtitle, this.isDisabled = false, this.hasPadding = true });
+  const TileWidget({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    this.imageUrl,
+    this.isDisabled = false,
+    this.hasPadding = true
+  });
 
   final String title;
   final String subtitle;
+  final String? imageUrl;
   final bool isDisabled;
   final bool hasPadding;
 
@@ -17,7 +26,10 @@ class TileWidget extends StatelessWidget {
       ),
       child: ListTile(
         contentPadding: hasPadding ? const EdgeInsets.fromLTRB(15, 5, 15, 5) : EdgeInsets.zero,
-        leading: const FlutterLogo(size: 30.0),
+        leading: ImageWidget(
+          url: imageUrl,
+          width: 30,
+        ),
         title: Text(
           title, 
           style: const TextStyle(fontWeight: FontWeight.bold),

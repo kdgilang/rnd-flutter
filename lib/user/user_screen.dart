@@ -139,15 +139,15 @@ class _UserWidgetState extends State<UserWidget> {
                           onPressed: null,
                           backgroundColor: ColorConstants.secondary,
                           foregroundColor: Theme.of(context).primaryColor,
-                          icon: Icons.archive,
-                          label: 'Archive',
+                          icon: Icons.block,
+                          label: 'Block',
                         ),
                       ],
                     ),
 
                     // The child of the Slidable is what the user sees when the
                     // component is not dragged.
-                    child: TileWidget(title: user.name, subtitle: user.email),
+                    child: TileWidget(title: user.name, subtitle: user.email, imageUrl: user.image?.thumbnailUrl ?? "",),
                   );
                 },
                 loadingWidget: LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50),
@@ -164,6 +164,11 @@ class _UserWidgetState extends State<UserWidget> {
                   ],
                 ),
                 asyncListCallback: () async {
+                  await Future.delayed(
+                    const Duration(
+                      milliseconds: 2000,
+                    ),
+                  );
                   return userRepo.getAll(1);
                 },
                 asyncListFilter: (q, list) {

@@ -56,7 +56,10 @@ class UserRepository {
     List<UserModel> users = [];
 
     for (var item in res) {
-      users.add(UserModel.fromJson(item));
+      final user = UserModel.fromJson(item);
+      final media = await mediaRepo.getOne(user.id, 'plugin::users-permissions.user');
+      user.image = media;
+      users.add(user);
     }
 
     return users;
