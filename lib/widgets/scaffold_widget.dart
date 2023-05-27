@@ -4,11 +4,13 @@ class ScaffoldWidget extends StatelessWidget {
   const ScaffoldWidget({
     super.key,
     required this.title,
-    required this.child
+    required this.child,
+    this.appBarActions,
   });
 
   final String title;
   final Widget child;
+  final List<Widget>? appBarActions;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class ScaffoldWidget extends StatelessWidget {
           fontWeight: FontWeight.bold,
           fontSize: 18
         ),
+        actions: appBarActions,
       ),
       body: Container(
         padding: const EdgeInsets.all(20),

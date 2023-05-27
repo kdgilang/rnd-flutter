@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
+import 'package:purala/widgets/tile_widget.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 
 class User {
@@ -19,10 +21,40 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AuthenticatedLayout(
+    return AuthenticatedLayout(
       child: ScaffoldWidget(
         title: "Users",
-        child: UserWidget()
+        appBarActions: [
+          Flex(
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: IconButton(
+                  icon: const Icon(Icons.add),
+                  tooltip: 'Add users',
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('This is a snackbar')));
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: IconButton(
+                  icon: const Icon(Icons.replay),
+                  tooltip: 'Reload users',
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('This is a snackbar')));
+                  },
+                ),
+              ),
+            ],
+          )
+        ],
+        child: const UserWidget(),
       )
     );
   }
@@ -79,17 +111,8 @@ class _UserWidgetState extends State<UserWidget> {
                     ]);
                   });
                 },
-                builder: (Actor actor) => ActorItem(actor: actor),
-                loadingWidget: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text('Loading data...')
-                  ],
-                ),
+                builder: (Actor actor) => TileWidget(title: actor.name, subtitle: actor.lastName),
+                loadingWidget: LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50),
                 errorWidget: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -126,31 +149,9 @@ class _UserWidgetState extends State<UserWidget> {
                     borderSide: BorderSide(color: Colors.white, width: 1.0)
                   )
                 ),
-                secondaryWidget: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Card(
-                    color: ColorConstants.secondary,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 20,
-                      ),
-                      child: Center(
-                        child: Icon(Icons.add, color: ColorConstants.primary,),
-                      ),
-                    ),
-                  ),
-                ),
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.center,
-            child: ElevatedButton(
-              onPressed: addActor,
-              child: const Text('Add actor'),
-            ),
-          )
         ],
       ),
     );

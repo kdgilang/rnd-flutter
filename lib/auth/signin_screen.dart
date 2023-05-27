@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/constants/path_constants.dart';
@@ -7,6 +8,7 @@ import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/providers/session_provider.dart';
 import 'package:purala/providers/user_provider.dart';
 import 'package:purala/auth/reset_password_screen.dart';
+import 'package:purala/repositories/user_repository.dart';
 import 'package:purala/validations/email_validation.dart';
 import 'package:purala/validations/password_validation.dart';
 import 'package:purala/widgets/image_widget.dart';
@@ -162,9 +164,23 @@ class _SigninWidgetState extends State<SigninWidget> {
         email: emailControl.text,
         password: passwordControl.text,
       );
+      
+      final userRepo = UserRepository();
+
+      final user = await userRepo.getBySsoId(res.user!.id);
+
+      if(!user.confirmed || user.blocked) {
+        throw Exception("Unable to login, please contact our support.");
+      }
+      
+      final int merchantId = int.parse(dotenv.env['MERCHANT_ID'] ?? "");
+
+      if (user.merchantId != merchantId) {
+        throw Exception("User unable to login, please contact our support.");
+      }
 
       if (context.mounted) {
-        context.read<UserProvider>().set(res.user);
+        context.read<UserProvider>().set(user);
         context.read<SessionProvider>().set(res.session);
         Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (_) => false);
       }
@@ -172,8 +188,22 @@ class _SigninWidgetState extends State<SigninWidget> {
       showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 400,
+                child: AlertDialog(
             content: Text(e.toString()),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context, rootNavigator: true).pop('dialog'),
+                child: const Text("ok")
+              )
+            ],
+          ),
+              )
+            ],
           );
         },
       );
