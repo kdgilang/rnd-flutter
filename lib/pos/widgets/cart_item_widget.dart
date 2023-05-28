@@ -19,7 +19,7 @@ class CartItemWidget extends StatelessWidget {
         children: [
           const Expanded(
             flex: 8,
-            child: TileWidget(title: "title", subtitle: "price", isDisabled: true, hasPadding: false, imageUrl: "",),
+            child: TileWidget(title: "title", subtitle: "price", isDisabled: true, hasPadding: false),
           ),
           Expanded(
             flex: 2,

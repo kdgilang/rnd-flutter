@@ -64,4 +64,16 @@ class UserRepository {
 
     return users;
   }
+
+  Future<void> update(UserModel user) async {
+    await _db
+      .from('up_users')
+      .update({
+        'name': user.name,
+        'blocked': user.blocked,
+        'password': user.password,
+        'updated_at': user.updatedAt
+      })
+      .eq('id', user.id);
+  }
 }

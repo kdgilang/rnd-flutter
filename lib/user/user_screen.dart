@@ -1,8 +1,9 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/user_model.dart';
+import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/user_repository.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
@@ -10,21 +11,34 @@ import 'package:purala/widgets/tile_widget.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-
-class User {
-  final String? name;
-  final String? avatar;
-  User({this.name, this.avatar});
-}
-
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});
 
   static const String routeName = "/users";
-  
 
   @override
   Widget build(BuildContext context) {
+    return const UserWidget();
+  }
+}
+
+class UserWidget extends StatefulWidget {
+  const UserWidget({Key? key}) : super(key: key);
+
+  @override
+  State<UserWidget> createState() => _UserWidgetState();
+}
+
+class _UserWidgetState extends State<UserWidget> {
+  final userRepo = UserRepository();
+  List<UserModel> users = [];
+  int merchantId = 0;
+  bool isBusy = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
+
     return AuthenticatedLayout(
       child: ScaffoldWidget(
         title: "Users",
@@ -49,158 +63,129 @@ class UserScreen extends StatelessWidget {
                 child: IconButton(
                   icon: const Icon(Icons.replay),
                   tooltip: 'Reload users',
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('This is a snackbar')));
-                  },
+                  onPressed: _loadUsers,
                 ),
               ),
             ],
           )
         ],
-        child: const UserWidget(),
-      )
-    );
-  }
-}
+        child: SizedBox(
+        width: double.infinity,
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(25),
+                child: isBusy ? 
+                  LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50) :
+                  SearchableList<UserModel>(
+                  style: const TextStyle(fontSize: 25),
+                  builder: (UserModel user) {
+                    return Slidable(
+                      // Specify a key if the Slidable is dismissible.
+                      key: ValueKey(user.id),
+                      // The start action pane is the one at the left or the top side.
+                      startActionPane: ActionPane(
+                        // A motion is a widget used to control how the pane animates.
+                        motion: const ScrollMotion(),
+                        // A pane can dismiss the Slidable.
+                        dismissible: DismissiblePane(onDismissed: () {}),
+                        // All actions are defined in the children parameter.
+                        children: const [
+                          // A SlidableAction can have an icon and/or a label.
+                          SlidableAction(
+                            onPressed: null,
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            icon: Icons.delete,
+                            label: 'Delete',
+                          ),
+                        ],
+                      ),
 
-class UserWidget extends StatefulWidget {
-  const UserWidget({Key? key}) : super(key: key);
+                      // The end action pane is the one at the right or the bottom side.
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: null,
+                            backgroundColor: Colors.green,
+                            foregroundColor: Theme.of(context).primaryColor,
+                            icon: Icons.edit,
+                            label: 'Edit',
+                          ),
+                          SlidableAction(
+                            onPressed: null,
+                            backgroundColor: ColorConstants.secondary,
+                            foregroundColor: Theme.of(context).primaryColor,
+                            icon: Icons.block,
+                            label: 'Block',
+                          ),
+                        ],
+                      ),
 
-  @override
-  State<UserWidget> createState() => _UserWidgetState();
-}
+                      // The child of the Slidable is what the user sees when the
+                      // component is not dragged.
+                      child: TileWidget(title: user.name, subtitle: user.email, imageUrl: user.image?.thumbnailUrl ?? "", isDisabled: true,),
+                    );
+                  },
+                  loadingWidget: LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50),
+                  errorWidget: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text('Error while fetching data.')
+                    ],
+                  ),
+                  asyncListCallback: () async {
 
-class _UserWidgetState extends State<UserWidget> {
-  final userRepo = UserRepository();
-  List<UserModel> users = [];
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(25),
-              child: SearchableList<UserModel>(
-                style: const TextStyle(fontSize: 25),
-                onPaginate: () async {
-                  await Future.delayed(const Duration(milliseconds: 1000));
-                  setState(() {
-                    // actors.addAll([
-                    //   Actor(age: 22, name: 'Fathi', lastName: 'Hadawi'),
-                    //   Actor(age: 22, name: 'Hichem', lastName: 'Rostom'),
-                    //   Actor(age: 22, name: 'Kamel', lastName: 'Twati'),
-                    // ]);
-                  });
-                },
-                builder: (UserModel user) {
-                  return Slidable(
-                    // Specify a key if the Slidable is dismissible.
-                    key: ValueKey(user.id),
-                    // The start action pane is the one at the left or the top side.
-                    startActionPane: ActionPane(
-                      // A motion is a widget used to control how the pane animates.
-                      motion: const ScrollMotion(),
-                      // A pane can dismiss the Slidable.
-                      dismissible: DismissiblePane(onDismissed: () {}),
-                      // All actions are defined in the children parameter.
-                      children: const [
-                        // A SlidableAction can have an icon and/or a label.
-                        SlidableAction(
-                          onPressed: null,
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Delete',
-                        ),
-                      ],
-                    ),
-
-                    // The end action pane is the one at the right or the bottom side.
-                    endActionPane: ActionPane(
-                      motion: const ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          onPressed: null,
-                          backgroundColor: Colors.green,
-                          foregroundColor: Theme.of(context).primaryColor,
-                          icon: Icons.edit,
-                          label: 'Edit',
-                        ),
-                        SlidableAction(
-                          onPressed: null,
-                          backgroundColor: ColorConstants.secondary,
-                          foregroundColor: Theme.of(context).primaryColor,
-                          icon: Icons.block,
-                          label: 'Block',
-                        ),
-                      ],
-                    ),
-
-                    // The child of the Slidable is what the user sees when the
-                    // component is not dragged.
-                    child: TileWidget(title: user.name, subtitle: user.email, imageUrl: user.image?.thumbnailUrl ?? "",),
-                  );
-                },
-                loadingWidget: LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50),
-                errorWidget: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text('Error while fetching data.')
-                  ],
-                ),
-                asyncListCallback: () async {
-                  await Future.delayed(
-                    const Duration(
-                      milliseconds: 2000,
-                    ),
-                  );
-                  return userRepo.getAll(1);
-                },
-                asyncListFilter: (q, list) {
-                  return list
-                      .where((element) => element.name.contains(q))
-                      .toList();
-                },
-                emptyWidget: const EmptyView(),
-                onRefresh: () async {},
-                onItemSelected: (UserModel item) {},
-                inputDecoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Search users',
-                  floatingLabelStyle: TextStyle(color: Colors.white),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 1.0)
-                  )
+                    return userRepo.getAll(merchantId);
+                  },
+                  asyncListFilter: (q, list) {
+                    return list
+                        .where((element) => element.name.contains(q))
+                        .toList();
+                  },
+                  emptyWidget: const EmptyView(),
+                  onRefresh: () async {},
+                  onItemSelected: null,
+                  inputDecoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Search users',
+                    floatingLabelStyle: TextStyle(color: Colors.white),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 1.0)
+                    )
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      )
+      )
     );
   }
 
-  void addActor() {
-    // users.add(UserModel(
-    //   i
-    //   name: 'ALi',
-    // ));
-    setState(() {});
+  void _loadUsers() async {
+    if (isBusy) {
+      return;
+    }
+    setState(() {
+      isBusy = true;
+    });
+
+    var res = await userRepo.getAll(merchantId);
+
+    setState(() {
+      users = res;
+      isBusy = false;
+    });
   }
 }
 

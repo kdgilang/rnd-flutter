@@ -9,6 +9,7 @@ class UserModel extends BaseModel {
   final String role;
   final String ssoId;
   final int merchantId;
+  final String? password;
   MediaModel? image;
 
   UserModel({
@@ -23,6 +24,7 @@ class UserModel extends BaseModel {
     super.createdAt,
     super.updatedAt,
     this.image,
+    this.password
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -34,9 +36,10 @@ class UserModel extends BaseModel {
       blocked: json['blocked'],
       role: json['up_users_role_links'][0]['up_roles']?['type'],
       ssoId: json['sso_id'],
-      merchantId: json['up_users_merchant_links'][0]?['merchants']?['id'],
+      merchantId: json['up_users_merchant_links'][0]?['merchants']?['id'] ?? 0,
       createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at'])
+      updatedAt: DateTime.parse(json['updated_at']),
+      password: ''
     );
   }
 }
