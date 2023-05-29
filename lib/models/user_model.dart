@@ -27,6 +27,20 @@ class UserModel extends BaseModel {
     this.password
   });
 
+  UserModel copyWith({int? id, String? name, String? email, bool? confirmed, bool? blocked, String? role, String? ssoId, int? merchantId, MediaModel? image}) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      confirmed: confirmed ?? this.confirmed,
+      blocked: blocked ?? this.blocked,
+      role: role ?? this.role,
+      ssoId: ssoId ?? this.ssoId,
+      merchantId: merchantId ?? this.merchantId,
+      image: image ?? this.image
+    );
+  }
+
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'],

@@ -31,13 +31,15 @@ class UserWidget extends StatefulWidget {
 
 class _UserWidgetState extends State<UserWidget> {
   final userRepo = UserRepository();
+
   List<UserModel> users = [];
-  int merchantId = 0;
   bool isBusy = false;
+  bool isLoading = false;
+  int merchantId = 0;
 
   @override
   Widget build(BuildContext context) {
-    final merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
+    merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
 
     return AuthenticatedLayout(
       child: ScaffoldWidget(
@@ -76,7 +78,7 @@ class _UserWidgetState extends State<UserWidget> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(25),
-                child: isBusy ? 
+                child: isLoading ?
                   LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50) :
                   SearchableList<UserModel>(
                   style: const TextStyle(fontSize: 25),
@@ -115,18 +117,25 @@ class _UserWidgetState extends State<UserWidget> {
                             label: 'Edit',
                           ),
                           SlidableAction(
-                            onPressed: null,
+                            onPressed: (context) {
+                              _handleBlockUser(user);
+                            },
                             backgroundColor: ColorConstants.secondary,
                             foregroundColor: Theme.of(context).primaryColor,
-                            icon: Icons.block,
-                            label: 'Block',
+                            icon: user.blocked ? Icons.block_flipped : Icons.block,
+                            label: user.blocked ? 'Unblock' : 'Block',
                           ),
                         ],
                       ),
 
                       // The child of the Slidable is what the user sees when the
                       // component is not dragged.
-                      child: TileWidget(title: user.name, subtitle: user.email, imageUrl: user.image?.thumbnailUrl ?? "", isDisabled: true,),
+                      child: TileWidget(
+                        title: user.name,
+                        subtitle: "${user.email} ${user.blocked ? "(blocked)" : ""}",
+                        imageUrl: user.image?.thumbnailUrl,
+                        isDisabled: true
+                      ),
                     );
                   },
                   loadingWidget: LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50),
@@ -143,8 +152,8 @@ class _UserWidgetState extends State<UserWidget> {
                     ],
                   ),
                   asyncListCallback: () async {
-
-                    return userRepo.getAll(merchantId);
+                    users = await userRepo.getAll(merchantId);
+                    return users;
                   },
                   asyncListFilter: (q, list) {
                     return list
@@ -177,14 +186,33 @@ class _UserWidgetState extends State<UserWidget> {
       return;
     }
     setState(() {
-      isBusy = true;
+      isLoading = isBusy = true;
     });
 
     var res = await userRepo.getAll(merchantId);
 
     setState(() {
       users = res;
+      isLoading = isBusy = false;
+    });
+  }
+
+  void _handleBlockUser(UserModel user) async {
+    if (isBusy) {
+      return;
+    }
+
+    setState(() {
+      isBusy = true;
+    });
+
+    final updatedUser = user.copyWith(blocked: !user.blocked);
+
+    await userRepo.update(updatedUser);
+
+    setState(() {
       isBusy = false;
+      users[users.indexWhere((item) => item.id == user.id)] = updatedUser;
     });
   }
 }

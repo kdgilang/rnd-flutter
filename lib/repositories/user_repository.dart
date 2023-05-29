@@ -69,10 +69,10 @@ class UserRepository {
     await _db
       .from('up_users')
       .update({
-        'name': user.name,
+        'username': user.name,
         'blocked': user.blocked,
         'password': user.password,
-        'updated_at': user.updatedAt
+        'updated_at': DateTime.now().toString()
       })
       .eq('id', user.id);
   }
