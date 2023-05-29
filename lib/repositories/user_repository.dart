@@ -76,4 +76,11 @@ class UserRepository {
       })
       .eq('id', user.id);
   }
+
+  Future<void> delete(int userId) async {
+    await _db
+      .from('up_users')
+      .delete()
+      .eq('id', userId);
+  }
 }
