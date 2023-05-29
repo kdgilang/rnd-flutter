@@ -5,6 +5,7 @@ import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/user_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/user_repository.dart';
+import 'package:purala/user/add_user_screen.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
 import 'package:purala/widgets/tile_widget.dart';
@@ -55,8 +56,7 @@ class _UserWidgetState extends State<UserWidget> {
                   icon: const Icon(Icons.add),
                   tooltip: 'Add users',
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('This is a snackbar')));
+                    Navigator.pushNamed(context, AddUserScreen.routeName);
                   },
                 ),
               ),

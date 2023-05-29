@@ -9,7 +9,6 @@ import 'package:purala/widgets/charts/pie_chart_widget.dart';
 import 'package:purala/home/widgets/tab_container_widget.dart';
 import 'package:purala/home/widgets/tab_items_widget.dart';
 import 'package:purala/pos/pos_widget.dart';
-import 'package:purala/widgets/image_widget.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
