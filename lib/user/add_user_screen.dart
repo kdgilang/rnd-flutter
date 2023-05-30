@@ -1,15 +1,14 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/providers/merchant_provider.dart';
+import 'package:purala/repositories/storage_repository.dart';
 import 'package:purala/repositories/user_repository.dart';
 import 'package:purala/validations/email_validation.dart';
 import 'package:purala/validations/password_validation.dart';
-import 'package:purala/widgets/image_widget.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
 
@@ -45,10 +44,8 @@ class _AddUserWidgetState extends State<AddUserWidget> {
   bool isBusy = false;
   bool isLoading = false;
   int merchantId = 0;
+  File image = File("");
 
-  String image = "";
-
-  
   @override
   Widget build(BuildContext context) {
     merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
@@ -70,14 +67,14 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               child: CircleAvatar(
                 radius: 45,
                 backgroundColor: ColorConstants.secondary,
-                child: image.isEmpty ? const Text(
+                child: image.path.isEmpty ? const Text(
                   "upload",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 10),
                 ) :
                 CircleAvatar(
-                  radius: 13,
-                  backgroundImage: NetworkImage(image)
+                  radius: 44,
+                  backgroundImage: FileImage(image)
                 ),
               ) 
             ),
@@ -214,7 +211,14 @@ class _AddUserWidgetState extends State<AddUserWidget> {
     );
 
     if (result != null) {
+      // final storageRepo = StorageRepository();
       File file = File(result.files.single.path ?? "");
+      // String fileName = result.files.first.name;
+      // final path = await storageRepo.upload(fileName, file);
+
+      setState(() {
+        image = file;
+      });
     } else {
       // User canceled the picker
     }
