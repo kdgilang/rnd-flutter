@@ -188,7 +188,8 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     textStyle: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18.0,
-                    )
+                    ),
+                    disabledBackgroundColor: ColorConstants.grey
                   ),
                   onPressed: _handleSave,
                   child: const Text('Save'),
@@ -202,7 +203,23 @@ class _AddUserWidgetState extends State<AddUserWidget> {
   }
 
   void _handleSave() async {
+    if (!_formKey.currentState!.validate() || isBusy) {
+      return;
+    }
 
+    setState(() {
+      isBusy = true;
+    });
+
+    try {
+
+    } catch(err) {
+
+    } finally {
+      setState(() {
+        isBusy = false;
+      });
+    }
   }
 
   Future<void> _handleSelectImage() async {

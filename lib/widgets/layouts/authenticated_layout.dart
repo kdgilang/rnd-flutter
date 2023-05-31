@@ -14,29 +14,54 @@ class AuthenticatedLayout extends StatelessWidget {
     if (context.read<SessionProvider>().isValidToken()) {
       return child;
     } else {
-      return AlertDialog(
-        content: Column(
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text("Session expired, please login again."),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorConstants.secondary,
-                foregroundColor: ColorConstants.primary,
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 18),
-                minimumSize: const Size(250, 0),
-                textStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0,
-                )
+
+              SizedBox(
+                width: 400,
+                child: AlertDialog(
+                content: Flex(
+                  direction: Axis.vertical,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Session expired", style: Theme.of(context).textTheme.titleLarge,),
+                    const SizedBox(height: 20,),
+                    Text("please login again.", style: Theme.of(context).textTheme.bodyMedium)
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                      Navigator.pushNamedAndRemoveUntil(context, StarterScreen.routeName, (_) => false);
+                    },
+                    child: const Text("ok")
+                  )
+                ],
               ),
-              onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(context, StarterScreen.routeName, (_) => false);
-              },
-              child: const Text("ok"),
-            )
+            ),
+            // const Text("Session expired, please login again."),
+            // const SizedBox(height: 20,),
+            // ElevatedButton(
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: ColorConstants.secondary,
+            //     foregroundColor: ColorConstants.primary,
+            //     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 18),
+            //     minimumSize: const Size(250, 0),
+            //     textStyle: const TextStyle(
+            //       fontWeight: FontWeight.bold,
+            //       fontSize: 18.0,
+            //     )
+            //   ),
+            //   onPressed: () {
+            //     Navigator.pushNamedAndRemoveUntil(context, StarterScreen.routeName, (_) => false);
+            //   },
+            //   child: const Text("ok"),
+            // )
           ],
-        ),
-      );
+        );
     }
   }
 }
