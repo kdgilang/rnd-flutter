@@ -112,7 +112,6 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
       future: futureMerchant,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          // context.read<MerchantProvider>().set(snapshot.data);
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
