@@ -1,13 +1,9 @@
 import 'dart:io';
-
-import 'package:purala/models/merchant_model.dart';
-import 'package:purala/repositories/media_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StorageRepository {
 
   final SupabaseClient _db = Supabase.instance.client;
-  final mediaRepo = MediaRepository();
 
   Future<String> upload(String name, File file) async {
 
@@ -18,5 +14,11 @@ class StorageRepository {
     );
 
     return path;
+  }
+
+  Future<void> delete(String fileName) async {
+    await _db.storage
+    .from('avatars')
+    .remove([fileName]);
   }
 }

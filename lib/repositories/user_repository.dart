@@ -29,7 +29,7 @@ class UserRepository {
 
     final user = UserModel.fromJson(res);
 
-    final media = await mediaRepo.getOne(user.id!, 'plugin::users-permissions.user');
+    final media = await mediaRepo.getOne(user.id!, UserModel.type);
 
     user.image = media;
 
@@ -58,7 +58,7 @@ class UserRepository {
 
     for (var item in res) {
       final user = UserModel.fromJson(item);
-      final media = await mediaRepo.getOne(user.id!, 'plugin::users-permissions.user');
+      final media = await mediaRepo.getOne(user.id!, UserModel.type);
       user.image = media;
       users.add(user);
     }
@@ -66,7 +66,7 @@ class UserRepository {
     return users;
   }
 
-  Future<void> add(UserModel user) async {
+  Future<int> add(UserModel user) async {
     final AuthResponse res = await _db.auth.signUp(
       email: user.email,
       password: user.password!,
@@ -84,34 +84,28 @@ class UserRepository {
       'blocked': user.blocked,
       'sso_id': res.user!.id,
       'created_at': DateTime.now().toString(),
-      'updated_at': DateTime.now().toString()
-    }).select();
+      'updated_at': DateTime.now().toString(),
+      'created_by_id': 1 // default admin id
+    }).select().single();
 
-    mediaRepo.add(
-      MediaModel(
-        name: user.image!.name,
-        url: user.image!.url,
-        size: user.image!.size,
-        caption: user.name,
-        ext: user.image!.ext,
-        alternativeText: user.image!.alternativeText
-      )
-      , newUSer.id, 'plugin::users-permissions.user');
+    final int userId = newUSer['id'];
 
     await _db
     .from('up_users_role_links')
     .insert({
-      'user_id': newUSer.id,
+      'user_id': userId,
       'role_id': 4, // default editor
       'user_order': 1,
     });
 
     await _db
-    .from('up_users_role_links')
+    .from('up_users_merchant_links')
     .insert({
-      'user_id': newUSer.id,
+      'user_id': userId,
       'merchant_id': user.merchantId, 
     });
+
+    return userId;
   }
 
   Future<void> update(UserModel user) async {
@@ -125,10 +119,22 @@ class UserRepository {
       .eq('id', user.id);
   }
 
-  Future<void> delete(int userId) async {
+  Future<void> delete(UserModel user) async {
+    await _db.auth.admin.deleteUser(user.ssoId!);
+    
+    await _db
+    .from('up_users_role_links')
+    .delete().eq('id', user.id);
+
+    await _db
+    .from('up_users_merchant_links')
+    .delete().eq('id', user.id);
+
+    await mediaRepo.delete(user.image!, user.id!, UserModel.type);
+
     await _db
       .from('up_users')
       .delete()
-      .eq('id', userId);
+      .eq('id', user.id);
   }
 }

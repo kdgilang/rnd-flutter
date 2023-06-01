@@ -23,9 +23,12 @@ class UserModel extends BaseModel {
     required this.merchantId,
     super.createdAt,
     super.updatedAt,
+    super.createdById,
     this.image,
     this.password
   });
+
+  static const String type = 'plugin::users-permissions.user';
 
   UserModel copyWith({
     int? id,
@@ -49,6 +52,7 @@ class UserModel extends BaseModel {
       ssoId: ssoId ?? this.ssoId,
       merchantId: merchantId ?? this.merchantId,
       image: image ?? this.image,
+      createdById: createdById ?? this.createdById
     );
   }
 
@@ -65,6 +69,7 @@ class UserModel extends BaseModel {
       merchantId: json['up_users_merchant_links'][0]?['merchants']?['id'] ?? 0,
       createdAt: json['created_at'] ?? DateTime.now().toString(),
       updatedAt: json['updated_at'] ?? DateTime.now().toString(),
+      createdById: json['created_by_id']
     );
   }
 }

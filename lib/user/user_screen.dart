@@ -41,6 +41,7 @@ class _UserWidgetState extends State<UserWidget> {
   @override
   Widget build(BuildContext context) {
     merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
+    final newUser = ModalRoute.of(context)!.settings;
 
     return AuthenticatedLayout(
       child: ScaffoldWidget(
@@ -93,10 +94,12 @@ class _UserWidgetState extends State<UserWidget> {
                         // A pane can dismiss the Slidable.
                         dismissible: DismissiblePane(onDismissed: () {}),
                         // All actions are defined in the children parameter.
-                        children: const [
+                        children: [
                           // A SlidableAction can have an icon and/or a label.
                           SlidableAction(
-                            onPressed: null,
+                            onPressed: (_) {
+                              _handleDeleteUser(user);
+                            },
                             backgroundColor: Colors.red,
                             foregroundColor: Colors.white,
                             icon: Icons.delete,
@@ -213,6 +216,23 @@ class _UserWidgetState extends State<UserWidget> {
     setState(() {
       isBusy = false;
       users[users.indexWhere((item) => item.id == user.id)] = updatedUser;
+    });
+  }
+
+  void _handleDeleteUser(UserModel user) async {
+    if (isBusy) {
+      return;
+    }
+
+    setState(() {
+      isBusy = true;
+    });
+
+    await userRepo.delete(user);
+
+    setState(() {
+      isBusy = false;
+      users.remove(user);
     });
   }
 }

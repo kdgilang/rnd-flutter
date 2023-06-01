@@ -20,4 +20,6 @@ class MerchantModel extends BaseModel {
       description: merchant['description'],
     );
   }
+
+  static const type = 'api::merchant.merchant';
 }

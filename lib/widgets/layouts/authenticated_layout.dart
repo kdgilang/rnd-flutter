@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:purala/constants/color_constants.dart';
 import 'package:purala/providers/session_provider.dart';
 import 'package:purala/starter/starter_screen.dart';
 

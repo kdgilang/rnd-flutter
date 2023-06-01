@@ -8,8 +8,10 @@ import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/media_model.dart';
 import 'package:purala/models/user_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
+import 'package:purala/repositories/media_repository.dart';
 import 'package:purala/repositories/storage_repository.dart';
 import 'package:purala/repositories/user_repository.dart';
+import 'package:purala/user/user_screen.dart';
 import 'package:purala/validations/email_validation.dart';
 import 'package:purala/validations/password_validation.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
@@ -215,34 +217,47 @@ class _AddUserWidgetState extends State<AddUserWidget> {
     }
 
     final storageRepo = StorageRepository();
+    final mediaRepo = MediaRepository();
 
     setState(() {
       isBusy = true;
     });
 
     try {
-      final String imageName = "${DateTime.now().millisecondsSinceEpoch}_${_imageMeta.name}";
-      final path = await storageRepo.upload(imageName, _image);
-      final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
-
       final user = UserModel(
         name: _userNameControl.text,
         email: _emailControl.text,
         confirmed: _isConfirmedUser,
         blocked: _isBlockedUser,
         merchantId: _merchantId,
-        password: _passwordControl.text,
-        image: MediaModel(
-          name: _imageMeta.name,
-          caption: _userNameControl.text,
-          url: imageUrl,
-          size: _imageMeta.size,
-          ext: _imageMeta.extension,
-          alternativeText: _userNameControl.text
-        )
+        password: _passwordControl.text
       );
 
-      await userRepo.add(user);
+      final userId = await userRepo.add(user);
+      final String imageName = "${DateTime.now().millisecondsSinceEpoch}_${_imageMeta.name}";
+      final path = await storageRepo.upload(imageName, _image);
+      final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
+      final imgProp = await decodeImageFromList(_image.readAsBytesSync());
+      
+      user.image = MediaModel(
+        name: imageName,
+        caption: _userNameControl.text,
+        url: imageUrl,
+        size: _imageMeta.size,
+        ext: _imageMeta.extension,
+        alternativeText: _userNameControl.text,
+        height: imgProp.height,
+        width: imgProp.width
+      );
+
+      mediaRepo.add(user.image!,
+        userId,
+        UserModel.type
+      );
+
+      if (mounted) {
+        Navigator.pop(context, user);
+      }
     } on Exception catch (err) {
       debugPrint('known error: $err');
     } catch(err) {

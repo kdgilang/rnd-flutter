@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/merchant_model.dart';
+import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/merchant_repository.dart';
 import 'package:purala/auth/signin_screen.dart';
 import 'package:purala/widgets/image_widget.dart';
@@ -110,7 +112,7 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
 
     return FutureBuilder<MerchantModel?>(
       future: futureMerchant,
-      builder: (context, snapshot) {
+      builder: (_, snapshot) {
         if (snapshot.hasData) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -119,13 +121,13 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
                 position: _offsetAnimation,
                 child: ImageWidget(url: snapshot.data?.media?.url ?? "${PathConstants.iconsPath}/purala-square-logo.png"),
               ),
-              ButtonsWidget(isVisible: isButtonsVisible)
+              ButtonsWidget(isVisible: isButtonsVisible, merchant: snapshot.data)
             ],
           );
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         }
-
+        
         // By default, show a loading spinner.
         return Stack(
           alignment: Alignment.center,
@@ -142,9 +144,10 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
 }
 
 class ButtonsWidget extends StatelessWidget {
-  const ButtonsWidget({ super.key, required this.isVisible });
+  const ButtonsWidget({ super.key, required this.isVisible, this.merchant });
 
   final bool isVisible;
+  final MerchantModel? merchant;
 
   @override
   Widget build(BuildContext context) {
@@ -167,6 +170,7 @@ class ButtonsWidget extends StatelessWidget {
               )
             ),
             onPressed: () {
+              context.read<MerchantProvider>().set(merchant);
               Navigator.pushNamed(context, SigninScreen.routeName);
             },
             child: const Text('Sign in'),

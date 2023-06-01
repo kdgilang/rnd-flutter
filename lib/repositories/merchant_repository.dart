@@ -14,7 +14,7 @@ class MerchantRepository {
     .select("*")
     .eq('id', id).maybeSingle();
 
-    final media = await mediaRepo.getOne(id, 'api::merchant.merchant');
+    final media = await mediaRepo.getOne(id, MerchantModel.type);
     final merchant = MerchantModel.fromJson(res);
     merchant.media = media;
 

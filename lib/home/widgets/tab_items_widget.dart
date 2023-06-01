@@ -11,7 +11,7 @@ class TabItemsWidget extends StatelessWidget {
       child: TabBar(
         labelStyle: const TextStyle(fontSize: 7),
         labelColor: ColorConstants.secondary,
-        unselectedLabelColor: Theme.of(context).textTheme.bodyText1!.color,
+        unselectedLabelColor: Theme.of(context).textTheme.bodyLarge!.color,
         // indicatorSize: TabBarIndicatorSize.tab,
         // indicatorPadding: EdgeInsets.all(5.0),
         indicatorColor: Colors.transparent,

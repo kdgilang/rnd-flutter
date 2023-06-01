@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:purala/constants/color_constants.dart';
-import 'package:purala/pos/widgets/cart_item_widget.dart';
-import 'package:purala/widgets/stepper_widget.dart';
 import 'package:purala/widgets/tile_widget.dart';
 
 class SearchWidget extends StatelessWidget {
@@ -49,7 +46,7 @@ class SearchWidget extends StatelessWidget {
                         return Center(child: TextButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
-                            foregroundColor: Theme.of(context).textTheme.bodyText1!.color,
+                            foregroundColor: Theme.of(context).textTheme.bodyLarge!.color,
                             textStyle: const TextStyle(
                             )
                           ),
