@@ -53,7 +53,7 @@ class HomeScreen extends StatelessWidget {
                       backgroundColor: ColorConstants.secondary,
                       child: CircleAvatar(
                         radius: 13,
-                        backgroundImage: NetworkImage(context.read<UserProvider>().user!.image!.thumbnailUrl)
+                        backgroundImage: NetworkImage(context.read<UserProvider>().user!.image!.url)
                       ) ,
                     ) : 
                     const Icon(Icons.person)

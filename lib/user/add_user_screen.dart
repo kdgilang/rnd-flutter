@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
+import 'package:purala/models/media_model.dart';
+import 'package:purala/models/user_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/storage_repository.dart';
 import 'package:purala/repositories/user_repository.dart';
@@ -21,7 +24,7 @@ class AddUserScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const AuthenticatedLayout(
       child: ScaffoldWidget(
-        title: "Users",
+        title: "Add user",
         child: AddUserWidget(),
       )
     );
@@ -38,17 +41,21 @@ class AddUserWidget extends StatefulWidget {
 class _AddUserWidgetState extends State<AddUserWidget> {
   final userRepo = UserRepository();
   final _formKey = GlobalKey<FormState>();
-  final nameControl = TextEditingController();
-  final passwordControl = TextEditingController();
+  final _emailControl = TextEditingController();
+  final _userNameControl = TextEditingController();
+  final _passwordControl = TextEditingController();
 
   bool isBusy = false;
   bool isLoading = false;
-  int merchantId = 0;
-  File image = File("");
+  int _merchantId = 0;
+  bool _isBlockedUser = false;
+  bool _isConfirmedUser = false;
+  File _image = File("");
+  PlatformFile _imageMeta = PlatformFile(name: "", size: 0);
 
   @override
   Widget build(BuildContext context) {
-    merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
+    _merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
 
     return Container(
       constraints: const BoxConstraints(maxWidth: 600),
@@ -67,14 +74,14 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               child: CircleAvatar(
                 radius: 45,
                 backgroundColor: ColorConstants.secondary,
-                child: image.path.isEmpty ? const Text(
+                child: _image.path.isEmpty ? const Text(
                   "upload",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 10),
                 ) :
                 CircleAvatar(
                   radius: 44,
-                  backgroundImage: FileImage(image)
+                  backgroundImage: FileImage(_image)
                 ),
               ) 
             ),
@@ -94,7 +101,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             child: Column(
               children: [
                 TextFormField(
-                  controller: null,
+                  controller: _emailControl,
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     labelText: 'Email address',
@@ -106,10 +113,10 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   validator: EmailValidation.validateEmail,
                 ),
                 TextFormField(
-                  controller: nameControl,
+                  controller: _userNameControl,
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
-                    labelText: 'Name',
+                    labelText: 'User Name',
                     // floatingLabelStyle: TextStyle(color: Colors.white),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
@@ -117,7 +124,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   ),
                   validator: (val) {
                     if (val!.isEmpty) {
-                      return "Name is required";
+                      return "User Name is required";
                     }
 
                     return null;
@@ -132,12 +139,12 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     const Text("Is confirmed user?"),
                     Switch(
                       // This bool value toggles the switch.
-                      value: true,
+                      value: _isConfirmedUser,
                       activeColor: ColorConstants.secondary,
                       onChanged: (bool value) {
                         // This is called when the user toggles the switch.
                         setState(() {
-                          // light = value;
+                          _isConfirmedUser = value;
                         });
                       },
                     ),
@@ -151,12 +158,12 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     const Text("Is blocked user?"),
                     Switch(
                       // This bool value toggles the switch.
-                      value: true,
+                      value: _isBlockedUser,
                       activeColor: ColorConstants.secondary,
                       onChanged: (bool value) {
                         // This is called when the user toggles the switch.
                         setState(() {
-                          // light = value;
+                          _isBlockedUser = value;
                         });
                       },
                     ),
@@ -164,7 +171,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 ),
                 const SizedBox(height: 10,),
                 TextFormField(
-                  controller: passwordControl,
+                  controller: _passwordControl,
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
@@ -181,7 +188,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                 const SizedBox(height: 20,),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: ColorConstants.secondary,
+                    backgroundColor: isBusy ? ColorConstants.grey : ColorConstants.secondary,
                     foregroundColor: ColorConstants.primary,
                     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 18),
                     minimumSize: const Size(250, 0),
@@ -207,14 +214,39 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       return;
     }
 
+    final storageRepo = StorageRepository();
+
     setState(() {
       isBusy = true;
     });
 
     try {
+      final String imageName = "${DateTime.now().millisecondsSinceEpoch}_${_imageMeta.name}";
+      final path = await storageRepo.upload(imageName, _image);
+      final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
 
+      final user = UserModel(
+        name: _userNameControl.text,
+        email: _emailControl.text,
+        confirmed: _isConfirmedUser,
+        blocked: _isBlockedUser,
+        merchantId: _merchantId,
+        password: _passwordControl.text,
+        image: MediaModel(
+          name: _imageMeta.name,
+          caption: _userNameControl.text,
+          url: imageUrl,
+          size: _imageMeta.size,
+          ext: _imageMeta.extension,
+          alternativeText: _userNameControl.text
+        )
+      );
+
+      await userRepo.add(user);
+    } on Exception catch (err) {
+      debugPrint('known error: $err');
     } catch(err) {
-
+      debugPrint('unknown error: $err');
     } finally {
       setState(() {
         isBusy = false;
@@ -228,13 +260,9 @@ class _AddUserWidgetState extends State<AddUserWidget> {
     );
 
     if (result != null) {
-      // final storageRepo = StorageRepository();
-      File file = File(result.files.single.path ?? "");
-      // String fileName = result.files.first.name;
-      // final path = await storageRepo.upload(fileName, file);
-
       setState(() {
-        image = file;
+        _imageMeta = result.files.single;
+        _image = File(result.files.single.path ?? "");
       });
     } else {
       // User canceled the picker

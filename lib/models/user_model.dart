@@ -6,20 +6,20 @@ class UserModel extends BaseModel {
   final String email;
   final bool confirmed;
   final bool blocked;
-  final String role;
-  final String ssoId;
+  final String? role;
+  final String? ssoId;
   final int merchantId;
   final String? password;
   MediaModel? image;
 
   UserModel({
-    required super.id,
+    super.id,
     required this.name,
     required this.email,
     required this.confirmed,
     required this.blocked,
-    required this.role,
-    required this.ssoId,
+    this.role,
+    this.ssoId,
     required this.merchantId,
     super.createdAt,
     super.updatedAt,
@@ -27,7 +27,18 @@ class UserModel extends BaseModel {
     this.password
   });
 
-  UserModel copyWith({int? id, String? name, String? email, bool? confirmed, bool? blocked, String? role, String? ssoId, int? merchantId, MediaModel? image}) {
+  UserModel copyWith({
+    int? id,
+    String? name,
+    String? email,
+    bool? confirmed,
+    bool? blocked,
+    String? role,
+    String? ssoId,
+    int? merchantId,
+    MediaModel? image,
+    int? createdById
+  }) {
     return UserModel(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -37,7 +48,7 @@ class UserModel extends BaseModel {
       role: role ?? this.role,
       ssoId: ssoId ?? this.ssoId,
       merchantId: merchantId ?? this.merchantId,
-      image: image ?? this.image
+      image: image ?? this.image,
     );
   }
 
@@ -47,13 +58,13 @@ class UserModel extends BaseModel {
       name: json['username'],
       email: json['email'],
       confirmed: json['confirmed'],
+      password: '',
       blocked: json['blocked'],
       role: json['up_users_role_links'][0]['up_roles']?['type'],
       ssoId: json['sso_id'],
       merchantId: json['up_users_merchant_links'][0]?['merchants']?['id'] ?? 0,
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      password: ''
+      createdAt: json['created_at'] ?? DateTime.now().toString(),
+      updatedAt: json['updated_at'] ?? DateTime.now().toString(),
     );
   }
 }

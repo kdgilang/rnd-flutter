@@ -1,16 +1,27 @@
-class MediaModel {
-  final int id;
+import 'package:purala/models/base_model.dart';
+
+class MediaModel extends BaseModel {
   final String name;
   final String? caption;
+  final String alternativeText;
   final String url;
-  final String thumbnailUrl;
+  final String? hash;
+  final String? mime;
+  final String? ext;
+  final int? size;
 
   const MediaModel({
-    required this.id,
+    super.id,
     required this.name,
-    this.caption,
     required this.url,
-    required this.thumbnailUrl
+    required this.alternativeText,
+    super.createdAt,
+    super.updatedAt,
+    this.caption,
+    this.hash,
+    this.mime,
+    this.ext,
+    this.size
   });
 
   factory MediaModel.fromJson(Map<String, dynamic> json) {
@@ -19,7 +30,13 @@ class MediaModel {
       name: json['name'],
       caption: json['caption'],
       url: json['url'],
-      thumbnailUrl: json['formats']['thumbnail']['url']
+      alternativeText: json['alternative_text'] ?? "",
+      hash: json['hash'],
+      mime: json['mime'],
+      ext: json['ext'],
+      size: json['size'],
+      createdAt: json['created_at'] ?? DateTime.now().toString(),
+      updatedAt: json['updated_at'] ?? DateTime.now().toString()
     );
   }
 }

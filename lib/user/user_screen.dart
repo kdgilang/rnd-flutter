@@ -133,7 +133,7 @@ class _UserWidgetState extends State<UserWidget> {
                       child: TileWidget(
                         title: user.name,
                         subtitle: "${user.email} ${user.blocked ? "(blocked)" : ""}",
-                        imageUrl: user.image?.thumbnailUrl,
+                        imageUrl: user.image?.url,
                         isDisabled: true
                       ),
                     );

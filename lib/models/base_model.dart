@@ -1,11 +1,11 @@
 class BaseModel {
-  final int id;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final int? id;
+  final String? createdAt;
+  final String? updatedAt;
 
   const BaseModel({
-    required this.id,
+    this.id,
     this.createdAt,
-    this.updatedAt
+    this.updatedAt,
   });
 }
