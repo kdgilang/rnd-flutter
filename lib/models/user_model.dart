@@ -1,5 +1,5 @@
 import 'package:purala/models/base_model.dart';
-import 'package:purala/models/media_model.dart';
+import 'package:purala/models/file_model.dart';
 
 class UserModel extends BaseModel {
   final String name;
@@ -10,7 +10,7 @@ class UserModel extends BaseModel {
   final String? ssoId;
   final int merchantId;
   final String? password;
-  MediaModel? image;
+  FileModel? image;
 
   UserModel({
     super.id,
@@ -39,7 +39,9 @@ class UserModel extends BaseModel {
     String? role,
     String? ssoId,
     int? merchantId,
-    MediaModel? image,
+    FileModel? image,
+    String? createdAt,
+    String? updatedAt,
     int? createdById,
     String? password
   }) {
@@ -53,6 +55,8 @@ class UserModel extends BaseModel {
       ssoId: ssoId ?? this.ssoId,
       merchantId: merchantId ?? this.merchantId,
       image: image ?? this.image,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       createdById: createdById ?? this.createdById,
       password: password ?? this.password,
     );

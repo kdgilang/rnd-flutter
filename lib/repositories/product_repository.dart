@@ -1,69 +1,38 @@
+import 'package:purala/models/product_model.dart';
 import 'package:purala/models/user_model.dart';
 import 'package:purala/repositories/file_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class UserRepository {
+class ProductRepository {
 
   final SupabaseClient _db = Supabase.instance.client;
   final fileRepo = FileRepository();
 
-  Future<UserModel> getBySsoId(String ssoId) async {
+  Future<List<ProductModel>> getAllEnabled(int merchanId) async {
     var res = await _db
-    .from('up_users')
+    .from('products')
     .select('''
       *,
-      up_users_merchant_links (
+      products_merchant_links(
         merchants (
           id
         )
-      ),
-      up_users_role_links (
-        up_roles (
-          type
-        )
       )
     ''')
-    .eq('sso_id', ssoId).single();
-
-
-    final user = UserModel.fromJson(res);
-
-    final media = await fileRepo.getOne(user.id!, UserModel.type);
-
-    user.image = media;
-
-    return user;
-  }
-
-  Future<List<UserModel>> getAll(int merchanId) async {
-    var res = await _db
-    .from('up_users')
-    .select('''
-      *,
-      up_users_merchant_links (
-        merchants (
-          id
-        )
-      ),
-      up_users_role_links (
-        up_roles (
-          type
-        )
-      )
-    ''')
-    .eq('up_users_merchant_links.merchants.id', merchanId)
+    .eq('products_merchant_links.merchants.id', merchanId)
+    .eq('enabled', true)
     .order('updated_at');
     
-    List<UserModel> users = [];
+    List<ProductModel> products = [];
 
     for (var item in res) {
-      final user = UserModel.fromJson(item);
-      final media = await fileRepo.getOne(user.id!, UserModel.type);
-      user.image = media;
-      users.add(user);
+      final product = ProductModel.fromJson(item);
+      final file = await fileRepo.getOne(product.id!, ProductModel.type);
+      product.image = file;
+      products.add(product);
     }
 
-    return users;
+    return products;
   }
 
   Future<int> add(UserModel user) async {

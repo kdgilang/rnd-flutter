@@ -1,6 +1,6 @@
 import 'package:purala/models/base_model.dart';
 
-class MediaModel extends BaseModel {
+class FileModel extends BaseModel {
   final String name;
   final String? caption;
   final String alternativeText;
@@ -12,7 +12,7 @@ class MediaModel extends BaseModel {
   final int? height;
   final int? width;
 
-  const MediaModel({
+  const FileModel({
     super.id,
     required this.name,
     required this.url,
@@ -29,8 +29,8 @@ class MediaModel extends BaseModel {
     this.size
   });
 
-  factory MediaModel.fromJson(Map<String, dynamic> json) {
-    return MediaModel(
+  factory FileModel.fromJson(Map<String, dynamic> json) {
+    return FileModel(
       id: json['id'],
       name: json['name'],
       caption: json['caption'],

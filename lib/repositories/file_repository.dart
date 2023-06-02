@@ -1,14 +1,14 @@
 import 'package:purala/models/files_related_morphs_model.dart';
-import 'package:purala/models/media_model.dart';
+import 'package:purala/models/file_model.dart';
 import 'package:purala/repositories/storage_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class MediaRepository {
+class FileRepository {
 
   final SupabaseClient _db = Supabase.instance.client;
   final storageRepo = StorageRepository();
 
-  Future<MediaModel> getOne(int id, String relatedType) async {
+  Future<FileModel> getOne(int id, String relatedType) async {
 
     final morphs = FilesRelatedMorphsModel.fromJson(await _db
     .from('files_related_morphs')
@@ -21,10 +21,10 @@ class MediaRepository {
     .select('id, name, caption, url')
     .eq('id', morphs.fileId).maybeSingle();
 
-    return MediaModel.fromJson(media);
+    return FileModel.fromJson(media);
   }
 
-  Future<void> add(MediaModel media, int relatedId, String relatedType) async {
+  Future<void> add(FileModel media, int relatedId, String relatedType) async {
     final file = await _db.from('files')
     .insert({
       'name': media.name,
@@ -49,7 +49,7 @@ class MediaRepository {
     });
   }
 
-  Future<void> update(MediaModel media, int relatedId, String relatedType) async {
+  Future<void> update(FileModel media, int relatedId, String relatedType) async {
     final morphs = FilesRelatedMorphsModel.fromJson(await _db
     .from('files_related_morphs')
     .select('*')
@@ -71,7 +71,7 @@ class MediaRepository {
     }).eq('id', morphs.fileId);
   }
 
-  Future<void> delete(MediaModel media, int relatedId, String relatedType) async {
+  Future<void> delete(FileModel media, int relatedId, String relatedType) async {
 
     await _db.from('files')
     .delete().eq('id', media.id);

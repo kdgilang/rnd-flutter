@@ -1,10 +1,10 @@
 import 'package:purala/models/base_model.dart';
-import 'package:purala/models/media_model.dart';
+import 'package:purala/models/file_model.dart';
 
 class MerchantModel extends BaseModel {
   final String name;
   final String? description;
-  MediaModel? media;
+  FileModel? media;
 
   MerchantModel({
     required super.id,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
+import 'package:purala/products/product_screen.dart';
 import 'package:purala/providers/user_provider.dart';
 import 'package:purala/starter/starter_screen.dart';
 import 'package:purala/user/user_screen.dart';
@@ -64,23 +65,48 @@ class HomeScreen extends StatelessWidget {
           drawerEnableOpenDragGesture: true,
           drawer: Drawer(
             backgroundColor: Theme.of(context).primaryColor,
-            child: ListView(
-              children: [
-                ListTile(
-                  title: const Text('Users'),
-                  onTap: () {
-                    Navigator.pushNamed(context, UserScreen.routeName);
-                  },
+            child: Column(children: [
+              Expanded(
+                flex: 1,
+                child: ListView(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.person),
+                      title: const Text('Users'),
+                      onTap: () {
+                        Navigator.pushNamed(context, UserScreen.routeName);
+                      },
+                    ),
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.pages),
+                      title: const Text('Products'),
+                      onTap: () {
+                        Navigator.pushNamed(context, ProductScreen.routeName);
+                      },
+                    ),
+                    const Divider()
+                  ],
                 ),
-                ListTile(
-                  title: const Text('Sign out'),
-                  onTap: () {
-                    Supabase.instance.client.auth.signOut();
-                    Navigator.pushNamedAndRemoveUntil(context, StarterScreen.routeName, (_) => false);
-                  },
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.logout),
+                      title: const Text('Sign out'),
+                      onTap: () {
+                        Supabase.instance.client.auth.signOut();
+                        Navigator.pushNamedAndRemoveUntil(context, StarterScreen.routeName, (_) => false);
+                      },
+                    ),
+                  ],
                 )
-              ],
-            ),
+              )
+            ],)
           ),
           bottomNavigationBar: const TabItemsWidget(),
           body: TabBarView(

@@ -5,10 +5,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
-import 'package:purala/models/media_model.dart';
+import 'package:purala/models/file_model.dart';
 import 'package:purala/models/user_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
-import 'package:purala/repositories/media_repository.dart';
+import 'package:purala/repositories/file_repository.dart';
 import 'package:purala/repositories/storage_repository.dart';
 import 'package:purala/repositories/user_repository.dart';
 import 'package:purala/validations/email_validation.dart';
@@ -42,7 +42,7 @@ class UserFormWidget extends StatefulWidget {
 class _UserFormWidgetState extends State<UserFormWidget> {
   final userRepo = UserRepository();
   final storageRepo = StorageRepository();
-  final mediaRepo = MediaRepository();
+  final fileRepo = FileRepository();
   final _formKey = GlobalKey<FormState>();
   final _emailControl = TextEditingController();
   final _userNameControl = TextEditingController();
@@ -255,7 +255,7 @@ class _UserFormWidgetState extends State<UserFormWidget> {
       final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
       final imgProp = await decodeImageFromList(_image.readAsBytesSync());
 
-      updatedUser.image = MediaModel(
+      updatedUser.image = FileModel(
         name: imageName,
         caption: _userNameControl.text,
         url: imageUrl,
@@ -266,7 +266,7 @@ class _UserFormWidgetState extends State<UserFormWidget> {
         width: imgProp.width
       );
 
-      mediaRepo.update(updatedUser.image!, updatedUser.id!, UserModel.type);
+      fileRepo.update(updatedUser.image!, updatedUser.id!, UserModel.type);
     }
 
     if (mounted) {
@@ -290,7 +290,7 @@ class _UserFormWidgetState extends State<UserFormWidget> {
     final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
     final imgProp = await decodeImageFromList(_image.readAsBytesSync());
 
-    user.image = MediaModel(
+    user.image = FileModel(
       name: imageName,
       caption: _userNameControl.text,
       url: imageUrl,
@@ -301,7 +301,7 @@ class _UserFormWidgetState extends State<UserFormWidget> {
       width: imgProp.width
     );
 
-    mediaRepo.add(user.image!,
+    fileRepo.add(user.image!,
       userId,
       UserModel.type
     );

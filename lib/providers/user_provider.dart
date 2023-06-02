@@ -14,6 +14,6 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty('merchant', user));
+    properties.add(ObjectFlagProperty('user', user));
   }
 }
