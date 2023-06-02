@@ -40,7 +40,8 @@ class UserModel extends BaseModel {
     String? ssoId,
     int? merchantId,
     MediaModel? image,
-    int? createdById
+    int? createdById,
+    String? password
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -52,7 +53,8 @@ class UserModel extends BaseModel {
       ssoId: ssoId ?? this.ssoId,
       merchantId: merchantId ?? this.merchantId,
       image: image ?? this.image,
-      createdById: createdById ?? this.createdById
+      createdById: createdById ?? this.createdById,
+      password: password ?? this.password,
     );
   }
 

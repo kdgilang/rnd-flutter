@@ -52,7 +52,8 @@ class UserRepository {
         )
       )
     ''')
-    .eq('up_users_merchant_links.merchants.id', merchanId);
+    .eq('up_users_merchant_links.merchants.id', merchanId)
+    .order('updated_at');
     
     List<UserModel> users = [];
 
@@ -113,6 +114,7 @@ class UserRepository {
       .from('up_users')
       .update({
         'username': user.name,
+        'confirmed': user.confirmed,
         'blocked': user.blocked,
         'updated_at': DateTime.now().toString()
       })

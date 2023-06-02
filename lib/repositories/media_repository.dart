@@ -49,6 +49,28 @@ class MediaRepository {
     });
   }
 
+  Future<void> update(MediaModel media, int relatedId, String relatedType) async {
+    final morphs = FilesRelatedMorphsModel.fromJson(await _db
+    .from('files_related_morphs')
+    .select('*')
+    .eq('related_id', relatedId)
+    .eq('related_type', relatedType).maybeSingle());
+
+    await _db.from('files')
+    .update({
+      'name': media.name,
+      'caption': media.caption,
+      'url': media.url,
+      'alternative_text': media.alternativeText,
+      'created_at': media.createdAt,
+      'created_by_id': 1, // default admin id
+      'ext': media.ext,
+      'hash': media.hash,
+      'size': media.size,
+      'updated_at': media.updatedAt
+    }).eq('id', morphs.fileId);
+  }
+
   Future<void> delete(MediaModel media, int relatedId, String relatedType) async {
 
     await _db.from('files')

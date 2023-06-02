@@ -41,7 +41,6 @@ class _UserWidgetState extends State<UserWidget> {
   @override
   Widget build(BuildContext context) {
     merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
-    final newUser = ModalRoute.of(context)!.settings;
 
     return AuthenticatedLayout(
       child: ScaffoldWidget(
@@ -56,9 +55,7 @@ class _UserWidgetState extends State<UserWidget> {
                 child: IconButton(
                   icon: const Icon(Icons.add),
                   tooltip: 'Add users',
-                  onPressed: () {
-                    Navigator.pushNamed(context, AddUserScreen.routeName);
-                  },
+                  onPressed: _handleAddUser,
                 ),
               ),
               Padding(
@@ -92,7 +89,9 @@ class _UserWidgetState extends State<UserWidget> {
                         // A motion is a widget used to control how the pane animates.
                         motion: const ScrollMotion(),
                         // A pane can dismiss the Slidable.
-                        dismissible: DismissiblePane(onDismissed: () {}),
+                        dismissible: DismissiblePane(onDismissed: () {
+                          _handleDeleteUser(user);
+                        }),
                         // All actions are defined in the children parameter.
                         children: [
                           // A SlidableAction can have an icon and/or a label.
@@ -113,7 +112,9 @@ class _UserWidgetState extends State<UserWidget> {
                         motion: const ScrollMotion(),
                         children: [
                           SlidableAction(
-                            onPressed: null,
+                            onPressed: (context) {
+                              _handleEditUser(user);
+                            },
                             backgroundColor: Colors.green,
                             foregroundColor: Theme.of(context).primaryColor,
                             icon: Icons.edit,
@@ -217,6 +218,42 @@ class _UserWidgetState extends State<UserWidget> {
       isBusy = false;
       users[users.indexWhere((item) => item.id == user.id)] = updatedUser;
     });
+  }
+
+  void _handleAddUser() async {
+    final user = await Navigator.pushNamed(
+      context,
+      AddUserScreen.routeName,
+      arguments: UserFormArgs(
+        type: 'add',
+      ),
+    );
+    if (user != null) {
+      user as UserModel;
+
+      setState(() {
+        users.insert(0, user);
+      });
+    }
+  }
+
+  void _handleEditUser(UserModel user) async {
+    final editUser = await Navigator.pushNamed(
+      context,
+      AddUserScreen.routeName,
+      arguments: UserFormArgs(
+        type: 'edit',
+        user: user,
+      ),
+    );
+    
+    if (editUser != null) {
+      editUser as UserModel;
+
+      setState(() {
+        users[users.indexWhere((item) => item.id == editUser.id)] = editUser;
+      });
+    }
   }
 
   void _handleDeleteUser(UserModel user) async {

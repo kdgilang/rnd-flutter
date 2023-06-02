@@ -11,7 +11,6 @@ import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/media_repository.dart';
 import 'package:purala/repositories/storage_repository.dart';
 import 'package:purala/repositories/user_repository.dart';
-import 'package:purala/user/user_screen.dart';
 import 'package:purala/validations/email_validation.dart';
 import 'package:purala/validations/password_validation.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
@@ -42,6 +41,8 @@ class AddUserWidget extends StatefulWidget {
 
 class _AddUserWidgetState extends State<AddUserWidget> {
   final userRepo = UserRepository();
+  final storageRepo = StorageRepository();
+  final mediaRepo = MediaRepository();
   final _formKey = GlobalKey<FormState>();
   final _emailControl = TextEditingController();
   final _userNameControl = TextEditingController();
@@ -53,12 +54,34 @@ class _AddUserWidgetState extends State<AddUserWidget> {
   bool _isBlockedUser = false;
   bool _isConfirmedUser = false;
   File _image = File("");
+  String _imageUrl = "";
   PlatformFile _imageMeta = PlatformFile(name: "", size: 0);
+  late UserModel _user;
+  UserFormArgs _userFormArgs = UserFormArgs(type: '');
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
+    _userFormArgs = ModalRoute.of(context)!.settings.arguments as UserFormArgs;
+
+    if (_userFormArgs.type == 'edit' && _userFormArgs.user != null) {
+      setState(() {
+        _user = _userFormArgs.user!;
+        _isBlockedUser = _user.blocked;
+        _isConfirmedUser = _user.confirmed;
+        _emailControl.text = _user.email;
+        _userNameControl.text = _user.name;
+        _passwordControl.text = _user.password ?? "";
+        _imageUrl = _user.image?.url ?? "";
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    _merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
-
+    
     return Container(
       constraints: const BoxConstraints(maxWidth: 600),
       decoration: BoxDecoration(
@@ -76,10 +99,15 @@ class _AddUserWidgetState extends State<AddUserWidget> {
               child: CircleAvatar(
                 radius: 45,
                 backgroundColor: ColorConstants.secondary,
-                child: _image.path.isEmpty ? const Text(
+                child: (_image.path.isEmpty && _imageUrl.isEmpty) ? const Text(
                   "upload",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 10),
+                ) :
+                 _image.path.isEmpty ?
+                CircleAvatar(
+                  radius: 44,
+                  backgroundImage: NetworkImage(_imageUrl)
                 ) :
                 CircleAvatar(
                   radius: 44,
@@ -103,23 +131,23 @@ class _AddUserWidgetState extends State<AddUserWidget> {
             child: Column(
               children: [
                 TextFormField(
+                  readOnly: _userFormArgs.type == 'edit',
                   controller: _emailControl,
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     labelText: 'Email address',
-                    // floatingLabelStyle: TextStyle(color: Colors.white),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
                     )
                   ),
                   validator: EmailValidation.validateEmail,
                 ),
+                const SizedBox(height: 20,),
                 TextFormField(
                   controller: _userNameControl,
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     labelText: 'User Name',
-                    // floatingLabelStyle: TextStyle(color: Colors.white),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
                     )
@@ -128,11 +156,10 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     if (val!.isEmpty) {
                       return "User Name is required";
                     }
-
                     return null;
                   },
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(height: 20,),
                 Flex(
                   direction: Axis.horizontal,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -140,11 +167,9 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   children: [
                     const Text("Is confirmed user?"),
                     Switch(
-                      // This bool value toggles the switch.
                       value: _isConfirmedUser,
                       activeColor: ColorConstants.secondary,
                       onChanged: (bool value) {
-                        // This is called when the user toggles the switch.
                         setState(() {
                           _isConfirmedUser = value;
                         });
@@ -152,6 +177,7 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 10,),
                 Flex(
                   direction: Axis.horizontal,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -159,11 +185,9 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                   children: [
                     const Text("Is blocked user?"),
                     Switch(
-                      // This bool value toggles the switch.
                       value: _isBlockedUser,
                       activeColor: ColorConstants.secondary,
                       onChanged: (bool value) {
-                        // This is called when the user toggles the switch.
                         setState(() {
                           _isBlockedUser = value;
                         });
@@ -171,21 +195,26 @@ class _AddUserWidgetState extends State<AddUserWidget> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10,),
-                TextFormField(
-                  controller: _passwordControl,
-                  obscureText: true,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: InputDecoration(
-                    border: const UnderlineInputBorder(),
-                    labelText: 'Password',
-                    // floatingLabelStyle: TextStyle(color: Colors.white),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
-                    )
+                Visibility(
+                  visible: _userFormArgs.type != 'edit',
+                  child: const SizedBox(height: 20,)
+                ),
+                Visibility(
+                  visible: _userFormArgs.type != 'edit',
+                  child: TextFormField(
+                    controller: _passwordControl,
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    decoration: InputDecoration(
+                      border: const UnderlineInputBorder(),
+                      labelText: 'Password',
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
+                      )
+                    ),
+                    validator: PasswordValidation.validateRegisterPassword,
                   ),
-                  validator: PasswordValidation.validateRegisterPassword,
                 ),
                 const SizedBox(height: 20,),
                 ElevatedButton(
@@ -211,35 +240,22 @@ class _AddUserWidgetState extends State<AddUserWidget> {
     );
   }
 
-  void _handleSave() async {
-    if (!_formKey.currentState!.validate() || isBusy) {
-      return;
-    }
+  Future<void> edit() async {
+    final updatedUser = _user.copyWith(
+      name: _userNameControl.text,
+      blocked: _isBlockedUser,
+      confirmed: _isConfirmedUser
+    );
 
-    final storageRepo = StorageRepository();
-    final mediaRepo = MediaRepository();
+    await userRepo.update(updatedUser);
 
-    setState(() {
-      isBusy = true;
-    });
-
-    try {
-      final user = UserModel(
-        name: _userNameControl.text,
-        email: _emailControl.text,
-        confirmed: _isConfirmedUser,
-        blocked: _isBlockedUser,
-        merchantId: _merchantId,
-        password: _passwordControl.text
-      );
-
-      final userId = await userRepo.add(user);
+    if (_image.path.isNotEmpty) {
       final String imageName = "${DateTime.now().millisecondsSinceEpoch}_${_imageMeta.name}";
       final path = await storageRepo.upload(imageName, _image);
       final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
       final imgProp = await decodeImageFromList(_image.readAsBytesSync());
-      
-      user.image = MediaModel(
+
+      updatedUser.image = MediaModel(
         name: imageName,
         caption: _userNameControl.text,
         url: imageUrl,
@@ -250,13 +266,65 @@ class _AddUserWidgetState extends State<AddUserWidget> {
         width: imgProp.width
       );
 
-      mediaRepo.add(user.image!,
-        userId,
-        UserModel.type
-      );
+      mediaRepo.update(updatedUser.image!, updatedUser.id!, UserModel.type);
+    }
 
-      if (mounted) {
-        Navigator.pop(context, user);
+    if (mounted) {
+      Navigator.pop(context, updatedUser);
+    }
+  }
+
+  Future<void> add() async {
+    final user = UserModel(
+      name: _userNameControl.text,
+      email: _emailControl.text,
+      confirmed: _isConfirmedUser,
+      blocked: _isBlockedUser,
+      merchantId: _merchantId,
+      password: _passwordControl.text
+    );
+
+    final userId = await userRepo.add(user);
+    final String imageName = "${DateTime.now().millisecondsSinceEpoch}_${_imageMeta.name}";
+    final path = await storageRepo.upload(imageName, _image);
+    final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
+    final imgProp = await decodeImageFromList(_image.readAsBytesSync());
+
+    user.image = MediaModel(
+      name: imageName,
+      caption: _userNameControl.text,
+      url: imageUrl,
+      size: _imageMeta.size,
+      ext: _imageMeta.extension,
+      alternativeText: _userNameControl.text,
+      height: imgProp.height,
+      width: imgProp.width
+    );
+
+    mediaRepo.add(user.image!,
+      userId,
+      UserModel.type
+    );
+
+    if (mounted) {
+      Navigator.pop(context, user.copyWith(id: userId));
+    }
+  }
+
+  void _handleSave() async {
+    if (!_formKey.currentState!.validate() || isBusy) {
+      return;
+    }
+
+    setState(() {
+      isBusy = true;
+    });
+
+    try {
+      if (_userFormArgs.type == 'edit') {
+        await edit();
+      } else {
+        await add();
       }
     } on Exception catch (err) {
       debugPrint('known error: $err');
@@ -283,4 +351,14 @@ class _AddUserWidgetState extends State<AddUserWidget> {
       // User canceled the picker
     }
   }
+}
+
+class UserFormArgs {
+  final String type;
+  final UserModel? user;
+
+  UserFormArgs({
+    required this.type,
+    this.user
+  });
 }
