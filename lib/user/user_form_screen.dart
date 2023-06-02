@@ -16,8 +16,8 @@ import 'package:purala/validations/password_validation.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
 
-class AddUserScreen extends StatelessWidget {
-  const AddUserScreen({super.key});
+class UserFormScreen extends StatelessWidget {
+  const UserFormScreen({super.key});
 
   static const String routeName = "/add-user";
 
@@ -26,20 +26,20 @@ class AddUserScreen extends StatelessWidget {
     return const AuthenticatedLayout(
       child: ScaffoldWidget(
         title: "Add user",
-        child: AddUserWidget(),
+        child: UserFormWidget(),
       )
     );
   }
 }
 
-class AddUserWidget extends StatefulWidget {
-  const AddUserWidget({Key? key}) : super(key: key);
+class UserFormWidget extends StatefulWidget {
+  const UserFormWidget({Key? key}) : super(key: key);
 
   @override
-  State<AddUserWidget> createState() => _AddUserWidgetState();
+  State<UserFormWidget> createState() => _UserFormWidgetState();
 }
 
-class _AddUserWidgetState extends State<AddUserWidget> {
+class _UserFormWidgetState extends State<UserFormWidget> {
   final userRepo = UserRepository();
   final storageRepo = StorageRepository();
   final mediaRepo = MediaRepository();

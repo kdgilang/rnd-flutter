@@ -5,7 +5,7 @@ import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/user_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/user_repository.dart';
-import 'package:purala/user/add_user_screen.dart';
+import 'package:purala/user/user_form_screen.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
 import 'package:purala/widgets/tile_widget.dart';
@@ -223,7 +223,7 @@ class _UserWidgetState extends State<UserWidget> {
   void _handleAddUser() async {
     final user = await Navigator.pushNamed(
       context,
-      AddUserScreen.routeName,
+      UserFormScreen.routeName,
       arguments: UserFormArgs(
         type: 'add',
       ),
@@ -240,7 +240,7 @@ class _UserWidgetState extends State<UserWidget> {
   void _handleEditUser(UserModel user) async {
     final editUser = await Navigator.pushNamed(
       context,
-      AddUserScreen.routeName,
+      UserFormScreen.routeName,
       arguments: UserFormArgs(
         type: 'edit',
         user: user,
