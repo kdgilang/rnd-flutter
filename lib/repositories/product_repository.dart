@@ -13,7 +13,12 @@ class ProductRepository {
     .select('''
       *,
       products_merchant_links(
-        merchants (
+        merchants(
+          id
+        )
+      ),
+      products_user_links(
+        up_users(
           id
         )
       )

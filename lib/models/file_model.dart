@@ -8,7 +8,7 @@ class FileModel extends BaseModel {
   final String? hash;
   final String? mime;
   final String? ext;
-  final int? size;
+  final num size;
   final int? height;
   final int? width;
 
@@ -16,6 +16,7 @@ class FileModel extends BaseModel {
     super.id,
     required this.name,
     required this.url,
+    required this.size,
     required this.alternativeText,
     super.createdAt,
     super.updatedAt,
@@ -26,7 +27,6 @@ class FileModel extends BaseModel {
     this.hash,
     this.mime,
     this.ext,
-    this.size
   });
 
   factory FileModel.fromJson(Map<String, dynamic> json) {
@@ -40,8 +40,8 @@ class FileModel extends BaseModel {
       mime: json['mime'],
       ext: json['ext'],
       size: json['size'],
-      createdAt: json['created_at'] ?? DateTime.now().toString(),
-      updatedAt: json['updated_at'] ?? DateTime.now().toString(),
+      createdAt: json['created_at'] ?? "",
+      updatedAt: json['updated_at'] ?? "",
       createdById: json['created_by_id'],
       height: json['height'],
       width: json['width']

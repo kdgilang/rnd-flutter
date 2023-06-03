@@ -10,18 +10,27 @@ class FileRepository {
 
   Future<FileModel> getOne(int id, String relatedType) async {
 
-    final morphs = FilesRelatedMorphsModel.fromJson(await _db
+    final res = await _db
     .from('files_related_morphs')
-    .select('*')
+    .select('''
+      files(
+        id,
+        name,
+        caption,
+        url,
+        alternative_text,
+        ext,
+        created_at,
+        updated_at,
+        created_by_id,
+        height,
+        width
+      )
+    ''')
     .eq('related_id', id)
-    .eq('related_type', relatedType).maybeSingle());
+    .eq('related_type', relatedType).single();
 
-    final media = await _db
-    .from('files')
-    .select('id, name, caption, url')
-    .eq('id', morphs.fileId).maybeSingle();
-
-    return FileModel.fromJson(media);
+    return FileModel.fromJson(res['files']);
   }
 
   Future<void> add(FileModel media, int relatedId, String relatedType) async {
@@ -35,7 +44,6 @@ class FileRepository {
       'created_by_id': 1, // default admin id
       'ext': media.ext,
       'hash': media.hash,
-      'size': media.size,
       'updated_at': media.updatedAt
     }).select().single();
 
@@ -66,7 +74,6 @@ class FileRepository {
       'created_by_id': 1, // default admin id
       'ext': media.ext,
       'hash': media.hash,
-      'size': media.size,
       'updated_at': media.updatedAt
     }).eq('id', morphs.fileId);
   }

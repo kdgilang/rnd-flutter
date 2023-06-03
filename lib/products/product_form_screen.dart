@@ -9,12 +9,10 @@ import 'package:purala/models/file_model.dart';
 import 'package:purala/models/product_model.dart';
 import 'package:purala/models/user_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
+import 'package:purala/providers/user_provider.dart';
 import 'package:purala/repositories/file_repository.dart';
 import 'package:purala/repositories/product_repository.dart';
 import 'package:purala/repositories/storage_repository.dart';
-import 'package:purala/repositories/user_repository.dart';
-import 'package:purala/validations/email_validation.dart';
-import 'package:purala/validations/password_validation.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
 
@@ -55,7 +53,6 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
 
   bool isBusy = false;
   bool isLoading = false;
-  int _merchantId = 0;
   bool _isEnabledProduct = false;
   File _image = File("");
   String _imageUrl = "";
@@ -66,8 +63,6 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    _merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
     _productFormArgs = ModalRoute.of(context)!.settings.arguments as ProductFormArgs;
 
     if (_productFormArgs.type == 'edit') {
@@ -87,7 +82,6 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Container(
       constraints: const BoxConstraints(maxWidth: 600),
       decoration: BoxDecoration(
@@ -314,7 +308,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
       quantity: int.parse(_quantityControl.text),
       quantityNotify: int.parse(_quantityNotifyControl.text),
       enabled: _isEnabledProduct,
-      merchantId: _merchantId,
+      merchantId: context.read<MerchantProvider>().merchant!.id!,
+      userId: context.read<UserProvider>().user!.id!
     );
 
     final productId = await _productRepo.add(product);

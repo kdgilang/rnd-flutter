@@ -9,6 +9,7 @@ class ProductModel extends BaseModel {
   final int quantity;
   final int? quantityNotify;
   final int merchantId;
+  final int userId;
   final String? publishedAt;
   final bool enabled;
   FileModel? image;
@@ -21,6 +22,7 @@ class ProductModel extends BaseModel {
     required this.normalPrice,
     required this.quantity,
     required this.merchantId,
+    required this.userId,
     super.createdAt,
     super.updatedAt,
     super.createdById,
@@ -41,6 +43,7 @@ class ProductModel extends BaseModel {
     int? quantity,
     int? quantityNotify,
     int? merchantId,
+    int? userId,
     String? publishedAt,
     FileModel? image,
     String? createdAt,
@@ -58,6 +61,7 @@ class ProductModel extends BaseModel {
       quantityNotify: quantityNotify ?? this.quantityNotify,
       publishedAt: publishedAt ?? this.publishedAt,
       merchantId: merchantId ?? this.merchantId,
+      userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       createdById: createdById ?? this.createdById,
@@ -77,6 +81,7 @@ class ProductModel extends BaseModel {
       quantityNotify: json['quantity_notify'],
       publishedAt: json['published_at'],
       merchantId: json['products_merchant_links'][0]?['merchants']?['id'] ?? 0,
+      userId: json['products_user_links'][0]?['up_users']?['id'] ?? 0,
       createdAt: json['created_at'] ?? DateTime.now().toString(),
       updatedAt: json['updated_at'] ?? DateTime.now().toString(),
       createdById: json['created_by_id'],
