@@ -3,6 +3,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/product_model.dart';
+import 'package:purala/products/product_form_screen.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/product_repository.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
@@ -54,7 +55,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                 child: IconButton(
                   icon: const Icon(Icons.add),
                   tooltip: 'Add product',
-                  onPressed: _handleAddUser,
+                  onPressed: _handleAddProduct,
                 ),
               ),
               Padding(
@@ -62,7 +63,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                 child: IconButton(
                   icon: const Icon(Icons.replay),
                   tooltip: 'Reload products',
-                  onPressed: _loadUsers,
+                  onPressed: _loadProducts,
                 ),
               ),
             ],
@@ -81,22 +82,16 @@ class _ProductWidgetState extends State<ProductWidget> {
                   style: const TextStyle(fontSize: 25),
                   builder: (ProductModel product) {
                     return Slidable(
-                      // Specify a key if the Slidable is dismissible.
                       key: ValueKey(product.id),
-                      // The start action pane is the one at the left or the top side.
                       startActionPane: ActionPane(
-                        // A motion is a widget used to control how the pane animates.
                         motion: const ScrollMotion(),
-                        // A pane can dismiss the Slidable.
                         dismissible: DismissiblePane(onDismissed: () {
-                          _handleDeleteUser(product);
+                          _handleDeleteProduct(product);
                         }),
-                        // All actions are defined in the children parameter.
                         children: [
-                          // A SlidableAction can have an icon and/or a label.
                           SlidableAction(
                             onPressed: (_) {
-                              _handleDeleteUser(product);
+                              _handleDeleteProduct(product);
                             },
                             backgroundColor: Colors.red,
                             foregroundColor: Colors.white,
@@ -105,8 +100,6 @@ class _ProductWidgetState extends State<ProductWidget> {
                           ),
                         ],
                       ),
-
-                      // The end action pane is the one at the right or the bottom side.
                       endActionPane: ActionPane(
                         motion: const ScrollMotion(),
                         children: [
@@ -121,18 +114,15 @@ class _ProductWidgetState extends State<ProductWidget> {
                           ),
                           SlidableAction(
                             onPressed: (context) {
-                              _handleBlockUser(product);
+                              _handleToggleEnabledProduct(product);
                             },
                             backgroundColor: ColorConstants.secondary,
                             foregroundColor: Theme.of(context).primaryColor,
-                            icon: product.enabled ? Icons.block_flipped : Icons.block,
-                            label: product.enabled ? 'Disabled' : 'Enabled',
+                            icon: product.enabled ? Icons.disabled_by_default : Icons.check,
+                            label: product.enabled ? 'Disable' : 'Enable',
                           ),
                         ],
                       ),
-
-                      // The child of the Slidable is what the user sees when the
-                      // component is not dragged.
                       child: TileWidget(
                         title: product.name,
                         subtitle: "${product.name} ${product.enabled ? "(enabled)" : "(disabled)"}",
@@ -184,7 +174,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     );
   }
 
-  void _loadUsers() async {
+  void _loadProducts() async {
     if (isBusy) {
       return;
     }
@@ -200,40 +190,41 @@ class _ProductWidgetState extends State<ProductWidget> {
     });
   }
 
-  void _handleBlockUser(ProductModel product) async {
-    // if (isBusy) {
-    //   return;
-    // }
+  void _handleToggleEnabledProduct(ProductModel product) async {
+    if (isBusy) {
+      return;
+    }
 
-    // setState(() {
-    //   isBusy = true;
-    // });
+    setState(() {
+      isBusy = true;
+    });
 
-    // final updatedProduct = product.copyWith(enabled: !product.blocked);
+    final updatedProduct = product.copyWith(enabled: !product.enabled);
 
-    // await productRepo.update(updatedProduct);
+    await productRepo.update(updatedProduct);
 
-    // setState(() {
-    //   isBusy = false;
-    //   products[products.indexWhere((item) => item.id == product.id)] = updatedProduct;
-    // });
+    setState(() {
+      isBusy = false;
+      products[products.indexWhere((item) => item.id == product.id)] = updatedProduct;
+    });
   }
 
-  void _handleAddUser() async {
-    // final user = await Navigator.pushNamed(
-    //   context,
-    //   UserFormScreen.routeName,
-    //   arguments: UserFormArgs(
-    //     type: 'add',
-    //   ),
-    // );
-    // if (user != null) {
-    //   user as ProductModel;
+  void _handleAddProduct() async {
+    final product = await Navigator.pushNamed(
+      context,
+      ProductFormScreen.routeName,
+      arguments: ProductFormArgs(
+        type: 'add',
+      ),
+    );
+    
+    if (product != null) {
+      product as ProductModel;
 
-    //   setState(() {
-    //     users.insert(0, user);
-    //   });
-    // }
+      setState(() {
+        products.insert(0, product);
+      });
+    }
   }
 
   void _handleEditUser(ProductModel product) async {
@@ -255,7 +246,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     // }
   }
 
-  void _handleDeleteUser(ProductModel product) async {
+  void _handleDeleteProduct(ProductModel product) async {
     // if (isBusy) {
     //   return;
     // }

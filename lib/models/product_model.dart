@@ -33,6 +33,7 @@ class ProductModel extends BaseModel {
   static const String type = 'api::product.product';
 
   ProductModel copyWith({
+    int? id,
     String? name,
     String? description,
     double? price,
@@ -48,6 +49,7 @@ class ProductModel extends BaseModel {
     bool? enabled,
   }) {
     return ProductModel(
+      id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
       price: price ?? this.price,

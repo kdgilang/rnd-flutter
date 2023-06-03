@@ -125,11 +125,11 @@ class UserRepository {
     
     await _db
     .from('up_users_role_links')
-    .delete().eq('id', user.id);
+    .delete().eq('user_id', user.id);
 
     await _db
     .from('up_users_merchant_links')
-    .delete().eq('id', user.id);
+    .delete().eq('user_id', user.id);
 
     await fileRepo.delete(user.image!, user.id!, UserModel.type);
 

@@ -1,5 +1,4 @@
 import 'package:purala/models/product_model.dart';
-import 'package:purala/models/user_model.dart';
 import 'package:purala/repositories/file_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -35,76 +34,83 @@ class ProductRepository {
     return products;
   }
 
-  Future<int> add(UserModel user) async {
-    final AuthResponse res = await _db.auth.signUp(
-      email: user.email,
-      password: user.password!,
-      data: {
-        'confirmation_sent_at': DateTime.now().toString(),
-      }
-    );
+  Future<int> add(ProductModel product) async {
 
-    final newUSer = await _db
+    final newProduct = await _db
     .from('up_users')
     .insert({
-      'username': user.name,
-      'email': user.email,
-      'confirmed': user.confirmed,
-      'blocked': user.blocked,
-      'sso_id': res.user!.id,
+      'name': product.name,
+      'description': product.description,
+      'price': product.price,
+      'normal_price': product.normalPrice,
+      'quantity': product.quantity,
+      'quantity_notify': product.quantityNotify,
+      'enabled': product.enabled,
       'created_at': DateTime.now().toString(),
       'updated_at': DateTime.now().toString(),
+      'published_at': DateTime.now().toString(),
       'created_by_id': 1 // default admin id
     }).select().single();
 
-    final int userId = newUSer['id'];
+    final int productId = newProduct['id'];
+
+    // await _db
+    // .from('products_user_links')
+    // .insert({
+    //   'product_id': productId,
+    //   'user_id': , // default editor
+    //   'user_order': 1,
+    // });
 
     await _db
-    .from('up_users_role_links')
+    .from('products_merchant_links')
     .insert({
-      'user_id': userId,
-      'role_id': 4, // default editor
-      'user_order': 1,
+      'product_id': productId,
+      'merchant_id': product.merchantId, 
     });
 
-    await _db
-    .from('up_users_merchant_links')
-    .insert({
-      'user_id': userId,
-      'merchant_id': user.merchantId, 
-    });
-
-    return userId;
+    return productId;
   }
 
-  Future<void> update(UserModel user) async {
+  Future<void> update(ProductModel product) async {
     await _db
-      .from('up_users')
+      .from('products')
       .update({
-        'username': user.name,
-        'confirmed': user.confirmed,
-        'blocked': user.blocked,
+        'name': product.name,
+        'description': product.description,
+        'price': product.price,
+        'normal_price': product.normalPrice,
+        'quantity': product.quantity,
+        'quantity_notify': product.quantityNotify,
+        'enabled': product.enabled,
         'updated_at': DateTime.now().toString()
       })
-      .eq('id', user.id);
+      .eq('id', product.id);
   }
 
-  Future<void> delete(UserModel user) async {
-    await _db.auth.admin.deleteUser(user.ssoId!);
+  Future<void> delete(ProductModel product) async {
     
     await _db
-    .from('up_users_role_links')
-    .delete().eq('id', user.id);
+    .from('categories_products_links')
+    .delete().eq('product_id', product.id);
 
     await _db
-    .from('up_users_merchant_links')
-    .delete().eq('id', user.id);
-
-    await fileRepo.delete(user.image!, user.id!, UserModel.type);
+    .from('products_ingredients_links')
+    .delete().eq('product_id', product.id);
 
     await _db
-      .from('up_users')
+    .from('products_user_links')
+    .delete().eq('product_id', product.id);    
+
+    await _db
+    .from('products_merchant_links')
+    .delete().eq('product_id', product.id);
+
+    await fileRepo.delete(product.image!, product.id!, ProductModel.type);
+
+    await _db
+      .from('products')
       .delete()
-      .eq('id', user.id);
+      .eq('id', product.id);
   }
 }

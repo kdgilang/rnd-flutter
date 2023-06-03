@@ -6,9 +6,11 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/file_model.dart';
+import 'package:purala/models/product_model.dart';
 import 'package:purala/models/user_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/file_repository.dart';
+import 'package:purala/repositories/product_repository.dart';
 import 'package:purala/repositories/storage_repository.dart';
 import 'package:purala/repositories/user_repository.dart';
 import 'package:purala/validations/email_validation.dart';
@@ -16,65 +18,69 @@ import 'package:purala/validations/password_validation.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
 
-class UserFormScreen extends StatelessWidget {
-  const UserFormScreen({super.key});
+class ProductFormScreen extends StatelessWidget {
+  const ProductFormScreen({super.key});
 
-  static const String routeName = "/add-user";
+  static const String routeName = "/add-product";
 
   @override
   Widget build(BuildContext context) {
     return const AuthenticatedLayout(
       child: ScaffoldWidget(
         title: "Product Form",
-        child: UserFormWidget(),
+        child: ProductFormWidget(),
       )
     );
   }
 }
 
-class UserFormWidget extends StatefulWidget {
-  const UserFormWidget({Key? key}) : super(key: key);
+class ProductFormWidget extends StatefulWidget {
+  const ProductFormWidget({Key? key}) : super(key: key);
 
   @override
-  State<UserFormWidget> createState() => _UserFormWidgetState();
+  State<ProductFormWidget> createState() => _ProductFormWidgetState();
 }
 
-class _UserFormWidgetState extends State<UserFormWidget> {
-  final userRepo = UserRepository();
-  final storageRepo = StorageRepository();
-  final fileRepo = FileRepository();
+class _ProductFormWidgetState extends State<ProductFormWidget> {
+  final _productRepo = ProductRepository();
+  final _storageRepo = StorageRepository();
+  final _fileRepo = FileRepository();
   final _formKey = GlobalKey<FormState>();
-  final _emailControl = TextEditingController();
-  final _userNameControl = TextEditingController();
-  final _passwordControl = TextEditingController();
+  final _nameControl = TextEditingController();
+  final _descriptionControl = TextEditingController();
+  final _priceControl = TextEditingController();
+  final _normalPriceControl = TextEditingController();
+  final _quantityControl = TextEditingController();
+  final _quantityNotifyControl = TextEditingController();
 
   bool isBusy = false;
   bool isLoading = false;
   int _merchantId = 0;
-  bool _isBlockedUser = false;
-  bool _isConfirmedUser = false;
+  bool _isEnabledProduct = false;
   File _image = File("");
   String _imageUrl = "";
   PlatformFile _imageMeta = PlatformFile(name: "", size: 0);
-  late UserModel _user;
-  UserFormArgs _userFormArgs = UserFormArgs(type: '');
+  late ProductModel _product;
+  ProductFormArgs _productFormArgs = ProductFormArgs(type: '');
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     _merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
-    _userFormArgs = ModalRoute.of(context)!.settings.arguments as UserFormArgs;
+    _productFormArgs = ModalRoute.of(context)!.settings.arguments as ProductFormArgs;
 
-    if (_userFormArgs.type == 'edit' && _userFormArgs.user != null) {
+    if (_productFormArgs.type == 'edit') {
       setState(() {
-        _user = _userFormArgs.user!;
-        _isBlockedUser = _user.blocked;
-        _isConfirmedUser = _user.confirmed;
-        _emailControl.text = _user.email;
-        _userNameControl.text = _user.name;
-        _passwordControl.text = _user.password ?? "";
-        _imageUrl = _user.image?.url ?? "";
+        _product = _productFormArgs.product!;
+        _isEnabledProduct = _product.enabled;
+        _nameControl.text = _product.name;
+        _descriptionControl.text = _product.description;
+        _priceControl.text = _product.price.toString();
+        _normalPriceControl.text = _product.normalPrice.toString();
+        _quantityControl.text = _product.quantity.toString();
+        _quantityNotifyControl.text = _product.quantityNotify.toString();
+        _imageUrl = _product.image?.url ?? "";
       });
     }
   }
@@ -131,33 +137,93 @@ class _UserFormWidgetState extends State<UserFormWidget> {
             child: Column(
               children: [
                 TextFormField(
-                  readOnly: _userFormArgs.type == 'edit',
-                  controller: _emailControl,
+                  controller: _nameControl,
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
-                    labelText: 'Email address',
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
-                    )
-                  ),
-                  validator: EmailValidation.validateEmail,
-                ),
-                const SizedBox(height: 20,),
-                TextFormField(
-                  controller: _userNameControl,
-                  decoration: InputDecoration(
-                    border: const UnderlineInputBorder(),
-                    labelText: 'User Name',
+                    labelText: 'Name',
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
                     )
                   ),
                   validator: (val) {
                     if (val!.isEmpty) {
-                      return "User Name is required";
+                      return "Product name is required.";
                     }
                     return null;
                   },
+                ),
+                const SizedBox(height: 20,),
+                TextFormField(
+                  controller: _descriptionControl,
+                  decoration: InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    labelText: 'Description',
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
+                    )
+                  ),
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Product description is required.";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20,),
+                TextFormField(
+                  controller: _priceControl,
+                  decoration: InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    labelText: 'Price',
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
+                    )
+                  ),
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Product price is required.";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20,),
+                TextFormField(
+                  controller: _normalPriceControl,
+                  decoration: InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    labelText: 'Normal price',
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
+                    )
+                  ),
+                ),
+                const SizedBox(height: 20,),
+                TextFormField(
+                  controller: _quantityControl,
+                  decoration: InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    labelText: 'Quantity',
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
+                    )
+                  ),
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return "Product quantity is required.";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20,),
+                TextFormField(
+                  controller: _quantityNotifyControl,
+                  decoration: InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    labelText: 'Quantity notify',
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
+                    )
+                  ),
                 ),
                 const SizedBox(height: 20,),
                 Flex(
@@ -165,56 +231,17 @@ class _UserFormWidgetState extends State<UserFormWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Is confirmed user?"),
+                    const Text("Show this product on sale?"),
                     Switch(
-                      value: _isConfirmedUser,
+                      value: _isEnabledProduct,
                       activeColor: ColorConstants.secondary,
                       onChanged: (bool value) {
                         setState(() {
-                          _isConfirmedUser = value;
+                          _isEnabledProduct = value;
                         });
                       },
                     ),
                   ],
-                ),
-                const SizedBox(height: 10,),
-                Flex(
-                  direction: Axis.horizontal,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text("Is blocked user?"),
-                    Switch(
-                      value: _isBlockedUser,
-                      activeColor: ColorConstants.secondary,
-                      onChanged: (bool value) {
-                        setState(() {
-                          _isBlockedUser = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                Visibility(
-                  visible: _userFormArgs.type != 'edit',
-                  child: const SizedBox(height: 20,)
-                ),
-                Visibility(
-                  visible: _userFormArgs.type != 'edit',
-                  child: TextFormField(
-                    controller: _passwordControl,
-                    obscureText: true,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    decoration: InputDecoration(
-                      border: const UnderlineInputBorder(),
-                      labelText: 'Password',
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
-                      )
-                    ),
-                    validator: PasswordValidation.validateRegisterPassword,
-                  ),
                 ),
                 const SizedBox(height: 20,),
                 ElevatedButton(
@@ -241,73 +268,79 @@ class _UserFormWidgetState extends State<UserFormWidget> {
   }
 
   Future<void> edit() async {
-    final updatedUser = _user.copyWith(
-      name: _userNameControl.text,
-      blocked: _isBlockedUser,
-      confirmed: _isConfirmedUser
+    final updatedProduct = _product.copyWith(
+      name: _nameControl.text,
+      description: _descriptionControl.text,
+      price: double.parse(_priceControl.text),
+      normalPrice: double.parse(_normalPriceControl.text),
+      quantity: int.parse(_quantityControl.text),
+      quantityNotify: int.parse(_quantityNotifyControl.text),
+      enabled: _isEnabledProduct,
     );
 
-    await userRepo.update(updatedUser);
+    await _productRepo.update(updatedProduct);
 
     if (_image.path.isNotEmpty) {
       final String imageName = "${DateTime.now().millisecondsSinceEpoch}_${_imageMeta.name}";
-      final path = await storageRepo.upload(imageName, _image);
+      final path = await _storageRepo.upload(imageName, _image);
       final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
       final imgProp = await decodeImageFromList(_image.readAsBytesSync());
 
-      updatedUser.image = FileModel(
+      updatedProduct.image = FileModel(
         name: imageName,
-        caption: _userNameControl.text,
+        caption: _descriptionControl.text,
         url: imageUrl,
         size: _imageMeta.size,
         ext: _imageMeta.extension,
-        alternativeText: _userNameControl.text,
+        alternativeText: _descriptionControl.text,
         height: imgProp.height,
         width: imgProp.width
       );
 
-      fileRepo.update(updatedUser.image!, updatedUser.id!, UserModel.type);
+      _fileRepo.update(updatedProduct.image!, updatedProduct.id!, ProductModel.type);
     }
 
     if (mounted) {
-      Navigator.pop(context, updatedUser);
+      Navigator.pop(context, updatedProduct);
     }
   }
 
   Future<void> add() async {
-    final user = UserModel(
-      name: _userNameControl.text,
-      email: _emailControl.text,
-      confirmed: _isConfirmedUser,
-      blocked: _isBlockedUser,
+    final product = ProductModel(
+      name: _nameControl.text,
+      description: _descriptionControl.text,
+      price: double.parse(_priceControl.text),
+      normalPrice: double.parse(_normalPriceControl.text),
+      quantity: int.parse(_quantityControl.text),
+      quantityNotify: int.parse(_quantityNotifyControl.text),
+      enabled: _isEnabledProduct,
       merchantId: _merchantId,
-      password: _passwordControl.text
     );
 
-    final userId = await userRepo.add(user);
+    final productId = await _productRepo.add(product);
     final String imageName = "${DateTime.now().millisecondsSinceEpoch}_${_imageMeta.name}";
-    final path = await storageRepo.upload(imageName, _image);
+    final path = await _storageRepo.upload(imageName, _image);
     final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
     final imgProp = await decodeImageFromList(_image.readAsBytesSync());
 
-    user.image = FileModel(
+    product.image = FileModel(
       name: imageName,
-      caption: _userNameControl.text,
+      caption: _descriptionControl.text,
       url: imageUrl,
       size: _imageMeta.size,
       ext: _imageMeta.extension,
-      alternativeText: _userNameControl.text,
+      alternativeText: _descriptionControl.text,
       height: imgProp.height,
       width: imgProp.width
     );
 
-    fileRepo.add(user.image!,
-      userId,
+    _fileRepo.add(product.image!,
+      productId,
       UserModel.type
     );
 
     if (mounted) {
-      Navigator.pop(context, user.copyWith(id: userId));
+      Navigator.pop(context, product.copyWith(id: productId));
     }
   }
 
@@ -321,7 +354,7 @@ class _UserFormWidgetState extends State<UserFormWidget> {
     });
 
     try {
-      if (_userFormArgs.type == 'edit') {
+      if (_productFormArgs.type == 'edit') {
         await edit();
       } else {
         await add();
@@ -353,12 +386,12 @@ class _UserFormWidgetState extends State<UserFormWidget> {
   }
 }
 
-class UserFormArgs {
+class ProductFormArgs {
   final String type;
-  final UserModel? user;
+  final ProductModel? product;
 
-  UserFormArgs({
+  ProductFormArgs({
     required this.type,
-    this.user
+    this.product
   });
 }
