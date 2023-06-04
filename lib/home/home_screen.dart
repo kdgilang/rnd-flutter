@@ -76,7 +76,7 @@ class HomeScreen extends StatelessWidget {
                       onTap: () {
                         Navigator.pushNamed(context, UserScreen.routeName);
                       },
-                    ),
+                    ), 
                     const Divider(),
                     ListTile(
                       leading: const Icon(Icons.pages),

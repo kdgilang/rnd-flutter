@@ -4,8 +4,8 @@ import 'package:purala/models/file_model.dart';
 class ProductModel extends BaseModel {
   final String name;
   final String description;
-  final double price;
-  final double normalPrice;
+  final num price;
+  final num normalPrice;
   final int quantity;
   final int? quantityNotify;
   final int merchantId;
@@ -38,8 +38,8 @@ class ProductModel extends BaseModel {
     int? id,
     String? name,
     String? description,
-    double? price,
-    double? normalPrice,
+    num? price,
+    num? normalPrice,
     int? quantity,
     int? quantityNotify,
     int? merchantId,

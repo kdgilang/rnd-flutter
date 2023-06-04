@@ -15,6 +15,8 @@ import 'package:purala/repositories/product_repository.dart';
 import 'package:purala/repositories/storage_repository.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
+import 'package:flutter/services.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
 class ProductFormScreen extends StatelessWidget {
   const ProductFormScreen({super.key});
@@ -50,6 +52,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
   final _normalPriceControl = TextEditingController();
   final _quantityControl = TextEditingController();
   final _quantityNotifyControl = TextEditingController();
+  final CurrencyTextInputFormatter _formatter = CurrencyTextInputFormatter(locale: 'id', symbol: 'Rp');
 
   bool isBusy = false;
   bool isLoading = false;
@@ -166,6 +169,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                 const SizedBox(height: 20,),
                 TextFormField(
                   controller: _priceControl,
+                  inputFormatters: <TextInputFormatter>[_formatter],
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     labelText: 'Price',
@@ -183,6 +188,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                 const SizedBox(height: 20,),
                 TextFormField(
                   controller: _normalPriceControl,
+                  inputFormatters: <TextInputFormatter>[_formatter],
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     labelText: 'Normal price',
@@ -194,6 +201,10 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                 const SizedBox(height: 20,),
                 TextFormField(
                   controller: _quantityControl,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     labelText: 'Quantity',
@@ -211,6 +222,10 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                 const SizedBox(height: 20,),
                 TextFormField(
                   controller: _quantityNotifyControl,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     labelText: 'Quantity notify',

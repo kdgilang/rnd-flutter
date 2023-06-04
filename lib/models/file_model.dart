@@ -39,7 +39,7 @@ class FileModel extends BaseModel {
       hash: json['hash'],
       mime: json['mime'],
       ext: json['ext'],
-      size: json['size'],
+      size: json['size'] ?? 0,
       createdAt: json['created_at'] ?? "",
       updatedAt: json['updated_at'] ?? "",
       createdById: json['created_by_id'],
