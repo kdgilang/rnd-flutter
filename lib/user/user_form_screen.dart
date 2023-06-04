@@ -40,9 +40,9 @@ class UserFormWidget extends StatefulWidget {
 }
 
 class _UserFormWidgetState extends State<UserFormWidget> {
-  final userRepo = UserRepository();
-  final storageRepo = StorageRepository();
-  final fileRepo = FileRepository();
+  final _userRepo = UserRepository();
+  final _storageRepo = StorageRepository();
+  final _fileRepo = FileRepository();
   final _formKey = GlobalKey<FormState>();
   final _emailControl = TextEditingController();
   final _userNameControl = TextEditingController();
@@ -247,18 +247,17 @@ class _UserFormWidgetState extends State<UserFormWidget> {
       confirmed: _isConfirmedUser
     );
 
-    await userRepo.update(updatedUser);
+    await _userRepo.update(updatedUser);
 
     if (_image.path.isNotEmpty) {
-      final String imageName = "${DateTime.now().millisecondsSinceEpoch}_${_imageMeta.name}";
-      final path = await storageRepo.upload(imageName, _image);
-      final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
+      final storageRes = await _storageRepo.upload(_imageMeta.name, _image, UserModel.type);
+      await _storageRepo.delete(_user.image!.name, UserModel.type);
       final imgProp = await decodeImageFromList(_image.readAsBytesSync());
 
       updatedUser.image = FileModel(
-        name: imageName,
+        name: storageRes.name,
         caption: _userNameControl.text,
-        url: imageUrl,
+        url: storageRes.url,
         size: _imageMeta.size,
         ext: _imageMeta.extension,
         alternativeText: _userNameControl.text,
@@ -266,7 +265,7 @@ class _UserFormWidgetState extends State<UserFormWidget> {
         width: imgProp.width
       );
 
-      fileRepo.update(updatedUser.image!, updatedUser.id!, UserModel.type);
+      _fileRepo.update(updatedUser.image!, updatedUser.id!, UserModel.type);
     }
 
     if (mounted) {
@@ -284,27 +283,28 @@ class _UserFormWidgetState extends State<UserFormWidget> {
       password: _passwordControl.text
     );
 
-    final userId = await userRepo.add(user);
-    final String imageName = "${DateTime.now().millisecondsSinceEpoch}_${_imageMeta.name}";
-    final path = await storageRepo.upload(imageName, _image);
-    final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
-    final imgProp = await decodeImageFromList(_image.readAsBytesSync());
+    final userId = await _userRepo.add(user);
 
-    user.image = FileModel(
-      name: imageName,
-      caption: _userNameControl.text,
-      url: imageUrl,
-      size: _imageMeta.size,
-      ext: _imageMeta.extension,
-      alternativeText: _userNameControl.text,
-      height: imgProp.height,
-      width: imgProp.width
-    );
+    if (_image.path.isNotEmpty) {
+      final storageRes = await _storageRepo.upload(_imageMeta.name, _image, UserModel.type);
+      final imgProp = await decodeImageFromList(_image.readAsBytesSync());
 
-    fileRepo.add(user.image!,
-      userId,
-      UserModel.type
-    );
+      user.image = FileModel(
+        name: storageRes.name,
+        caption: _userNameControl.text,
+        url: storageRes.url,
+        size: _imageMeta.size,
+        ext: _imageMeta.extension,
+        alternativeText: _userNameControl.text,
+        height: imgProp.height,
+        width: imgProp.width
+      );
+
+      _fileRepo.add(user.image!,
+        userId,
+        UserModel.type
+      );
+    }
 
     if (mounted) {
       Navigator.pop(context, user.copyWith(id: userId));

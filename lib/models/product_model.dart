@@ -81,7 +81,7 @@ class ProductModel extends BaseModel {
       quantityNotify: json['quantity_notify'],
       publishedAt: json['published_at'],
       merchantId: json['products_merchant_links'][0]?['merchants']?['id'] ?? 0,
-      userId: json['products_user_links'][0]?['up_users']?['id'] ?? 0,
+      userId: json['products_user_links']?[0]?['up_users']?['id'] ?? 0,
       createdAt: json['created_at'] ?? DateTime.now().toString(),
       updatedAt: json['updated_at'] ?? DateTime.now().toString(),
       createdById: json['created_by_id'],

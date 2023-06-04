@@ -59,13 +59,12 @@ class ProductRepository {
 
     final int productId = newProduct['id'];
 
-    // await _db
-    // .from('products_user_links')
-    // .insert({
-    //   'product_id': productId,
-    //   'user_id': , // default editor
-    //   'user_order': 1,
-    // });
+    await _db
+    .from('products_user_links')
+    .insert({
+      'product_id': productId,
+      'user_id': product.userId,
+    });
 
     await _db
     .from('products_merchant_links')
@@ -111,7 +110,9 @@ class ProductRepository {
     .from('products_merchant_links')
     .delete().eq('product_id', product.id);
 
-    await fileRepo.delete(product.image!, product.id!, ProductModel.type);
+    if (product.image != null) {
+      await fileRepo.delete(product.image!, product.id!, ProductModel.type);
+    }
 
     await _db
       .from('products')

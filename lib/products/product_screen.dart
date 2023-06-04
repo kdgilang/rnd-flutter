@@ -228,39 +228,39 @@ class _ProductWidgetState extends State<ProductWidget> {
   }
 
   void _handleEditUser(ProductModel product) async {
-    // final editUser = await Navigator.pushNamed(
-    //   context,
-    //   UserFormScreen.routeName,
-    //   arguments: UserFormArgs(
-    //     type: 'edit',
-    //     user: user,
-    //   ),
-    // );
+    final editProduct = await Navigator.pushNamed(
+      context,
+      ProductFormScreen.routeName,
+      arguments: ProductFormArgs(
+        type: 'edit',
+        product: product,
+      ),
+    );
     
-    // if (editUser != null) {
-    //   editUser as ProductModel;
+    if (editProduct != null) {
+      editProduct as ProductModel;
 
-    //   setState(() {
-    //     users[users.indexWhere((item) => item.id == editUser.id)] = editUser;
-    //   });
-    // }
+      setState(() {
+        products[products.indexWhere((item) => item.id == editProduct.id)] = editProduct;
+      });
+    }
   }
 
   void _handleDeleteProduct(ProductModel product) async {
-    // if (isBusy) {
-    //   return;
-    // }
+    if (isBusy) {
+      return;
+    }
 
-    // setState(() {
-    //   isBusy = true;
-    // });
+    setState(() {
+      isBusy = true;
+    });
 
-    // await productRepo.delete(user);
+    await productRepo.delete(product);
 
-    // setState(() {
-    //   isBusy = false;
-    //   users.remove(user);
-    // });
+    setState(() {
+      isBusy = false;
+      products.remove(product);
+    });
   }
 }
 

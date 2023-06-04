@@ -52,8 +52,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
   final _normalPriceControl = TextEditingController();
   final _quantityControl = TextEditingController();
   final _quantityNotifyControl = TextEditingController();
-  final CurrencyTextInputFormatter _formatterPrice = CurrencyTextInputFormatter(locale: 'id', symbol: 'Rp');
-  final CurrencyTextInputFormatter _formatterNormalPrice =  CurrencyTextInputFormatter(locale: 'id', symbol: 'Rp');
+  final CurrencyTextInputFormatter _formatterPrice = CurrencyTextInputFormatter(locale: 'id', symbol: 'Rp', decimalDigits: 0);
+  final CurrencyTextInputFormatter _formatterNormalPrice =  CurrencyTextInputFormatter(locale: 'id', symbol: 'Rp', decimalDigits: 0);
 
   bool isBusy = false;
   bool isLoading = false;
@@ -75,8 +75,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
         _isEnabledProduct = _product.enabled;
         _nameControl.text = _product.name;
         _descriptionControl.text = _product.description;
-        _priceControl.text = _product.price.toString();
-        _normalPriceControl.text = _product.normalPrice.toString();
+        _priceControl.text = _formatterPrice.format(_product.price.toString());
+        _normalPriceControl.text = _formatterNormalPrice.format(_product.normalPrice.toString());
         _quantityControl.text = _product.quantity.toString();
         _quantityNotifyControl.text = _product.quantityNotify.toString();
         _imageUrl = _product.image?.url ?? "";
@@ -281,8 +281,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
     final updatedProduct = _product.copyWith(
       name: _nameControl.text,
       description: _descriptionControl.text,
-      price: double.parse(_priceControl.text),
-      normalPrice: double.parse(_normalPriceControl.text),
+      price: _formatterPrice.getUnformattedValue(),
+      normalPrice: _formatterNormalPrice.getUnformattedValue(),
       quantity: int.parse(_quantityControl.text),
       quantityNotify: int.parse(_quantityNotifyControl.text),
       enabled: _isEnabledProduct,
@@ -291,15 +291,19 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
     await _productRepo.update(updatedProduct);
 
     if (_image.path.isNotEmpty) {
-      final String imageName = "${DateTime.now().millisecondsSinceEpoch}_${_imageMeta.name}";
-      final path = await _storageRepo.upload(imageName, _image);
-      final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
+      final storageRes = await _storageRepo.upload(_imageMeta.name, _image, ProductModel.type);
+
+      if(_product.image != null) {
+        // remove prev image from storage.
+        await _storageRepo.delete(_product.image!.name, ProductModel.type);
+      }
+      
       final imgProp = await decodeImageFromList(_image.readAsBytesSync());
 
       updatedProduct.image = FileModel(
-        name: imageName,
-        caption: _descriptionControl.text,
-        url: imageUrl,
+        name: storageRes.name,
+        caption: _nameControl.text,
+        url: storageRes.url,
         size: _imageMeta.size,
         ext: _imageMeta.extension,
         alternativeText: _descriptionControl.text,
@@ -329,26 +333,26 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
     );
 
     final productId = await _productRepo.add(product);
-    final String imageName = "${DateTime.now().millisecondsSinceEpoch}_${_imageMeta.name}";
-    final path = await _storageRepo.upload(imageName, _image);
-    final imageUrl = "${dotenv.env['SUPABASE_STORAGE_URL']}/$path";
-    final imgProp = await decodeImageFromList(_image.readAsBytesSync());
+    if (_image.path.isNotEmpty) {
+      final storageRes = await _storageRepo.upload(_imageMeta.name, _image, ProductModel.type);
+      final imgProp = await decodeImageFromList(_image.readAsBytesSync());
 
-    product.image = FileModel(
-      name: imageName,
-      caption: _descriptionControl.text,
-      url: imageUrl,
-      size: _imageMeta.size,
-      ext: _imageMeta.extension,
-      alternativeText: _descriptionControl.text,
-      height: imgProp.height,
-      width: imgProp.width
-    );
+      product.image = FileModel(
+        name: storageRes.name,
+        caption: _descriptionControl.text,
+        url: storageRes.url,
+        size: _imageMeta.size,
+        ext: _imageMeta.extension,
+        alternativeText: _descriptionControl.text,
+        height: imgProp.height,
+        width: imgProp.width
+      );
 
-    _fileRepo.add(product.image!,
-      productId,
-      UserModel.type
-    );
+      _fileRepo.add(product.image!,
+        productId,
+        ProductModel.type
+      );
+    }
 
     if (mounted) {
       Navigator.pop(context, product.copyWith(id: productId));

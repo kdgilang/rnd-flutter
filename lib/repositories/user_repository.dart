@@ -131,7 +131,9 @@ class UserRepository {
     .from('up_users_merchant_links')
     .delete().eq('user_id', user.id);
 
-    await fileRepo.delete(user.image!, user.id!, UserModel.type);
+    if (user.image != null) {
+      await fileRepo.delete(user.image!, user.id!, UserModel.type);
+    }
 
     await _db
       .from('up_users')

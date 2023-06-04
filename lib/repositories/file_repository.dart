@@ -6,7 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class FileRepository {
 
   final SupabaseClient _db = Supabase.instance.client;
-  final storageRepo = StorageRepository();
+  final _storageRepo = StorageRepository();
 
   Future<FileModel> getOne(int id, String relatedType) async {
 
@@ -33,23 +33,23 @@ class FileRepository {
     return FileModel.fromJson(res['files']);
   }
 
-  Future<void> add(FileModel media, int relatedId, String relatedType) async {
-    final file = await _db.from('files')
+  Future<void> add(FileModel file, int relatedId, String relatedType) async {
+    final res = await _db.from('files')
     .insert({
-      'name': media.name,
-      'caption': media.caption,
-      'url': media.url,
-      'alternative_text': media.alternativeText,
-      'created_at': media.createdAt,
+      'name': file.name,
+      'caption': file.caption,
+      'url': file.url,
+      'alternative_text': file.alternativeText,
+      'created_at': file.createdAt,
       'created_by_id': 1, // default admin id
-      'ext': media.ext,
-      'hash': media.hash,
-      'updated_at': media.updatedAt
+      'ext': file.ext,
+      'hash': file.hash,
+      'updated_at': file.updatedAt
     }).select().single();
 
     await _db.from('files_related_morphs')
     .insert({
-      'file_id': file['id'],
+      'file_id': res['id'],
       'related_id': relatedId,
       'related_type': relatedType,
       'field': 'image', // default strapi field
@@ -57,37 +57,42 @@ class FileRepository {
     });
   }
 
-  Future<void> update(FileModel media, int relatedId, String relatedType) async {
-    final morphs = FilesRelatedMorphsModel.fromJson(await _db
+  Future<void> update(FileModel file, int relatedId, String relatedType) async {
+    final morph = await _db
     .from('files_related_morphs')
     .select('*')
     .eq('related_id', relatedId)
-    .eq('related_type', relatedType).maybeSingle());
+    .eq('related_type', relatedType).maybeSingle();
 
-    await _db.from('files')
-    .update({
-      'name': media.name,
-      'caption': media.caption,
-      'url': media.url,
-      'alternative_text': media.alternativeText,
-      'created_at': media.createdAt,
-      'created_by_id': 1, // default admin id
-      'ext': media.ext,
-      'hash': media.hash,
-      'updated_at': media.updatedAt
-    }).eq('id', morphs.fileId);
+    if (morph == null) {
+      await add(file, relatedId, relatedType);
+    } else {
+      final morphs = FilesRelatedMorphsModel.fromJson(morph);
+      await _db.from('files')
+      .update({
+        'name': file.name,
+        'caption': file.caption,
+        'url': file.url,
+        'alternative_text': file.alternativeText,
+        'created_at': file.createdAt,
+        'created_by_id': 1, // default admin id
+        'ext': file.ext,
+        'hash': file.hash,
+        'updated_at': file.updatedAt
+      }).eq('id', morphs.fileId);
+    }
   }
 
-  Future<void> delete(FileModel media, int relatedId, String relatedType) async {
+  Future<void> delete(FileModel file, int relatedId, String relatedType) async {
 
     await _db.from('files')
-    .delete().eq('id', media.id);
+    .delete().eq('id', file.id);
 
     await _db.from('files_related_morphs')
     .delete()
     .eq('related_id', relatedId)
     .eq('related_type', relatedType);
 
-    await storageRepo.delete(media.name);
+    await _storageRepo.delete(file.name, relatedType);
   }
 }
