@@ -52,7 +52,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
   final _normalPriceControl = TextEditingController();
   final _quantityControl = TextEditingController();
   final _quantityNotifyControl = TextEditingController();
-  final CurrencyTextInputFormatter _formatter = CurrencyTextInputFormatter(locale: 'id', symbol: 'Rp');
+  final CurrencyTextInputFormatter _formatterPrice = CurrencyTextInputFormatter(locale: 'id', symbol: 'Rp');
+  final CurrencyTextInputFormatter _formatterNormalPrice =  CurrencyTextInputFormatter(locale: 'id', symbol: 'Rp');
 
   bool isBusy = false;
   bool isLoading = false;
@@ -169,7 +170,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                 const SizedBox(height: 20,),
                 TextFormField(
                   controller: _priceControl,
-                  inputFormatters: <TextInputFormatter>[_formatter],
+                  inputFormatters: <TextInputFormatter>[_formatterPrice],
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
@@ -188,7 +189,7 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                 const SizedBox(height: 20,),
                 TextFormField(
                   controller: _normalPriceControl,
-                  inputFormatters: <TextInputFormatter>[_formatter],
+                  inputFormatters: <TextInputFormatter>[_formatterNormalPrice],
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
@@ -318,8 +319,8 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
     final product = ProductModel(
       name: _nameControl.text,
       description: _descriptionControl.text,
-      price: double.parse(_priceControl.text),
-      normalPrice: double.parse(_normalPriceControl.text),
+      price: _formatterPrice.getUnformattedValue(),
+      normalPrice: _formatterNormalPrice.getUnformattedValue(),
       quantity: int.parse(_quantityControl.text),
       quantityNotify: int.parse(_quantityNotifyControl.text),
       enabled: _isEnabledProduct,

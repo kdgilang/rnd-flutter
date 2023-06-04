@@ -42,7 +42,7 @@ class ProductRepository {
   Future<int> add(ProductModel product) async {
 
     final newProduct = await _db
-    .from('up_users')
+    .from('products')
     .insert({
       'name': product.name,
       'description': product.description,
