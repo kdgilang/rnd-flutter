@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
-import 'package:purala/products/product_screen.dart';
+import 'package:purala/product/product_screen.dart';
 import 'package:purala/providers/user_provider.dart';
 import 'package:purala/starter/starter_screen.dart';
+import 'package:purala/stock/stock_screen.dart';
+import 'package:purala/supplier/supplier_screen.dart';
 import 'package:purala/user/user_screen.dart';
 import 'package:purala/widgets/charts/line_chart_widget.dart';
 import 'package:purala/widgets/charts/pie_chart_widget.dart';
@@ -85,7 +87,23 @@ class HomeScreen extends StatelessWidget {
                         Navigator.pushNamed(context, ProductScreen.routeName);
                       },
                     ),
-                    const Divider()
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.factory),
+                      title: const Text('Suppliers'),
+                      onTap: () {
+                        Navigator.pushNamed(context, SupplierScreen.routeName);
+                      },
+                    ),
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.inventory),
+                      title: const Text('Stocks'),
+                      onTap: () {
+                        Navigator.pushNamed(context, StockScreen.routeName);
+                      },
+                    ),
+                    const Divider(),
                   ],
                 ),
               ),

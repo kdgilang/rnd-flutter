@@ -3,7 +3,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/product_model.dart';
-import 'package:purala/products/product_form_screen.dart';
+import 'package:purala/product/product_form_screen.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/product_repository.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
@@ -31,7 +31,7 @@ class ProductWidget extends StatefulWidget {
 }
 
 class _ProductWidgetState extends State<ProductWidget> {
-  final productRepo = ProductRepository();
+  final _productRepo = ProductRepository();
 
   List<ProductModel> products = [];
   bool isBusy = false;
@@ -55,7 +55,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                 child: IconButton(
                   icon: const Icon(Icons.add),
                   tooltip: 'Add product',
-                  onPressed: _handleAddProduct,
+                  onPressed: _handleAdd,
                 ),
               ),
               Padding(
@@ -63,7 +63,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                 child: IconButton(
                   icon: const Icon(Icons.replay),
                   tooltip: 'Reload products',
-                  onPressed: _loadProducts,
+                  onPressed: _loadData,
                 ),
               ),
             ],
@@ -86,12 +86,12 @@ class _ProductWidgetState extends State<ProductWidget> {
                       startActionPane: ActionPane(
                         motion: const ScrollMotion(),
                         dismissible: DismissiblePane(onDismissed: () {
-                          _handleDeleteProduct(product);
+                          _handleDelete(product);
                         }),
                         children: [
                           SlidableAction(
                             onPressed: (_) {
-                              _handleDeleteProduct(product);
+                              _handleDelete(product);
                             },
                             backgroundColor: Colors.red,
                             foregroundColor: Colors.white,
@@ -105,7 +105,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                         children: [
                           SlidableAction(
                             onPressed: (context) {
-                              _handleEditUser(product);
+                              _handleEdit(product);
                             },
                             backgroundColor: Colors.green,
                             foregroundColor: Theme.of(context).primaryColor,
@@ -114,7 +114,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                           ),
                           SlidableAction(
                             onPressed: (context) {
-                              _handleToggleEnabledProduct(product);
+                              _handleToggleEnabled(product);
                             },
                             backgroundColor: ColorConstants.secondary,
                             foregroundColor: Theme.of(context).primaryColor,
@@ -145,7 +145,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                     ],
                   ),
                   asyncListCallback: () async {
-                    products = await productRepo.getAllEnabled(merchantId);
+                    products = await _productRepo.getAllEnabled(merchantId);
                     return products;
                   },
                   asyncListFilter: (q, list) {
@@ -174,7 +174,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     );
   }
 
-  void _loadProducts() async {
+  void _loadData() async {
     if (isBusy) {
       return;
     }
@@ -182,7 +182,7 @@ class _ProductWidgetState extends State<ProductWidget> {
       isLoading = isBusy = true;
     });
 
-    var res = await productRepo.getAllEnabled(merchantId);
+    var res = await _productRepo.getAllEnabled(merchantId);
 
     setState(() {
       products = res;
@@ -190,7 +190,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     });
   }
 
-  void _handleToggleEnabledProduct(ProductModel product) async {
+  void _handleToggleEnabled(ProductModel product) async {
     if (isBusy) {
       return;
     }
@@ -201,7 +201,7 @@ class _ProductWidgetState extends State<ProductWidget> {
 
     final updatedProduct = product.copyWith(enabled: !product.enabled);
 
-    await productRepo.update(updatedProduct);
+    await _productRepo.update(updatedProduct);
 
     setState(() {
       isBusy = false;
@@ -209,7 +209,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     });
   }
 
-  void _handleAddProduct() async {
+  void _handleAdd() async {
     final product = await Navigator.pushNamed(
       context,
       ProductFormScreen.routeName,
@@ -227,7 +227,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     }
   }
 
-  void _handleEditUser(ProductModel product) async {
+  void _handleEdit(ProductModel product) async {
     final editProduct = await Navigator.pushNamed(
       context,
       ProductFormScreen.routeName,
@@ -246,7 +246,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     }
   }
 
-  void _handleDeleteProduct(ProductModel product) async {
+  void _handleDelete(ProductModel product) async {
     if (isBusy) {
       return;
     }
@@ -255,7 +255,7 @@ class _ProductWidgetState extends State<ProductWidget> {
       isBusy = true;
     });
 
-    await productRepo.delete(product);
+    await _productRepo.delete(product);
 
     setState(() {
       isBusy = false;

@@ -1,13 +1,11 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/file_model.dart';
 import 'package:purala/models/product_model.dart';
-import 'package:purala/models/user_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/providers/user_provider.dart';
 import 'package:purala/repositories/file_repository.dart';

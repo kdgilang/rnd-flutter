@@ -2,38 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
-import 'package:purala/models/user_model.dart';
+import 'package:purala/models/stock_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
-import 'package:purala/repositories/user_repository.dart';
-import 'package:purala/user/user_form_screen.dart';
+import 'package:purala/repositories/stock_repository.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
 import 'package:purala/widgets/tile_widget.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class UserScreen extends StatelessWidget {
-  const UserScreen({super.key});
+class StockScreen extends StatelessWidget {
+  const StockScreen({super.key});
 
-  static const String routeName = "/users";
+  static const String routeName = "/stocks";
 
   @override
   Widget build(BuildContext context) {
-    return const UserWidget();
+    return const StockWidget();
   }
 }
 
-class UserWidget extends StatefulWidget {
-  const UserWidget({Key? key}) : super(key: key);
+class StockWidget extends StatefulWidget {
+  const StockWidget({Key? key}) : super(key: key);
 
   @override
-  State<UserWidget> createState() => _UserWidgetState();
+  State<StockWidget> createState() => _StockWidgetState();
 }
 
-class _UserWidgetState extends State<UserWidget> {
-  final userRepo = UserRepository();
+class _StockWidgetState extends State<StockWidget> {
+  final _stockRepo = StockRepository();
 
-  List<UserModel> users = [];
+  List<StockModel> stocks = [];
   bool isBusy = false;
   bool isLoading = false;
   int merchantId = 0;
@@ -44,7 +43,7 @@ class _UserWidgetState extends State<UserWidget> {
 
     return AuthenticatedLayout(
       child: ScaffoldWidget(
-        title: "Users",
+        title: "Stocks",
         appBarActions: [
           Flex(
             direction: Axis.horizontal,
@@ -54,7 +53,7 @@ class _UserWidgetState extends State<UserWidget> {
                 padding: const EdgeInsets.only(right: 20),
                 child: IconButton(
                   icon: const Icon(Icons.add),
-                  tooltip: 'Add users',
+                  tooltip: 'Add product',
                   onPressed: _handleAdd,
                 ),
               ),
@@ -62,8 +61,8 @@ class _UserWidgetState extends State<UserWidget> {
                 padding: const EdgeInsets.only(right: 10),
                 child: IconButton(
                   icon: const Icon(Icons.replay),
-                  tooltip: 'Reload users',
-                  onPressed: _loadData,
+                  tooltip: 'Reload stocks',
+                  onPressed: _loadStocks,
                 ),
               ),
             ],
@@ -78,26 +77,20 @@ class _UserWidgetState extends State<UserWidget> {
                 padding: const EdgeInsets.all(25),
                 child: isLoading ?
                   LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50) :
-                  SearchableList<UserModel>(
+                  SearchableList<StockModel>(
                   style: const TextStyle(fontSize: 25),
-                  builder: (UserModel user) {
+                  builder: (StockModel stock) {
                     return Slidable(
-                      // Specify a key if the Slidable is dismissible.
-                      key: ValueKey(user.id),
-                      // The start action pane is the one at the left or the top side.
+                      key: ValueKey(stock.id),
                       startActionPane: ActionPane(
-                        // A motion is a widget used to control how the pane animates.
                         motion: const ScrollMotion(),
-                        // A pane can dismiss the Slidable.
                         dismissible: DismissiblePane(onDismissed: () {
-                          _handleDelete(user);
+                          _handleDelete(stock);
                         }),
-                        // All actions are defined in the children parameter.
                         children: [
-                          // A SlidableAction can have an icon and/or a label.
                           SlidableAction(
                             onPressed: (_) {
-                              _handleDelete(user);
+                              _handleDelete(stock);
                             },
                             backgroundColor: Colors.red,
                             foregroundColor: Colors.white,
@@ -106,38 +99,24 @@ class _UserWidgetState extends State<UserWidget> {
                           ),
                         ],
                       ),
-
-                      // The end action pane is the one at the right or the bottom side.
                       endActionPane: ActionPane(
                         motion: const ScrollMotion(),
                         children: [
                           SlidableAction(
                             onPressed: (context) {
-                              _handleEdit(user);
+                              _handleEdit(stock);
                             },
                             backgroundColor: Colors.green,
                             foregroundColor: Theme.of(context).primaryColor,
                             icon: Icons.edit,
                             label: 'Edit',
                           ),
-                          SlidableAction(
-                            onPressed: (context) {
-                              _handleBlock(user);
-                            },
-                            backgroundColor: ColorConstants.secondary,
-                            foregroundColor: Theme.of(context).primaryColor,
-                            icon: user.blocked ? Icons.block_flipped : Icons.block,
-                            label: user.blocked ? 'Unblock' : 'Block',
-                          ),
                         ],
                       ),
-
-                      // The child of the Slidable is what the user sees when the
-                      // component is not dragged.
                       child: TileWidget(
-                        title: user.name,
-                        subtitle: "${user.email} ${user.blocked ? "(blocked)" : ""}",
-                        imageUrl: user.image?.url,
+                        title: "${stock.supplierName} -> ${stock.productName}",
+                        subtitle: "(Quantity: ${stock.quantity})",
+                        // imageUrl: stock.image?.url,
                         isDisabled: true
                       ),
                     );
@@ -156,20 +135,21 @@ class _UserWidgetState extends State<UserWidget> {
                     ],
                   ),
                   asyncListCallback: () async {
-                    users = await userRepo.getAll(merchantId);
-                    return users;
+                    stocks = await _stockRepo.getAll(merchantId);
+                    return stocks;
                   },
                   asyncListFilter: (q, list) {
                     return list
-                        .where((element) => element.name.contains(q))
-                        .toList();
+                      .where((element) => element.productName!.contains(q) ||
+                        element.supplierName!.contains(q))
+                      .toList();
                   },
                   emptyWidget: const EmptyView(),
                   onRefresh: () async {},
                   onItemSelected: null,
                   inputDecoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Search users',
+                    hintText: 'Search stocks',
                     floatingLabelStyle: TextStyle(color: Colors.white),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white, width: 1.0)
@@ -185,7 +165,7 @@ class _UserWidgetState extends State<UserWidget> {
     );
   }
 
-  void _loadData() async {
+  void _loadStocks() async {
     if (isBusy) {
       return;
     }
@@ -193,70 +173,52 @@ class _UserWidgetState extends State<UserWidget> {
       isLoading = isBusy = true;
     });
 
-    var res = await userRepo.getAll(merchantId);
+    var res = await _stockRepo.getAll(merchantId);
 
     setState(() {
-      users = res;
+      stocks = res;
       isLoading = isBusy = false;
     });
   }
 
-  void _handleBlock(UserModel user) async {
-    if (isBusy) {
-      return;
-    }
-
-    setState(() {
-      isBusy = true;
-    });
-
-    final updatedUser = user.copyWith(blocked: !user.blocked);
-
-    await userRepo.update(updatedUser);
-
-    setState(() {
-      isBusy = false;
-      users[users.indexWhere((item) => item.id == user.id)] = updatedUser;
-    });
-  }
-
   void _handleAdd() async {
-    final user = await Navigator.pushNamed(
-      context,
-      UserFormScreen.routeName,
-      arguments: UserFormArgs(
-        type: 'add',
-      ),
-    );
-    if (user != null) {
-      user as UserModel;
-
-      setState(() {
-        users.insert(0, user);
-      });
-    }
-  }
-
-  void _handleEdit(UserModel user) async {
-    final editUser = await Navigator.pushNamed(
-      context,
-      UserFormScreen.routeName,
-      arguments: UserFormArgs(
-        type: 'edit',
-        user: user,
-      ),
-    );
+    // final stock = await Navigator.pushNamed(
+    //   context,
+    //   ProductFormScreen.routeName,
+    //   arguments: StockFormArgs(
+    //     type: 'add',
+    //   ),
+    // );
     
-    if (editUser != null) {
-      editUser as UserModel;
+    // if (stock != null) {
+    //   stock as StockModel;
 
-      setState(() {
-        users[users.indexWhere((item) => item.id == editUser.id)] = editUser;
-      });
-    }
+    //   setState(() {
+    //     stocks.insert(0, stock);
+    //   });
+    // }
   }
 
-  void _handleDelete(UserModel user) async {
+  void _handleEdit(StockModel stock) async {
+    // final editStock = await Navigator.pushNamed(
+    //   context,
+    //   ProductFormScreen.routeName,
+    //   arguments: StockFormArgs(
+    //     type: 'edit',
+    //     stock: stock,
+    //   ),
+    // );
+    
+    // if (editStock != null) {
+    //   editStock as StockModel;
+
+    //   setState(() {
+    //     stocks[stocks.indexWhere((item) => item.id == editStock.id)] = editStock;
+    //   });
+    // }
+  }
+
+  void _handleDelete(StockModel stock) async {
     if (isBusy) {
       return;
     }
@@ -265,11 +227,11 @@ class _UserWidgetState extends State<UserWidget> {
       isBusy = true;
     });
 
-    await userRepo.delete(user);
+    await _stockRepo.delete(stock);
 
     setState(() {
       isBusy = false;
-      users.remove(user);
+      stocks.remove(stock);
     });
   }
 }

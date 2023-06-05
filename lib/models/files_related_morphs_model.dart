@@ -1,5 +1,7 @@
-class FilesRelatedMorphsModel {
-  final int id;
+import 'package:purala/models/base_model.dart';
+
+class FilesRelatedMorphsModel extends BaseModel {
+
   final int fileId;
   final int relatedId;
   final String relatedType;
@@ -7,7 +9,7 @@ class FilesRelatedMorphsModel {
   final int order;
 
   const FilesRelatedMorphsModel({
-    required this.id,
+    super.id,
     required this.fileId,
     required this.relatedId,
     required this.relatedType,
