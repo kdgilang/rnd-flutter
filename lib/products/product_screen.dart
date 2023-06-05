@@ -150,8 +150,8 @@ class _ProductWidgetState extends State<ProductWidget> {
                   },
                   asyncListFilter: (q, list) {
                     return list
-                        .where((element) => element.name.contains(q))
-                        .toList();
+                      .where((element) => element.name.contains(q))
+                      .toList();
                   },
                   emptyWidget: const EmptyView(),
                   onRefresh: () async {},

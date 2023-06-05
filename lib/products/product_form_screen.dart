@@ -200,25 +200,28 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
                   ),
                 ),
                 const SizedBox(height: 20,),
-                TextFormField(
-                  controller: _quantityControl,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
+                Wrap(
+                  spacing: 20,
+                  children: [
+                    const Text("Quantity: "),
+                    Text(_quantityControl.text)
                   ],
-                  decoration: InputDecoration(
-                    border: const UnderlineInputBorder(),
-                    labelText: 'Quantity',
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
-                    )
+                ),
+                const SizedBox(height: 10,),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isBusy ? ColorConstants.grey : ColorConstants.secondary,
+                    foregroundColor: ColorConstants.primary,
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 18),
+                    minimumSize: const Size(250, 0),
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),
+                    disabledBackgroundColor: ColorConstants.grey
                   ),
-                  validator: (val) {
-                    if (val!.isEmpty) {
-                      return "Product quantity is required.";
-                    }
-                    return null;
-                  },
+                  onPressed: _handleAddStock,
+                  child: const Text('Add stock'),
                 ),
                 const SizedBox(height: 20,),
                 TextFormField(
@@ -398,6 +401,10 @@ class _ProductFormWidgetState extends State<ProductFormWidget> {
     } else {
       // User canceled the picker
     }
+  }
+
+  Future<void> _handleAddStock() async {
+    
   }
 }
 
