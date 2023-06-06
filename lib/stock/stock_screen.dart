@@ -6,6 +6,7 @@ import 'package:purala/models/stock_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/stock_repository.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
+import 'package:purala/widgets/not_found_widget.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
 import 'package:purala/widgets/tile_widget.dart';
 import 'package:searchable_listview/searchable_listview.dart';
@@ -144,7 +145,7 @@ class _StockWidgetState extends State<StockWidget> {
                         element.supplierName!.contains(q))
                       .toList();
                   },
-                  emptyWidget: const EmptyView(),
+                  emptyWidget: const NotFoundWidget(),
                   onRefresh: () async {},
                   onItemSelected: null,
                   inputDecoration: const InputDecoration(
@@ -233,22 +234,5 @@ class _StockWidgetState extends State<StockWidget> {
       isBusy = false;
       stocks.remove(stock);
     });
-  }
-}
-
-class EmptyView extends StatelessWidget {
-  const EmptyView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.error,
-        ),
-        Text('No Items Found.'),
-      ],
-    );
   }
 }

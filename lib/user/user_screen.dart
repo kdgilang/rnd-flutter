@@ -7,6 +7,7 @@ import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/user_repository.dart';
 import 'package:purala/user/user_form_screen.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
+import 'package:purala/widgets/not_found_widget.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
 import 'package:purala/widgets/tile_widget.dart';
 import 'package:searchable_listview/searchable_listview.dart';
@@ -164,7 +165,7 @@ class _UserWidgetState extends State<UserWidget> {
                         .where((element) => element.name.contains(q))
                         .toList();
                   },
-                  emptyWidget: const EmptyView(),
+                  emptyWidget: const NotFoundWidget(),
                   onRefresh: () async {},
                   onItemSelected: null,
                   inputDecoration: const InputDecoration(
@@ -271,22 +272,5 @@ class _UserWidgetState extends State<UserWidget> {
       isBusy = false;
       users.remove(user);
     });
-  }
-}
-
-class EmptyView extends StatelessWidget {
-  const EmptyView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.error,
-        ),
-        Text('No Items Found.'),
-      ],
-    );
   }
 }

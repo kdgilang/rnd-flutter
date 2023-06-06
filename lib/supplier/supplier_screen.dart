@@ -7,6 +7,7 @@ import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/supplier_repository.dart';
 import 'package:purala/supplier/supplier_form_screen.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
+import 'package:purala/widgets/not_found_widget.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
 import 'package:purala/widgets/tile_widget.dart';
 import 'package:searchable_listview/searchable_listview.dart';
@@ -144,7 +145,7 @@ class _SupplierWidgetState extends State<SupplierWidget> {
                       .where((element) => element.name.contains(q))
                       .toList();
                   },
-                  emptyWidget: const EmptyView(),
+                  emptyWidget: const NotFoundWidget(),
                   onRefresh: () async {},
                   onItemSelected: null,
                   inputDecoration: const InputDecoration(
@@ -200,22 +201,22 @@ class _SupplierWidgetState extends State<SupplierWidget> {
   }
 
   void _handleEdit(SupplierModel supplier) async {
-    // final editStock = await Navigator.pushNamed(
-    //   context,
-    //   ProductFormScreen.routeName,
-    //   arguments: StockFormArgs(
-    //     type: 'edit',
-    //     stock: stock,
-    //   ),
-    // );
+    final res = await Navigator.pushNamed(
+      context,
+      SupplierFormScreen.routeName,
+      arguments: SupplierFormArgs(
+        type: 'edit',
+        supplier: supplier,
+      ),
+    );
     
-    // if (editStock != null) {
-    //   editStock as SupplierModel;
+    if (res != null) {
+      res as SupplierModel;
 
-    //   setState(() {
-    //     suppliers[suppliers.indexWhere((item) => item.id == editsupplier.id)] = editStock;
-    //   });
-    // }
+      setState(() {
+        suppliers[suppliers.indexWhere((item) => item.id == res.id)] = res;
+      });
+    }
   }
 
   void _handleDelete(SupplierModel supplier) async {
@@ -233,22 +234,5 @@ class _SupplierWidgetState extends State<SupplierWidget> {
       isBusy = false;
       suppliers.remove(supplier);
     });
-  }
-}
-
-class EmptyView extends StatelessWidget {
-  const EmptyView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.error,
-        ),
-        Text('No Items Found.'),
-      ],
-    );
   }
 }

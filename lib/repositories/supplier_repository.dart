@@ -36,71 +36,62 @@ class SupplierRepository {
     return suppliers;
   }
 
-  Future<int> add(SupplierModel product) async {
+  Future<int> add(SupplierModel supplier) async {
 
-    // final newProduct = await _db
-    // .from('products')
-    // .insert({
-    //   'name': product.name,
-    //   'description': product.description,
-    //   'price': product.price,
-    //   'normal_price': product.normalPrice,
-    //   'quantity': product.quantity,
-    //   'quantity_notify': product.quantityNotify,
-    //   'enabled': product.enabled,
-    //   'created_at': DateTime.now().toString(),
-    //   'updated_at': DateTime.now().toString(),
-    //   'published_at': DateTime.now().toString(),
-    //   'created_by_id': 1 // default admin id
-    // }).select().single();
+    final res = await _db
+    .from('suppliers')
+    .insert({
+      'name': supplier.name,
+      'phone': supplier.phone,
+      'address': supplier.address,
+      'created_at': DateTime.now().toString(),
+      'updated_at': DateTime.now().toString(),
+      'created_by_id': 1 // default admin id
+    }).select().single();
 
-    // final int productId = newProduct['id'];
+    final int id = res['id'];
 
-    // await _db
-    // .from('products_user_links')
-    // .insert({
-    //   'product_id': productId,
-    //   'user_id': product.userId,
-    // });
+    await _db
+    .from('suppliers_user_links')
+    .insert({
+      'supplier_id': id,
+      'user_id': supplier.userId,
+    });
 
-    // await _db
-    // .from('products_merchant_links')
-    // .insert({
-    //   'product_id': productId,
-    //   'merchant_id': product.merchantId, 
-    // });
+    await _db
+    .from('suppliers_merchant_links')
+    .insert({
+      'supplier_id': id,
+      'merchant_id': supplier.merchantId, 
+    });
 
     return 1;
   }
 
-  Future<void> update(SupplierModel product) async {
-    // await _db
-    //   .from('products')
-    //   .update({
-    //     'name': product.name,
-    //     'description': product.description,
-    //     'price': product.price,
-    //     'normal_price': product.normalPrice,
-    //     'quantity': product.quantity,
-    //     'quantity_notify': product.quantityNotify,
-    //     'enabled': product.enabled,
-    //     'updated_at': DateTime.now().toString()
-    //   })
-    //   .eq('id', product.id);
+  Future<void> update(SupplierModel supplier) async {
+    await _db
+      .from('suppliers')
+      .update({
+        'name': supplier.name,
+        'phone': supplier.phone,
+        'address': supplier.address,
+        'updated_at': DateTime.now().toString()
+      })
+      .eq('id', supplier.id);
   }
 
-  Future<void> delete(SupplierModel stock) async {
+  Future<void> delete(SupplierModel supplier) async {
     await _db
-    .from('supplier_user_links')
-    .delete().eq('stock_id', stock.id);    
+    .from('suppliers_user_links')
+    .delete().eq('supplier_id', supplier.id);    
 
     await _db
-    .from('supplier_merchant_links')
-    .delete().eq('stock_id', stock.id);
+    .from('suppliers_merchant_links')
+    .delete().eq('supplier_id', supplier.id);
 
     await _db
-      .from('supplier')
+      .from('suppliers')
       .delete()
-      .eq('id', stock.id);
+      .eq('id', supplier.id);
   }
 }

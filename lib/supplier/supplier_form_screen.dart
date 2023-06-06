@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/supplier_model.dart';
+import 'package:purala/providers/merchant_provider.dart';
+import 'package:purala/providers/user_provider.dart';
 import 'package:purala/repositories/supplier_repository.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
@@ -101,16 +104,6 @@ class _SupplierFormWidgetState extends State<SupplierFormWidget> {
                 ),
                 const SizedBox(height: 20,),
                 TextFormField(
-                  controller: _addressControl,
-                  decoration: InputDecoration(
-                    border: const UnderlineInputBorder(),
-                    labelText: 'Address',
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
-                    )
-                  ),
-                ),
-                TextFormField(
                   controller: _phoneControl,
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
@@ -121,6 +114,17 @@ class _SupplierFormWidgetState extends State<SupplierFormWidget> {
                   ),
                 ),
                 const SizedBox(height: 20,),
+                TextFormField(
+                  controller: _addressControl,
+                  decoration: InputDecoration(
+                    border: const UnderlineInputBorder(),
+                    labelText: 'Address',
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
+                    )
+                  ),
+                ),
+                const SizedBox(height: 40,),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isBusy ? ColorConstants.grey : ColorConstants.secondary,
@@ -163,6 +167,8 @@ class _SupplierFormWidgetState extends State<SupplierFormWidget> {
       name: _nameControl.text,
       phone: _phoneControl.text,
       address: _addressControl.text,
+      merchantId: context.read<MerchantProvider>().merchant!.id!,
+      userId: context.read<UserProvider>().user!.id!
     );
 
     final supplierId = await _supplierRepo.add(supplier);
