@@ -5,6 +5,7 @@ import 'package:purala/constants/color_constants.dart';
 import 'package:purala/models/supplier_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/supplier_repository.dart';
+import 'package:purala/supplier/supplier_form_screen.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
 import 'package:purala/widgets/tile_widget.dart';
@@ -39,7 +40,7 @@ class _SupplierWidgetState extends State<SupplierWidget> {
 
   @override
   Widget build(BuildContext context) {
-    merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
+    merchantId = context.watch<MerchantProvider>().merchant?.id ?? 0;
 
     return AuthenticatedLayout(
       child: ScaffoldWidget(
@@ -181,21 +182,21 @@ class _SupplierWidgetState extends State<SupplierWidget> {
   }
 
   void _handleAdd() async {
-    // final stock = await Navigator.pushNamed(
-    //   context,
-    //   ProductFormScreen.routeName,
-    //   arguments: StockFormArgs(
-    //     type: 'add',
-    //   ),
-    // );
+    final supplier = await Navigator.pushNamed(
+      context,
+      SupplierFormScreen.routeName,
+      arguments: SupplierFormArgs(
+        type: 'add',
+      ),
+    );
     
-    // if (stock != null) {
-    //   stock as SupplierModel;
+    if (supplier != null) {
+      supplier as SupplierModel;
 
-    //   setState(() {
-    //     suppliers.insert(0, supplier);
-    //   });
-    // }
+      setState(() {
+        suppliers.insert(0, supplier);
+      });
+    }
   }
 
   void _handleEdit(SupplierModel supplier) async {

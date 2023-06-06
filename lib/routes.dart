@@ -7,6 +7,7 @@ import 'package:purala/product/product_form_screen.dart';
 import 'package:purala/product/product_screen.dart';
 import 'package:purala/starter/starter_screen.dart';
 import 'package:purala/stock/stock_screen.dart';
+import 'package:purala/supplier/supplier_form_screen.dart';
 import 'package:purala/supplier/supplier_screen.dart';
 import 'package:purala/user/user_form_screen.dart';
 import 'package:purala/user/user_screen.dart';
@@ -22,5 +23,6 @@ var routes = <String, WidgetBuilder>{
   ProductFormScreen.routeName: (_) => const ProductFormScreen(),
   StockScreen.routeName: (_) => const StockScreen(),
   SupplierScreen.routeName: (_) => const SupplierScreen(),
+  SupplierFormScreen.routeName: (_) => const SupplierFormScreen(),
   CategoryScreen.routeName: (_) => const CategoryScreen()
 };
