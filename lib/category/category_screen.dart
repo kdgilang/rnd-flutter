@@ -2,37 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:purala/constants/color_constants.dart';
-import 'package:purala/models/stock_model.dart';
+import 'package:purala/models/category_model.dart';
 import 'package:purala/providers/merchant_provider.dart';
-import 'package:purala/repositories/stock_repository.dart';
+import 'package:purala/repositories/category_repository.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
 import 'package:purala/widgets/tile_widget.dart';
 import 'package:searchable_listview/searchable_listview.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class StockScreen extends StatelessWidget {
-  const StockScreen({super.key});
+class CategoryScreen extends StatelessWidget {
+  const CategoryScreen({super.key});
 
-  static const String routeName = "/stocks";
+  static const String routeName = "/categories";
 
   @override
   Widget build(BuildContext context) {
-    return const StockWidget();
+    return const CategoryWidget();
   }
 }
 
-class StockWidget extends StatefulWidget {
-  const StockWidget({Key? key}) : super(key: key);
+class CategoryWidget extends StatefulWidget {
+  const CategoryWidget({Key? key}) : super(key: key);
 
   @override
-  State<StockWidget> createState() => _StockWidgetState();
+  State<CategoryWidget> createState() => _CategoryWidgetState();
 }
 
-class _StockWidgetState extends State<StockWidget> {
-  final _stockRepo = StockRepository();
+class _CategoryWidgetState extends State<CategoryWidget> {
+  final _categoryRepo = CategoryRepository();
 
-  List<StockModel> stocks = [];
+  List<CategoryModel> categories = [];
   bool isBusy = false;
   bool isLoading = false;
   int merchantId = 0;
@@ -43,7 +43,7 @@ class _StockWidgetState extends State<StockWidget> {
 
     return AuthenticatedLayout(
       child: ScaffoldWidget(
-        title: "Stocks",
+        title: "Categories",
         appBarActions: [
           Flex(
             direction: Axis.horizontal,
@@ -53,7 +53,7 @@ class _StockWidgetState extends State<StockWidget> {
                 padding: const EdgeInsets.only(right: 20),
                 child: IconButton(
                   icon: const Icon(Icons.add),
-                  tooltip: 'Add stock',
+                  tooltip: 'Add category',
                   onPressed: _handleAdd,
                 ),
               ),
@@ -61,8 +61,8 @@ class _StockWidgetState extends State<StockWidget> {
                 padding: const EdgeInsets.only(right: 10),
                 child: IconButton(
                   icon: const Icon(Icons.replay),
-                  tooltip: 'Reload stocks',
-                  onPressed: _loadStocks,
+                  tooltip: 'Reload categories',
+                  onPressed: _loadData,
                 ),
               ),
             ],
@@ -77,20 +77,20 @@ class _StockWidgetState extends State<StockWidget> {
                 padding: const EdgeInsets.all(25),
                 child: isLoading ?
                   LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50) :
-                  SearchableList<StockModel>(
+                  SearchableList<CategoryModel>(
                   style: const TextStyle(fontSize: 25),
-                  builder: (StockModel stock) {
+                  builder: (CategoryModel category) {
                     return Slidable(
-                      key: ValueKey(stock.id),
+                      key: ValueKey(category.id),
                       startActionPane: ActionPane(
                         motion: const ScrollMotion(),
                         dismissible: DismissiblePane(onDismissed: () {
-                          _handleDelete(stock);
+                          _handleDelete(category);
                         }),
                         children: [
                           SlidableAction(
                             onPressed: (_) {
-                              _handleDelete(stock);
+                              _handleDelete(category);
                             },
                             backgroundColor: Colors.red,
                             foregroundColor: Colors.white,
@@ -104,7 +104,7 @@ class _StockWidgetState extends State<StockWidget> {
                         children: [
                           SlidableAction(
                             onPressed: (context) {
-                              _handleEdit(stock);
+                              _handleEdit(category);
                             },
                             backgroundColor: Colors.green,
                             foregroundColor: Theme.of(context).primaryColor,
@@ -114,9 +114,8 @@ class _StockWidgetState extends State<StockWidget> {
                         ],
                       ),
                       child: TileWidget(
-                        title: "${stock.supplierName} -> ${stock.productName}",
-                        subtitle: "(Quantity: ${stock.quantity})",
-                        // imageUrl: stock.image?.url,
+                        title: category.name,
+                        subtitle: "${category.description}",
                         isDisabled: true
                       ),
                     );
@@ -135,13 +134,12 @@ class _StockWidgetState extends State<StockWidget> {
                     ],
                   ),
                   asyncListCallback: () async {
-                    stocks = await _stockRepo.getAll(merchantId);
-                    return stocks;
+                    categories = await _categoryRepo.getAll(merchantId);
+                    return categories;
                   },
                   asyncListFilter: (q, list) {
                     return list
-                      .where((element) => element.productName!.contains(q) ||
-                        element.supplierName!.contains(q))
+                      .where((element) => element.name.contains(q))
                       .toList();
                   },
                   emptyWidget: const EmptyView(),
@@ -149,7 +147,7 @@ class _StockWidgetState extends State<StockWidget> {
                   onItemSelected: null,
                   inputDecoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Search stocks',
+                    hintText: 'Search categories',
                     floatingLabelStyle: TextStyle(color: Colors.white),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.white, width: 1.0)
@@ -165,7 +163,7 @@ class _StockWidgetState extends State<StockWidget> {
     );
   }
 
-  void _loadStocks() async {
+  void _loadData() async {
     if (isBusy) {
       return;
     }
@@ -173,10 +171,10 @@ class _StockWidgetState extends State<StockWidget> {
       isLoading = isBusy = true;
     });
 
-    var res = await _stockRepo.getAll(merchantId);
+    var res = await _categoryRepo.getAll(merchantId);
 
     setState(() {
-      stocks = res;
+      categories = res;
       isLoading = isBusy = false;
     });
   }
@@ -191,15 +189,15 @@ class _StockWidgetState extends State<StockWidget> {
     // );
     
     // if (stock != null) {
-    //   stock as StockModel;
+    //   stock as CategoryModel;
 
     //   setState(() {
-    //     stocks.insert(0, stock);
+    //     categories.insert(0, category);
     //   });
     // }
   }
 
-  void _handleEdit(StockModel stock) async {
+  void _handleEdit(CategoryModel category) async {
     // final editStock = await Navigator.pushNamed(
     //   context,
     //   ProductFormScreen.routeName,
@@ -210,15 +208,15 @@ class _StockWidgetState extends State<StockWidget> {
     // );
     
     // if (editStock != null) {
-    //   editStock as StockModel;
+    //   editStock as CategoryModel;
 
     //   setState(() {
-    //     stocks[stocks.indexWhere((item) => item.id == editStock.id)] = editStock;
+    //     categories[categories.indexWhere((item) => item.id == editcategory.id)] = editStock;
     //   });
     // }
   }
 
-  void _handleDelete(StockModel stock) async {
+  void _handleDelete(CategoryModel category) async {
     if (isBusy) {
       return;
     }
@@ -227,11 +225,11 @@ class _StockWidgetState extends State<StockWidget> {
       isBusy = true;
     });
 
-    await _stockRepo.delete(stock);
+    await _categoryRepo.delete(category);
 
     setState(() {
       isBusy = false;
-      stocks.remove(stock);
+      categories.remove(category);
     });
   }
 }

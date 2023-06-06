@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:purala/category/category_screen.dart';
 import 'package:purala/home/home_screen.dart';
 import 'package:purala/auth/reset_password_screen.dart';
 import 'package:purala/auth/signin_screen.dart';
@@ -20,5 +21,6 @@ var routes = <String, WidgetBuilder>{
   ProductScreen.routeName: (_) => const ProductScreen(),
   ProductFormScreen.routeName: (_) => const ProductFormScreen(),
   StockScreen.routeName: (_) => const StockScreen(),
-  SupplierScreen.routeName: (_) => const SupplierScreen()
+  SupplierScreen.routeName: (_) => const SupplierScreen(),
+  CategoryScreen.routeName: (_) => const CategoryScreen()
 };

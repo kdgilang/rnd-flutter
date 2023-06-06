@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:purala/category/category_screen.dart';
 import 'package:purala/constants/color_constants.dart';
 import 'package:purala/product/product_screen.dart';
 import 'package:purala/providers/user_provider.dart';
@@ -79,6 +80,14 @@ class HomeScreen extends StatelessWidget {
                         Navigator.pushNamed(context, UserScreen.routeName);
                       },
                     ), 
+                    const Divider(),
+                    ListTile(
+                      leading: const Icon(Icons.category),
+                      title: const Text('Categories'),
+                      onTap: () {
+                        Navigator.pushNamed(context, CategoryScreen.routeName);
+                      },
+                    ),
                     const Divider(),
                     ListTile(
                       leading: const Icon(Icons.pages),

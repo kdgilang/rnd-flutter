@@ -1,11 +1,9 @@
 import 'package:purala/models/stock_model.dart';
-import 'package:purala/repositories/file_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StockRepository {
 
   final SupabaseClient _db = Supabase.instance.client;
-  final fileRepo = FileRepository();
 
   Future<List<StockModel>> getAll(int merchanId) async {
     var res = await _db

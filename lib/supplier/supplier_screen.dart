@@ -43,7 +43,7 @@ class _SupplierWidgetState extends State<SupplierWidget> {
 
     return AuthenticatedLayout(
       child: ScaffoldWidget(
-        title: "suppliers",
+        title: "Suppliers",
         appBarActions: [
           Flex(
             direction: Axis.horizontal,
@@ -53,7 +53,7 @@ class _SupplierWidgetState extends State<SupplierWidget> {
                 padding: const EdgeInsets.only(right: 20),
                 child: IconButton(
                   icon: const Icon(Icons.add),
-                  tooltip: 'Add product',
+                  tooltip: 'Add supplier',
                   onPressed: _handleAdd,
                 ),
               ),
