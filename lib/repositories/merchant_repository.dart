@@ -12,7 +12,7 @@ class MerchantRepository {
     var res = await _db
     .from('merchants')
     .select("*")
-    .eq('id', id).maybeSingle();
+    .eq('id', id).limit(1).maybeSingle();
 
     final media = await fileRepo.getOne(id, MerchantModel.type);
     final merchant = MerchantModel.fromJson(res);

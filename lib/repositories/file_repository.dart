@@ -27,8 +27,8 @@ class FileRepository {
         width
       )
     ''')
-    .eq('related_id', id)
-    .eq('related_type', relatedType).single();
+    .eq('related_type', relatedType)
+    .eq('related_id', id).limit(1).single();
 
     return FileModel.fromJson(res['files']);
   }
@@ -62,7 +62,7 @@ class FileRepository {
     .from('files_related_morphs')
     .select('*')
     .eq('related_id', relatedId)
-    .eq('related_type', relatedType).maybeSingle();
+    .eq('related_type', relatedType).limit(1).maybeSingle();
 
     if (morph == null) {
       await add(file, relatedId, relatedType);
