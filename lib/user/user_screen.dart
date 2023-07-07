@@ -39,6 +39,10 @@ class _UserWidgetState extends State<UserWidget> {
   bool isLoading = false;
   int merchantId = 0;
 
+  static const int numItems = 10;
+  List<bool> selected = List<bool>.generate(numItems, (int index) => false);
+
+
   @override
   Widget build(BuildContext context) {
     merchantId = context.read<MerchantProvider>().merchant?.id ?? 0;
@@ -79,102 +83,139 @@ class _UserWidgetState extends State<UserWidget> {
                 padding: const EdgeInsets.all(25),
                 child: isLoading ?
                   LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50) :
-                  SearchableList<UserModel>(
-                  style: const TextStyle(fontSize: 25),
-                  builder: (UserModel user) {
-                    return Slidable(
-                      // Specify a key if the Slidable is dismissible.
-                      key: ValueKey(user.id),
-                      // The start action pane is the one at the left or the top side.
-                      startActionPane: ActionPane(
-                        // A motion is a widget used to control how the pane animates.
-                        motion: const ScrollMotion(),
-                        // A pane can dismiss the Slidable.
-                        dismissible: DismissiblePane(onDismissed: () {
-                          _handleDelete(user);
-                        }),
-                        // All actions are defined in the children parameter.
-                        children: [
-                          // A SlidableAction can have an icon and/or a label.
-                          SlidableAction(
-                            onPressed: (_) {
-                              _handleDelete(user);
-                            },
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                            icon: Icons.delete,
-                            label: 'Delete',
-                          ),
-                        ],
-                      ),
+                //   SearchableList<UserModel>(
+                //   style: const TextStyle(fontSize: 25),
+                //   builder: (UserModel user) {
+                //     return Slidable(
+                //       // Specify a key if the Slidable is dismissible.
+                //       key: ValueKey(user.id),
+                //       // The start action pane is the one at the left or the top side.
+                //       startActionPane: ActionPane(
+                //         // A motion is a widget used to control how the pane animates.
+                //         motion: const ScrollMotion(),
+                //         // A pane can dismiss the Slidable.
+                //         dismissible: DismissiblePane(onDismissed: () {
+                //           _handleDelete(user);
+                //         }),
+                //         // All actions are defined in the children parameter.
+                //         children: [
+                //           // A SlidableAction can have an icon and/or a label.
+                //           SlidableAction(
+                //             onPressed: (_) {
+                //               _handleDelete(user);
+                //             },
+                //             backgroundColor: Colors.red,
+                //             foregroundColor: Colors.white,
+                //             icon: Icons.delete,
+                //             label: 'Delete',
+                //           ),
+                //         ],
+                //       ),
 
-                      // The end action pane is the one at the right or the bottom side.
-                      endActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) {
-                              _handleEdit(user);
-                            },
-                            backgroundColor: Colors.green,
-                            foregroundColor: Theme.of(context).primaryColor,
-                            icon: Icons.edit,
-                            label: 'Edit',
-                          ),
-                          SlidableAction(
-                            onPressed: (context) {
-                              _handleBlock(user);
-                            },
-                            backgroundColor: ColorConstants.secondary,
-                            foregroundColor: Theme.of(context).primaryColor,
-                            icon: user.blocked ? Icons.block_flipped : Icons.block,
-                            label: user.blocked ? 'Unblock' : 'Block',
-                          ),
-                        ],
-                      ),
+                //       // The end action pane is the one at the right or the bottom side.
+                //       endActionPane: ActionPane(
+                //         motion: const ScrollMotion(),
+                //         children: [
+                //           SlidableAction(
+                //             onPressed: (context) {
+                //               _handleEdit(user);
+                //             },
+                //             backgroundColor: Colors.green,
+                //             foregroundColor: Theme.of(context).primaryColor,
+                //             icon: Icons.edit,
+                //             label: 'Edit',
+                //           ),
+                //           SlidableAction(
+                //             onPressed: (context) {
+                //               _handleBlock(user);
+                //             },
+                //             backgroundColor: ColorConstants.secondary,
+                //             foregroundColor: Theme.of(context).primaryColor,
+                //             icon: user.blocked ? Icons.block_flipped : Icons.block,
+                //             label: user.blocked ? 'Unblock' : 'Block',
+                //           ),
+                //         ],
+                //       ),
 
-                      // The child of the Slidable is what the user sees when the
-                      // component is not dragged.
-                      child: TileWidget(
-                        title: user.name,
-                        subtitle: "${user.email} ${user.blocked ? "(blocked)" : ""}",
-                        imageUrl: user.image?.url,
-                        isDisabled: true
-                      ),
-                    );
-                  },
-                  loadingWidget: LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50),
-                  errorWidget: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text('Error while fetching data.')
-                    ],
-                  ),
-                  asyncListCallback: () async {
-                    users = await userRepo.getAll(merchantId);
-                    return users;
-                  },
-                  asyncListFilter: (q, list) {
-                    return list
-                        .where((element) => element.name.contains(q))
-                        .toList();
-                  },
-                  emptyWidget: const NotFoundWidget(),
-                  onRefresh: () async {},
-                  onItemSelected: null,
-                  inputDecoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Search users',
-                    floatingLabelStyle: TextStyle(color: Colors.white),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 1.0)
-                    )
+                //       // The child of the Slidable is what the user sees when the
+                //       // component is not dragged.
+                //       child: TileWidget(
+                //         title: user.name,
+                //         subtitle: "${user.email} ${user.blocked ? "(blocked)" : ""}",
+                //         imageUrl: user.image?.url,
+                //         isDisabled: true
+                //       ),
+                //     );
+                //   },
+                //   loadingWidget: LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50),
+                //   errorWidget: const Column(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Icon(
+                //         Icons.error,
+                //       ),
+                //       SizedBox(
+                //         height: 20,
+                //       ),
+                //       Text('Error while fetching data.')
+                //     ],
+                //   ),
+                //   asyncListCallback: () async {
+                //     users = await userRepo.getAll(merchantId);
+                //     return users;
+                //   },
+                //   asyncListFilter: (q, list) {
+                //     return list
+                //         .where((element) => element.name.contains(q))
+                //         .toList();
+                //   },
+                //   emptyWidget: const NotFoundWidget(),
+                //   onRefresh: () async {},
+                //   onItemSelected: null,
+                //   inputDecoration: const InputDecoration(
+                //     border: OutlineInputBorder(),
+                //     hintText: 'Search users',
+                //     floatingLabelStyle: TextStyle(color: Colors.white),
+                //     focusedBorder: OutlineInputBorder(
+                //       borderSide: BorderSide(color: Colors.white, width: 1.0)
+                //     )
+                //   ),
+                // ),
+                DataTable(
+                  columns: const <DataColumn>[
+                    DataColumn(
+                      label: Text('Number'),
+                    ),
+                    DataColumn(
+                      label: Text('aba'),
+                    ),
+                  ],
+                  rows: List<DataRow>.generate(
+                    numItems,
+                    (int index) => DataRow(
+                      color: MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                        // All rows will have the same selected color.
+                        if (states.contains(MaterialState.selected)) {
+                          return Theme.of(context).colorScheme.primary.withOpacity(0.08);
+                        }
+                        // Even rows will have a grey color.
+                        if (index.isEven) {
+                          return Colors.grey.withOpacity(0.3);
+                        }
+                        return null; // Use default value for other states and odd rows.
+                      }),
+                      cells: <DataCell>[
+                        DataCell(Text('Row $index')),
+                        DataCell(Text('Raw $index'))
+                      ],
+                      selected: selected[index],
+                      onSelectChanged: (bool? value) {
+                        setState(() {
+                          selected[index] = value!;
+                        });
+                      },
+                    ),
                   ),
                 ),
               ),
