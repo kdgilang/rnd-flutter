@@ -39,7 +39,7 @@ class _UserWidgetState extends State<UserWidget> {
   bool isLoading = false;
   int merchantId = 0;
 
-  static const int numItems = 10;
+  static const int numItems = 100;
   List<bool> selected = List<bool>.generate(numItems, (int index) => false);
 
 
@@ -76,11 +76,9 @@ class _UserWidgetState extends State<UserWidget> {
         ],
         child: SizedBox(
         width: double.infinity,
-        child: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(25),
+        height: double.infinity,
+        child: Padding(
+                padding: const EdgeInsets.only(top: 25, bottom: 25),
                 child: isLoading ?
                   LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50) :
                 //   SearchableList<UserModel>(
@@ -181,46 +179,50 @@ class _UserWidgetState extends State<UserWidget> {
                 //     )
                 //   ),
                 // ),
-                DataTable(
-                  columns: const <DataColumn>[
-                    DataColumn(
-                      label: Text('Number'),
-                    ),
-                    DataColumn(
-                      label: Text('aba'),
-                    ),
-                  ],
-                  rows: List<DataRow>.generate(
-                    numItems,
-                    (int index) => DataRow(
-                      color: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                        // All rows will have the same selected color.
-                        if (states.contains(MaterialState.selected)) {
-                          return Theme.of(context).colorScheme.primary.withOpacity(0.08);
-                        }
-                        // Even rows will have a grey color.
-                        if (index.isEven) {
-                          return Colors.grey.withOpacity(0.3);
-                        }
-                        return null; // Use default value for other states and odd rows.
-                      }),
-                      cells: <DataCell>[
-                        DataCell(Text('Row $index')),
-                        DataCell(Text('Raw $index'))
-                      ],
-                      selected: selected[index],
-                      onSelectChanged: (bool? value) {
-                        setState(() {
-                          selected[index] = value!;
-                        });
-                      },
+                
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: DataTable(
+                    columns: const <DataColumn>[
+                      DataColumn(
+                        label: Text('Number'),
+                      ),
+                      DataColumn(
+                        label: Text('aba'),
+                      ),
+                    ],
+                    rows: List<DataRow>.generate(
+                      numItems,
+                      (int index) => DataRow(
+                        // color: MaterialStateProperty.resolveWith<Color?>(
+                        //     (Set<MaterialState> states) {
+                        //   // All rows will have the same selected color.
+                        //   if (states.contains(MaterialState.selected)) {
+                        //     return Theme.of(context).colorScheme.primary.withOpacity(0.08);
+                        //   }
+                        //   // Even rows will have a grey color.
+                        //   if (index.isEven) {
+                        //     return Colors.grey.withOpacity(0.3);
+                        //   }
+                        //   return null; // Use default value for other states and odd rows.
+                        // }),
+                        cells: <DataCell>[
+                          DataCell(Text('Row $index')),
+                          DataCell(Text('Raw $index'))
+                        ],
+                        selected: selected[index],
+                        onSelectChanged: (bool? value) {
+                          setState(() {
+                            selected[index] = value!;
+                          });
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ),
-          ],
+                  )
+                )
+              
+            
         ),
       )
       )
