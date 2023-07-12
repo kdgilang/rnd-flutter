@@ -35,9 +35,7 @@ class _UserWidgetState extends State<UserWidget> {
   bool isLoading = false;
   int merchantId = 0;
 
-  static const int numItems = 100;
-  List<bool> selected = List<bool>.generate(numItems, (int index) => false);
-
+  List<UserModel> selectedUsers = [];
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +49,19 @@ class _UserWidgetState extends State<UserWidget> {
             direction: Axis.horizontal,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Visibility(
+                visible: selectedUsers.isNotEmpty,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 15),
+                  child: IconButton(
+                    icon: const Icon(Icons.delete),
+                    tooltip: 'Delete selected users',
+                    onPressed: _handleDeleteSelectedUsers,
+                  ),
+                ),
+              ),
               Padding(
-                padding: const EdgeInsets.only(right: 20),
+                padding: const EdgeInsets.only(right: 15),
                 child: IconButton(
                   icon: const Icon(Icons.add),
                   tooltip: 'Add users',
@@ -74,7 +83,7 @@ class _UserWidgetState extends State<UserWidget> {
         width: double.infinity,
         height: double.infinity,
         child: FutureBuilder<List<UserModel>>(
-          future: userRepo.getAll(merchantId),
+          future: userRepo.getAll(merchantId).then((value) => users = value),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return SingleChildScrollView(
@@ -93,12 +102,8 @@ class _UserWidgetState extends State<UserWidget> {
                       label: Expanded(child: Text('Actions', textAlign: TextAlign.center,),)
                     ),
                   ],
-                  rows: List<DataRow>.generate(
-                    snapshot.data!.length,
-                    (int index) {
-                      UserModel user = snapshot.data![index];
-                      
-                      return DataRow(
+                  rows: users.map((user) =>
+                    DataRow(
                         // color: MaterialStateProperty.resolveWith<Color?>(
                         //     (Set<MaterialState> states) {
                         //   // All rows will have the same selected color.
@@ -122,10 +127,12 @@ class _UserWidgetState extends State<UserWidget> {
                                 direction: Axis.horizontal,
                                 children: [
                                   IconButton(
+                                    tooltip: 'Edit user',
                                     onPressed: () => _handleEdit(user),
                                     icon: const Icon(Icons.edit)
                                   ),
                                   IconButton(
+                                    tooltip: 'Delete user',
                                     onPressed: () => _handleDelete(user),
                                     icon: const Icon(Icons.delete)
                                   )
@@ -134,15 +141,18 @@ class _UserWidgetState extends State<UserWidget> {
                             )
                           )
                         ],
-                        selected: selected[index],
+                        selected: selectedUsers.contains(user),
                         onSelectChanged: (bool? value) {
                           setState(() {
-                            selected[index] = value!;
+                            if (value!) {
+                              selectedUsers.add(user);
+                            } else {
+                              selectedUsers.remove(user);
+                            }
                           });
                         },
-                      );
-                    },
-                  ),
+                      )  
+                  ).toList()
                 ),
               );
             } else if (snapshot.hasError) {
@@ -242,6 +252,28 @@ class _UserWidgetState extends State<UserWidget> {
     setState(() {
       isBusy = false;
       users.remove(user);
+    });
+  }
+
+  void _handleDeleteSelectedUsers() async {
+    if(selectedUsers.isEmpty || isBusy) {
+      return;
+    }
+
+    setState(() {
+      isBusy = true;
+    });
+
+    var clonedUsers = users;
+
+    for (int i=0; i < selectedUsers.length; i++) {
+      clonedUsers.remove(selectedUsers[i]);
+    }
+
+    setState(() {
+      users = clonedUsers;
+      isBusy = false;
+      selectedUsers = [];
     });
   }
 }
