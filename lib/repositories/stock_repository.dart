@@ -5,7 +5,7 @@ class StockRepository {
 
   final SupabaseClient _db = Supabase.instance.client;
 
-  Future<List<StockModel>> getAll(int merchanId) async {
+  Future<List<StockModel>> getAll(int merchantId) async {
     var res = await _db
     .from('stocks')
     .select('''
@@ -31,7 +31,7 @@ class StockRepository {
         )
       )
     ''')
-    .eq('stocks_merchant_links.merchants.id', merchanId)
+    .eq('stocks_merchant_links.merchants.id', merchantId)
     .order('updated_at');
     
     List<StockModel> stocks = [];

@@ -7,11 +7,7 @@ import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/repositories/user_repository.dart';
 import 'package:purala/user/user_form_screen.dart';
 import 'package:purala/widgets/layouts/authenticated_layout.dart';
-import 'package:purala/widgets/not_found_widget.dart';
 import 'package:purala/widgets/scaffold_widget.dart';
-import 'package:purala/widgets/tile_widget.dart';
-import 'package:searchable_listview/searchable_listview.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});
@@ -77,24 +73,32 @@ class _UserWidgetState extends State<UserWidget> {
         child: SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: Padding(
-                padding: const EdgeInsets.only(top: 25, bottom: 25),
-                child: isLoading ?
-                  LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50) :
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: DataTable(
-                    columns: const <DataColumn>[
-                      DataColumn(
-                        label: Text('Number'),
-                      ),
-                      DataColumn(
-                        label: Text('aba'),
-                      ),
-                    ],
-                    rows: List<DataRow>.generate(
-                      numItems,
-                      (int index) => DataRow(
+        child: FutureBuilder<List<UserModel>>(
+          future: userRepo.getAll(merchantId),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return SingleChildScrollView(
+                  child: DataTable(
+                  columns: const <DataColumn>[
+                    DataColumn(
+                      label: Text('Name'),
+                    ),
+                    DataColumn(
+                      label: Text('Email'),
+                    ),
+                    DataColumn(
+                      label: Text('Status'),
+                    ),
+                    DataColumn(
+                      label: Expanded(child: Text('Actions', textAlign: TextAlign.center,),)
+                    ),
+                  ],
+                  rows: List<DataRow>.generate(
+                    snapshot.data!.length,
+                    (int index) {
+                      UserModel user = snapshot.data![index];
+                      
+                      return DataRow(
                         // color: MaterialStateProperty.resolveWith<Color?>(
                         //     (Set<MaterialState> states) {
                         //   // All rows will have the same selected color.
@@ -108,8 +112,27 @@ class _UserWidgetState extends State<UserWidget> {
                         //   return null; // Use default value for other states and odd rows.
                         // }),
                         cells: <DataCell>[
-                          DataCell(Text('Row $index')),
-                          DataCell(Text('Raw $index'))
+                          DataCell(Text(user.name)),
+                          DataCell(Text(user.email)),
+                          DataCell(Text(user.blocked ? 'disabled' : 'enabled')),
+                          DataCell(
+                            Center(
+                              child: Wrap(
+                                spacing: 10,
+                                direction: Axis.horizontal,
+                                children: [
+                                  IconButton(
+                                    onPressed: () => _handleEdit(user),
+                                    icon: const Icon(Icons.edit)
+                                  ),
+                                  IconButton(
+                                    onPressed: () => _handleDelete(user),
+                                    icon: const Icon(Icons.delete)
+                                  )
+                                ],
+                              ),
+                            )
+                          )
                         ],
                         selected: selected[index],
                         onSelectChanged: (bool? value) {
@@ -117,13 +140,17 @@ class _UserWidgetState extends State<UserWidget> {
                             selected[index] = value!;
                           });
                         },
-                      ),
-                    ),
+                      );
+                    },
                   ),
-                  )
-                )
-              
-            
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            }
+
+            return LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50);
+          }
         ),
       )
       )

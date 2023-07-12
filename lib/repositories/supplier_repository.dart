@@ -7,7 +7,7 @@ class SupplierRepository {
   final SupabaseClient _db = Supabase.instance.client;
   final fileRepo = FileRepository();
 
-  Future<List<SupplierModel>> getAll(int merchanId) async {
+  Future<List<SupplierModel>> getAll(int merchantId) async {
     var res = await _db
     .from('suppliers')
     .select('''
@@ -23,7 +23,7 @@ class SupplierRepository {
         )
       )
     ''')
-    .eq('suppliers_merchant_links.merchants.id', merchanId)
+    .eq('suppliers_merchant_links.merchants.id', merchantId)
     .order('updated_at');
     
     List<SupplierModel> suppliers = [];

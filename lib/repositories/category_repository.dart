@@ -5,7 +5,7 @@ class CategoryRepository {
 
   final SupabaseClient _db = Supabase.instance.client;
 
-  Future<List<CategoryModel>> getAll(int merchanId) async {
+  Future<List<CategoryModel>> getAll(int merchantId) async {
     var res = await _db
     .from('categories')
     .select('''
@@ -21,7 +21,7 @@ class CategoryRepository {
         )
       )
     ''')
-    .eq('categories_merchant_links.merchants.id', merchanId)
+    .eq('categories_merchant_links.merchants.id', merchantId)
     .order('updated_at');
     
     List<CategoryModel> categories = [];

@@ -7,7 +7,7 @@ class ProductRepository {
   final SupabaseClient _db = Supabase.instance.client;
   final fileRepo = FileRepository();
 
-  Future<List<ProductModel>> getAllEnabled(int merchanId) async {
+  Future<List<ProductModel>> getAllEnabled(int merchantId) async {
     var res = await _db
     .from('products')
     .select('''
@@ -23,7 +23,7 @@ class ProductRepository {
         )
       )
     ''')
-    .eq('products_merchant_links.merchants.id', merchanId)
+    .eq('products_merchant_links.merchants.id', merchantId)
     .eq('enabled', true)
     .order('updated_at');
     

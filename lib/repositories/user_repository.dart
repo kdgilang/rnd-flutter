@@ -35,7 +35,7 @@ class UserRepository {
     return user;
   }
 
-  Future<List<UserModel>> getAll(int merchanId) async {
+  Future<List<UserModel>> getAll(int merchantId) async {
     var res = await _db
     .from('up_users')
     .select('''
@@ -51,7 +51,7 @@ class UserRepository {
         )
       )
     ''')
-    .eq('up_users_merchant_links.merchants.id', merchanId)
+    .eq('up_users_merchant_links.merchants.id', merchantId)
     .order('updated_at');
     
     List<UserModel> users = [];
