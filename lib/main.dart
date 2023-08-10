@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:purala/constants/color_constants.dart';
+import 'package:purala/core/consts/color_constants.dart';
+import 'package:purala/core/providers/strapi_graphql.dart';
+import 'package:purala/dependencies.dart';
+import 'package:purala/features/starter/starter_screen.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/providers/session_provider.dart';
 import 'package:purala/providers/user_provider.dart';
-import 'package:purala/starter/starter_screen.dart';
 import 'package:purala/routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,6 +13,8 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
+  initGraphQL();
+  initDependencies();
 
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_API_URL'] ?? "",
