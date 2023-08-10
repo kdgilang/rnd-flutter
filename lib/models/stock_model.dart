@@ -1,6 +1,6 @@
-import 'package:purala/models/base_model.dart';
+import 'package:purala/data/core/entities/base_entities.dart';
 
-class StockModel extends BaseModel {
+class StockModel extends BaseEntity {
   final String? note;
   final num price;
   final num salePrice;

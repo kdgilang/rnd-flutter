@@ -1,16 +1,12 @@
-import 'package:purala/data/core/entities/base_entities.dart';
-import 'package:purala/models/file_model.dart';
+import 'package:purala/data/features/merchant/domain/entities/merchant_entity.dart';
 
-class MerchantModel extends BaseEntity {
-  final String name;
-  final String? description;
-  FileModel? media;
+class MerchantModel extends MerchantEntity {
 
   MerchantModel({
     required super.id,
-    required this.name,
-    this.description,
-    this.media
+    required super.name,
+    super.description,
+    super.media
   });
 
   factory MerchantModel.fromJson(Map<String, dynamic> merchant) {

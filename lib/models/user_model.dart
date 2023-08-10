@@ -1,7 +1,7 @@
-import 'package:purala/models/base_model.dart';
+import 'package:purala/data/core/entities/base_entities.dart';
 import 'package:purala/models/file_model.dart';
 
-class UserModel extends BaseModel {
+class UserModel extends BaseEntity {
   final String name;
   final String email;
   final bool confirmed;

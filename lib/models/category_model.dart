@@ -1,6 +1,6 @@
-import 'package:purala/models/base_model.dart';
+import 'package:purala/data/core/entities/base_entities.dart';
 
-class CategoryModel extends BaseModel {
+class CategoryModel extends BaseEntity {
   final String name;
   final String? description;
 

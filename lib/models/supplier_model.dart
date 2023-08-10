@@ -1,6 +1,6 @@
-import 'package:purala/models/base_model.dart';
+import 'package:purala/data/core/entities/base_entities.dart';
 
-class SupplierModel extends BaseModel {
+class SupplierModel extends BaseEntity {
   final String name;
   final int merchantId;
   final int userId;

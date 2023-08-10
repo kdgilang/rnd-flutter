@@ -1,6 +1,6 @@
-import 'package:purala/models/base_model.dart';
+import 'package:purala/data/core/entities/base_entities.dart';
 
-class FilesRelatedMorphsModel extends BaseModel {
+class FilesRelatedMorphsModel extends BaseEntity {
 
   final int fileId;
   final int relatedId;

@@ -1,6 +1,6 @@
-import 'package:purala/models/base_model.dart';
+import 'package:purala/data/core/entities/base_entities.dart';
 
-class FileModel extends BaseModel {
+class FileModel extends BaseEntity {
   final String name;
   final String? caption;
   final String alternativeText;
