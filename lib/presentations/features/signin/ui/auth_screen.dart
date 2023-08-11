@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:provider/provider.dart';
+import 'package:purala/data/features/merchant/data/models/merchant_model.dart';
+import 'package:purala/dependencies.dart';
 import 'package:purala/presentations/core/consts/color_constants.dart';
-import 'package:purala/presentations/core/consts/path_constants.dart';
 import 'package:purala/presentations/features/home/home_screen.dart';
-import 'package:purala/providers/merchant_provider.dart';
+import 'package:purala/presentations/features/starter/bloc/starter_bloc.dart';
+import 'package:purala/presentations/features/starter/bloc/starter_state.dart';
 import 'package:purala/providers/session_provider.dart';
 import 'package:purala/providers/user_provider.dart';
 import 'package:purala/presentations/features/reset-password/ui/reset_password_screen.dart';
@@ -25,9 +27,16 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ScaffoldWidget(
-      title: "Sign in",
-      child: SigninWidget(),
+    return BlocProvider<StarterBloc>(
+        create: (context) => sl<StarterBloc>(),
+        child: ScaffoldWidget(
+          title: "Sign in",
+          child: BlocBuilder<StarterBloc, StarterState>(
+          builder: (context, state) {
+            return const SigninWidget();
+          },
+        )
+      ),
     );
   }
 }
@@ -45,12 +54,18 @@ class _SigninWidgetState extends State<SigninWidget> {
   final passwordControl = TextEditingController();
   final supabase = Supabase.instance.client;
   final _formKey = GlobalKey<FormState>();
+  late MerchantModel? merchant;
+
+  @override
+  void initState() {
+
+    merchant = context.read<StarterBloc>().state.data;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    
-    final merchant = context.read<MerchantProvider>().merchant;
-    
+
     return Container(
       constraints: const BoxConstraints(maxWidth: 400),
       decoration: BoxDecoration(
@@ -63,7 +78,11 @@ class _SigninWidgetState extends State<SigninWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: ImageWidget(url: merchant?.media?.url ?? "${PathConstants.iconsPath}/purala-square-logo.png")
+            child: ImageWidget(
+              height: 100,
+              width: 100,
+              url: merchant?.image?.url
+            )
           ),
           const SizedBox(height: 10,),
           Visibility(
@@ -72,7 +91,10 @@ class _SigninWidgetState extends State<SigninWidget> {
             maintainAnimation: true,
             maintainState: true,
             child: Center(
-              child: LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 20),
+              child: LoadingAnimationWidget.fourRotatingDots(
+                size: 20,
+                color: ColorConstants.secondary
+              ),
             ),
           ),
           Form(
@@ -102,7 +124,9 @@ class _SigninWidgetState extends State<SigninWidget> {
                     labelText: 'Password',
                     // floatingLabelStyle: TextStyle(color: Colors.white),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0)
+                      borderSide: BorderSide(
+                        color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black, width: 1.0
+                      )
                     )
                   ),
                   validator: PasswordValidation.validateRegisterPassword,
