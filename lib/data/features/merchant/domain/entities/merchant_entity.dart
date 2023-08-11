@@ -4,12 +4,12 @@ import 'package:purala/models/file_model.dart';
 class MerchantEntity extends BaseEntity {
   final String name;
   final String? description;
-  FileModel? media;
+  FileModel? image;
 
   MerchantEntity({
     required super.id,
     required this.name,
     this.description,
-    this.media
+    this.image
   });
 }

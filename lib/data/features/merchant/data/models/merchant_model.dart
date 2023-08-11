@@ -1,4 +1,5 @@
 import 'package:purala/data/features/merchant/domain/entities/merchant_entity.dart';
+import 'package:purala/models/file_model.dart';
 
 class MerchantModel extends MerchantEntity {
 
@@ -6,16 +7,21 @@ class MerchantModel extends MerchantEntity {
     required super.id,
     required super.name,
     super.description,
-    super.media
+    super.image
   });
 
-  factory MerchantModel.fromJson(Map<String, dynamic> merchant) {
+  factory MerchantModel.fromJson(Map<String, dynamic> json) {
     return MerchantModel(
-      id: merchant['id'],
-      name: merchant['name'],
-      description: merchant['description'],
+      id: int.tryParse(json['id']),
+      name: json['attributes']['name'] ?? '',
+      description: json['attributes']?['description'],
+      image: FileModel(
+        url: json['attributes']?['image']?['data']?['attributes']?['url'] ?? '',
+        name: json['attributes']?['image']?['data']?['attributes']?['name'] ?? '',
+        alternativeText: json['attributes']?['image']?['data']?['attributes']?['alternativeText'] ?? ''
+      ) 
     );
   }
 
-  static const type = 'api::merchant.merchant';
+  static const type = 'merchant';
 }

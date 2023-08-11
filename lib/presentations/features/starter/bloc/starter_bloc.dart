@@ -13,14 +13,13 @@ class StarterBloc extends Bloc<StarterEvent, StarterState> {
 
   Future<void> onMounted(OnMounted event, Emitter<StarterState> emit) async {
     emit(const StarterLoading());
-    Future.delayed(const Duration(milliseconds: 10000));
     final params = GetMerchantByIdParams(id: event.id);
     final res = await _getMerchantByIdUseCase.exec(params: params);
 
     if (res.error != null) {
       emit(StarterError(res.error));
     } else {
-      emit(StarterDone(res));
+      emit(StarterDone(res.data!));
     }
   }
 }

@@ -5,9 +5,27 @@ class GetMerchantByIdParams {
 }
 
 String getMerchantByIdQuery = """
-  mutation login(\$identifier: String!, \$password: String!) {
-    login(input: { identifier: \$identifier, password: \$password }) {
-      jwt
+  query getMerchantById(\$id: ID!) {
+    merchant(id: \$id) {
+      data {
+        id,
+        attributes {
+          name,
+          description,
+          updatedAt,
+          createdAt,
+          image {
+            data {
+              attributes {
+                url,
+                name,
+                size,
+                alternativeText,
+              }
+            }
+          }
+        }
+      }
     }
   }
 """;

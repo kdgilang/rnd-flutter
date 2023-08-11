@@ -10,7 +10,7 @@ import 'package:purala/data/features/merchant/domain/usecases/get_merchant_by_id
 import 'package:purala/presentations/features/signin/bloc/auth_bloc.dart';
 import 'package:purala/presentations/features/starter/bloc/starter_bloc.dart';
 
-final sl = GetIt.instance;
+GetIt sl = GetIt.instance;
 
 Future<void> initDependencies() async {
   // Providers

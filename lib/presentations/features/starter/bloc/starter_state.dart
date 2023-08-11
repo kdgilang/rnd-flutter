@@ -1,10 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:purala/data/core/resources/data_state.dart';
 import 'package:purala/data/features/merchant/data/models/merchant_model.dart';
 
 abstract class StarterState extends Equatable {
-  final DataState<MerchantModel> ? data;
+  final MerchantModel ? data;
   final GraphQLError ? error;
 
   const StarterState({ this.data, this.error });
@@ -18,7 +17,7 @@ class StarterLoading extends StarterState {
 }
 
 class StarterDone extends StarterState {
-  const StarterDone(DataState<MerchantModel> data) : super(data: data); 
+  const StarterDone(MerchantModel data) : super(data: data); 
 }
 
 class StarterError extends StarterState {

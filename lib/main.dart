@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
-  initGraphQL();
+  await initGraphQL();
   initDependencies();
 
   await Supabase.initialize(

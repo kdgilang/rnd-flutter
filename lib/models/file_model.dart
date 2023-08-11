@@ -8,7 +8,7 @@ class FileModel extends BaseEntity {
   final String? hash;
   final String? mime;
   final String? ext;
-  final num size;
+  final num? size;
   final int? height;
   final int? width;
 
@@ -16,11 +16,11 @@ class FileModel extends BaseEntity {
     super.id,
     required this.name,
     required this.url,
-    required this.size,
     required this.alternativeText,
     super.createdAt,
     super.updatedAt,
     super.createdById,
+    this.size,
     this.height,
     this.width,
     this.caption,

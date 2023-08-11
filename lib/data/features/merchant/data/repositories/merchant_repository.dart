@@ -30,11 +30,17 @@ class MerchantRepositoryImpl implements MerchantRepository {
           )
         );
       } else {
-        final data = MerchantModel.fromJson(graphQLClient.data!);
+        final data = MerchantModel.fromJson(graphQLClient.data!['merchant']['data']!);
         return DataSuccess(data);
       }
     } on GraphQLError catch(e) {
       return DataException(e);
+    } on Exception catch (e) {
+      return DataException(
+        GraphQLError(
+          message: e.toString(),
+        )
+      );
     }
   }
 }

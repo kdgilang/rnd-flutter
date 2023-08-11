@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:purala/dependencies.dart';
 import 'package:purala/presentations/core/consts/color_constants.dart';
 import 'package:purala/models/merchant_model.dart';
-import 'package:purala/providers/merchant_provider.dart';
+import 'package:purala/presentations/features/starter/bloc/starter_bloc.dart';
+import 'package:purala/presentations/features/starter/bloc/starter_event.dart';
+import 'package:purala/presentations/features/starter/bloc/starter_state.dart';
+import 'package:purala/presentations/features/starter/ui/shared/buttons_widget.dart';
 import 'package:purala/repositories/merchant_repository.dart';
-import 'package:purala/presentations/features/signin/ui/auth_screen.dart';
 import 'package:purala/presentations/core/components/image_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:purala/presentations/core/consts/path_constants.dart';
 
 class StarterScreen extends StatelessWidget {
   const StarterScreen({super.key});
@@ -18,40 +20,51 @@ class StarterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Expanded(
-              flex: 9,
-              child: StarterWidget()
-            ),
-            Expanded(
-              flex: 1,
-              child: Flex(
-                mainAxisAlignment: MainAxisAlignment.center,
-                direction: Axis.horizontal,
-                children: [
-                  const Text("powered by"),
-                  TextButton(
-                    onPressed: _launchUrl,
-                    child: const Text(
-                      "Purala",
-                      style: TextStyle(color: ColorConstants.secondary),
-                    )
-                  )
-                ]
-              ),
-            )
-          ],
+    return BlocProvider<StarterBloc>(
+      create: (context) => sl<StarterBloc>(),
+      child: Scaffold(
+        body: BlocBuilder<StarterBloc, StarterState>(
+          builder: (context, state) {
+            return _buildBody(context);
+          },
         )
-      ),
+      )
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Expanded(
+            flex: 9,
+            child: StarterWidget()
+          ),
+          Expanded(
+            flex: 1,
+            child: Flex(
+              mainAxisAlignment: MainAxisAlignment.center,
+              direction: Axis.horizontal,
+              children: [
+                const Text("powered by"),
+                TextButton(
+                  onPressed: _launchUrl,
+                  child: const Text(
+                    "Purala",
+                    style: TextStyle(color: ColorConstants.secondary),
+                  )
+                )
+              ]
+            ),
+          )
+        ],
+      )
     );
   }
 
@@ -80,16 +93,11 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 400),
     vsync: this,
-  )..forward()
-    .whenComplete(() {
-      setState(() {
-        isButtonsVisible = true;
-      });
-    });
+  );
 
   late final Animation<Offset> _offsetAnimation = Tween<Offset>(
-    begin: Offset.zero,
-    end: const Offset(0.0, -1.5),
+    begin: const Offset(0.0, -1.5),
+    end: const Offset(0.0, 0.0),
   ).animate(CurvedAnimation(
     parent: _controller,
     curve: Curves.linearToEaseOut,
@@ -98,7 +106,7 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    futureMerchant = merchantRepository.getOne(int.parse(dotenv.env['MERCHANT_ID'] ?? ""));
+    context.read<StarterBloc>().add(OnMounted(id: dotenv.get('MERCHANT_ID')));
   }
 
   @override
@@ -107,91 +115,55 @@ class _StarterWidgetState extends State<StarterWidget> with SingleTickerProvider
     super.dispose();
   }
 
+  void initAnimation() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    _controller.forward()
+    .whenComplete(() {
+      setState(() {
+        isButtonsVisible = true;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
-    return FutureBuilder<MerchantModel?>(
-      future: futureMerchant,
-      builder: (_, snapshot) {
-        if (snapshot.hasData) {
+    return BlocBuilder<StarterBloc, StarterState>(
+      builder: (context, state) {
+        if (state is StarterLoading) {
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+            SizedBox(
+              height: 50,
+              width: 50,
+              child: LoadingAnimationWidget.fourRotatingDots(
+                size: 50,
+                color: ColorConstants.secondary,
+              )
+            )
+          ]);
+        } else if (state is StarterError) {
+          return Text(state.error.toString());
+        } else {
+          initAnimation();
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SlideTransition(
                 position: _offsetAnimation,
-                child: ImageWidget(url: snapshot.data?.media?.url ?? "${PathConstants.iconsPath}/purala-square-logo.png"),
+                child: ImageWidget(
+                  height: 100,
+                  width: 100,
+                  url: state.data?.image?.url
+                ),
               ),
-              ButtonsWidget(isVisible: isButtonsVisible, merchant: snapshot.data)
+              const SizedBox(height: 30,),
+              ButtonsWidget(isVisible: isButtonsVisible)
             ],
           );
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
         }
-        
-        // By default, show a loading spinner.
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-          SizedBox(
-            height: 50,
-            width: 50,
-            child: LoadingAnimationWidget.fourRotatingDots(color: ColorConstants.secondary, size: 50)
-          )
-        ]);
       },
-    );
-  }
-}
-
-class ButtonsWidget extends StatelessWidget {
-  const ButtonsWidget({ super.key, required this.isVisible, this.merchant });
-
-  final bool isVisible;
-  final MerchantModel? merchant;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      opacity: isVisible ? 1.0 : 0.0,
-      duration: const Duration(milliseconds: 500),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ColorConstants.secondary,
-              foregroundColor: ColorConstants.primary,
-              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
-              minimumSize: const Size(280, 0),
-              textStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              )
-            ),
-            onPressed: () {
-              context.read<MerchantProvider>().set(merchant);
-              Navigator.pushNamed(context, AuthScreen.routeName);
-            },
-            child: const Text('Sign in'),
-          ),
-          const SizedBox(height: 20,),
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              foregroundColor: Colors.white,
-              side: const BorderSide(color: Colors.white, width: 1),
-              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
-              minimumSize: const Size(280, 0),
-              textStyle: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              )
-            ),
-            onPressed: () {},
-            child: const Text('Add User'),
-          ),
-        ],
-      ),
     );
   }
 }
