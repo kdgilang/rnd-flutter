@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:purala/presentation/core/consts/color_constants.dart';
 import 'package:purala/presentation/core/consts/path_constants.dart';
 import 'package:purala/providers/merchant_provider.dart';
-import 'package:purala/presentation/features/signin/ui/auth_screen.dart';
+import 'package:purala/presentation/features/signin/ui/signin_screen.dart';
 import 'package:purala/presentation/core/validations/email_validation.dart';
 import 'package:purala/presentation/core/components/image_widget.dart';
 import 'package:purala/presentation/core/components/scaffold_widget.dart';

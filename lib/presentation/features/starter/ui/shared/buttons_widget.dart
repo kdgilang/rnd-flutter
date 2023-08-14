@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:purala/presentation/core/consts/color_constants.dart';
-import 'package:purala/presentation/features/signin/ui/auth_screen.dart';
+import 'package:purala/presentation/features/signin/ui/signin_screen.dart';
 
 class ButtonsWidget extends StatelessWidget {
   const ButtonsWidget({ super.key, required this.isVisible });

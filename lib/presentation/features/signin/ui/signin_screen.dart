@@ -182,7 +182,7 @@ class _SigninWidgetState extends State<SigninWidget> {
                         )
                       )
                     ),
-                    validator: PasswordValidation.validateRegisterPassword,
+                    validator: PasswordValidation.validatePassword,
                   ),
                   Align(
                     alignment: Alignment.centerLeft,

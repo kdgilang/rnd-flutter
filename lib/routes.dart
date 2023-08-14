@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:purala/presentation/features/category/category_screen.dart';
 import 'package:purala/presentation/features/home/home_screen.dart';
 import 'package:purala/presentation/features/reset-password/ui/reset_password_screen.dart';
-import 'package:purala/presentation/features/signin/ui/auth_screen.dart';
+import 'package:purala/presentation/features/signin/ui/signin_screen.dart';
 import 'package:purala/presentation/features/product/product_form_screen.dart';
 import 'package:purala/presentation/features/product/product_screen.dart';
 import 'package:purala/presentation/features/starter/ui/starter_screen.dart';
