@@ -7,8 +7,8 @@ import 'package:purala/data/features/auth/domain/usecases/auth_usecase.dart';
 import 'package:purala/data/features/merchant/data/repositories/merchant_repository.dart';
 import 'package:purala/data/features/merchant/domain/repositories/merchant_repository.dart';
 import 'package:purala/data/features/merchant/domain/usecases/get_merchant_by_id_usecase.dart';
-import 'package:purala/presentations/features/signin/bloc/auth_bloc.dart';
-import 'package:purala/presentations/features/starter/bloc/starter_bloc.dart';
+import 'package:purala/presentation/features/merchant/bloc/merchant_bloc.dart';
+import 'package:purala/presentation/features/signin/bloc/signin_bloc.dart';
 
 GetIt sl = GetIt.instance;
 
@@ -26,6 +26,6 @@ Future<void> initDependencies() async {
   sl.registerSingleton<GetMerchantByIdUseCase>(GetMerchantByIdUseCase(sl()));
 
   // Blocs
-  sl.registerSingleton<AuthBloc>(AuthBloc(sl()));
-  sl.registerSingleton<StarterBloc>(StarterBloc(sl()));
+  sl.registerSingleton<SigninBloc>(SigninBloc(sl()));
+  sl.registerSingleton<MerchantBloc>(MerchantBloc(sl()));
 }

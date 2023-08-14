@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:purala/presentations/core/consts/color_constants.dart';
+import 'package:purala/presentation/core/consts/color_constants.dart';
 import 'package:purala/data/core/providers/strapi_graphql.dart';
 import 'package:purala/dependencies.dart';
-import 'package:purala/presentations/features/starter/ui/starter_screen.dart';
+import 'package:purala/presentation/features/starter/ui/starter_screen.dart';
 import 'package:purala/providers/merchant_provider.dart';
 import 'package:purala/providers/session_provider.dart';
 import 'package:purala/providers/user_provider.dart';
